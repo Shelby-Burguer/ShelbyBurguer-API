@@ -5,10 +5,13 @@ import idVo from '../../../shared/domain/vo/id';
 import stringVo from '../../../shared/domain/vo/string';
 import { Injectable } from '@nestjs/common';
 import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
-//import { createCollectionDto } from '../../application/dto/collection.create.dto';
+import { createIngredienteDto } from '../../application/dto/createIngrediente.dto';
 import UniqueId from '../../../shared/domain/UniqueUUID';
-//import { idCollectionDto } from '../../application/dto/idCollection.dto';
-//mport { updateCollectionDto } from '../../application/dto/updateCollection.dto';
+import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
+import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
+import { idIngrediente } from '../models/idIngrediente';
+import { responseDeleteIngredienteDto } from '../../application/dto/responseDelete.dto';
+
 //import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
 
 Injectable();
@@ -22,7 +25,6 @@ export class ingredienteDataMapper
     ingre.unidad = stringVo.create(entity.unidad_ingrediente);
     return ingre;
   }
-
 
   public toDalEntity(ingrediente: ingrediente): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
@@ -40,30 +42,43 @@ export class ingredienteDataMapper
     ingredienteDto.unidad = dto.unidad.getString();
     return ingredienteDto;
   }
-/*
-  public toDomainFromDto(dto: createCollectionDto): collection {
-    const coll = new collection();
-    coll.id = idVo.create(new UniqueId().getId());
-    coll.name = stringVo.create(dto.name);
 
-    return coll;
+  public toDomainFromDto(dto: createIngredienteDto): ingrediente {
+    const _ingrediente = new ingrediente();
+    _ingrediente.id = idVo.create(new UniqueId().getId());
+    _ingrediente.nombre = stringVo.create(dto.nombre);
+    _ingrediente.unidad = stringVo.create(dto.unidad);
+
+    return _ingrediente;
   }
 
   public updateDtotoDomain(
-    idCollections: idCollectionDto,
-    namecollection: updateCollectionDto,
-  ): collection {
-    const coll = new collection();
-    coll.id = idVo.create(idCollections.id);
-    coll.name = stringVo.create(namecollection.company_name);
-    return coll;
+    idIngrediente: idIngredienteDto,
+    updateIngrediente: updateIngredientelDto,
+  ): ingrediente {
+    const _ingrediente = new ingrediente();
+    _ingrediente.id = idVo.create(idIngrediente.id);
+    _ingrediente.nombre = stringVo.create(updateIngrediente.nombre);
+    _ingrediente.unidad = stringVo.create(updateIngrediente.unidad);
+    return _ingrediente;
   }
 
-    public createtoDomainFromDto(dto: readcreateCollectionDto): collection {
-    const coll = new collection();
-    coll.id = idVo.create(dto.id);
-    coll.name = stringVo.create(dto.name);
+  public deleteDtotoDomain(
+    idIngredienteDto: idIngredienteDto): idIngrediente {
+    const _idIngreidiente = new idIngrediente()
+    _idIngreidiente.id = idVo.create(idIngredienteDto.id);
+    return _idIngreidiente;
+  }
 
-    return coll;
-  }*/
+  public deletetoDalEntity(ingrediente: idIngrediente): ingredienteEntity {
+    const _ingredienteEntity = new ingredienteEntity();
+    _ingredienteEntity.ingrediente_id = ingrediente.id.getId();
+    return _ingredienteEntity;
+  }
+  public todeleteDto(ingrediente: string): responseDeleteIngredienteDto {
+    const _ingredientedto = new responseDeleteIngredienteDto();
+    _ingredientedto.responseDelete = ingrediente;
+    return _ingredientedto;
+  }
+
 }

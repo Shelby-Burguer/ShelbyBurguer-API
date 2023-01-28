@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 //import { collectionEntity } from '../orm/collection.orm';
 import { iIngredienteRepository } from '../../application/repository/iIngrediente.repository';
 import { Repository, EntityRepository, getRepository } from 'typeorm';
-import { ingrediente } from 'src/producto_combo/domain/models/ingrediente';
 import { ingredienteEntity } from '../orm/ingrediente.orm';
 
 @EntityRepository(ingredienteEntity)
@@ -17,27 +16,38 @@ export class ingredientePersisteceAdapter
     return ingrediente;
   }
 
- /* async createCollection(
-    _collectionEntity: collectionEntity,
-  ): Promise<collectionEntity> {
-    const collectionRepository = getRepository(collectionEntity);
-    const collection: collectionEntity = await collectionRepository.save({
-      collection_id: _collectionEntity.collection_id,
-      collection_name: _collectionEntity.collection_name,
+  async createIngrediente(
+    _ingredienteEntity: ingredienteEntity,
+  ): Promise<ingredienteEntity> {
+    const ingredienteRepository = getRepository(ingredienteEntity);
+    const ingrediente: ingredienteEntity = await ingredienteRepository.save({
+      ingrediente_id: _ingredienteEntity.ingrediente_id,
+      nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
+      unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
     });
-    return collection;
+    return ingrediente;
   }
 
-  async updateCollection(_collectionEntity: collectionEntity): Promise<collectionEntity> {
-    const collectionRepository = getRepository(collectionEntity);
-    await collectionRepository.update(_collectionEntity.collection_id, {
-      collection_name: _collectionEntity.collection_name,
+  async updateIngrediente(
+    _ingredienteEntity: ingredienteEntity,
+  ): Promise<ingredienteEntity> {
+    const ingredienteRepository = getRepository(ingredienteEntity);
+    await ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
+      nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
+      unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
     });
 
-    const collction: collectionEntity = await collectionRepository.findOne({
-      collection_id: _collectionEntity.collection_id,
+    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
+      ingrediente_id: _ingredienteEntity.ingrediente_id,
     });
-    return collction;
+    return ingrediente;
   }
-*/
+
+  async deleteIngrediente(_ingredienteEntity: ingredienteEntity): Promise<any> {
+    const ingredienteRepository = getRepository(ingredienteEntity);
+    await ingredienteRepository.delete(_ingredienteEntity.ingrediente_id);
+    let messageDelete: string = 'Eiminación realizada';
+
+    return messageDelete;
+  }
 }
