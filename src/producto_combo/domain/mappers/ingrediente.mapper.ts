@@ -1,36 +1,38 @@
 import { DataMapper } from '../../../shared/domain/data-mapper.interface';
 import { ingrediente } from '../models/ingrediente';
-import { collectionEntity } from '../../infrestructure/orm/collection.orm';
-import idVo from '../../../shared/domain/Vo/id.vo';
-import stringVo from '../../../shared/domain/Vo/string.vo';
+import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
+import idVo from '../../../shared/domain/vo/id';
+import stringVo from '../../../shared/domain/vo/string';
 import { Injectable } from '@nestjs/common';
 import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
-import { createCollectionDto } from '../../application/dto/collection.create.dto';
+//import { createCollectionDto } from '../../application/dto/collection.create.dto';
 import UniqueId from '../../../shared/domain/UniqueUUID';
-import { idCollectionDto } from '../../application/dto/idCollection.dto';
-import { updateCollectionDto } from '../../application/dto/updateCollection.dto';
-import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
+//import { idCollectionDto } from '../../application/dto/idCollection.dto';
+//mport { updateCollectionDto } from '../../application/dto/updateCollection.dto';
+//import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
 
 Injectable();
 export class ingredienteDataMapper
-  implements DataMapper<ingrediente, collectionEntity>
+  implements DataMapper<ingrediente, ingredienteEntity>
 {
-/*  public toDomain(entity: collectionEntity): collection {
-    const coll = new collection();
-    coll.id = idVo.create(entity.collection_id);
-    coll.name = stringVo.create(entity.collection_name);
-
-    return coll;
+  public toDomain(entity: ingredienteEntity): ingrediente {
+    const ingre = new ingrediente();
+    ingre.id = idVo.create(entity.ingrediente_id);
+    ingre.nombre = stringVo.create(entity.nombre_ingrediente);
+    ingre.unidad = stringVo.create(entity.unidad_ingrediente);
+    return ingre;
   }
 
-  public toDalEntity(collection: collection): collectionEntity {
-    const collEntity = new collectionEntity();
-    collEntity.collection_id = collection.id.getId();
-    collEntity.collection_name = collection.name.getString();
 
-    return collEntity;
+  public toDalEntity(ingrediente: ingrediente): ingredienteEntity {
+    const ingreEntity = new ingredienteEntity();
+    ingreEntity.ingrediente_id = ingrediente.id.getId();
+    ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
+    ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
+
+    return ingreEntity;
   }
-*/
+
   public toDto(dto: ingrediente): readIngredienteDto {
     const ingredienteDto = new readIngredienteDto();
     ingredienteDto.id = dto.id.getId();

@@ -1,13 +1,15 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { icollectionRepository } from '../repository/Icollection.repository';
-import { readCollectionDto } from '../dto/collection.read.dto';
-import { collection } from '../../domain/models/collection.model';
+//import { icollectionRepository } from '../repository/Icollection.repository';
+//import { readCollectionDto } from '../dto/collection.read.dto';
+import { ingrediente } from '../../domain/models/ingrediente';
 import { forwardRef } from '@nestjs/common';
 import { ingredienteDataMapper } from '../../domain/mappers/ingrediente.mapper';
-import { collectionPersisteceAdapter } from '../../infrestructure/Adapter/collection.persistance.adapter';
+import { ingredientePersisteceAdapter } from '../../infraestructure/adapter/ingrediente.adapter';
 import { InjectRepository } from '@nestjs/typeorm';
-import { collectionEntity } from '../../infrestructure/orm/collection.orm';
+//import { collectionEntity } from '../../infrestructure/orm/collection.orm';
+import { iIngredienteRepository } from '../repository/iIngrediente.repository';
+import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
 
 @Injectable()
 export class ingredienteService {
@@ -17,10 +19,12 @@ export class ingredienteService {
     private readonly _mapper: ingredienteDataMapper,
   ) {}
 
-  async getCollection(): Promise<collection[]> {
-    const collectionEntity = await this._icollectionRepository.getCollection();
-    return collectionEntity.map((collection: collectionEntity) =>
-      this._mapper.toDomain(collection),
+  async getIngrediente(): Promise<ingrediente[]> {
+    const ingredienteEntity =
+      await this._iIngredienteRepository.getIngrediente();
+    console.log(ingredienteEntity);
+    return ingredienteEntity.map((ingrediente: ingredienteEntity) =>
+      this._mapper.toDomain(ingrediente),
     );
   }
 

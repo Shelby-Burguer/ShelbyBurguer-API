@@ -5,6 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 //import { configValidationSchema } from './config/config.shema';
 import { CqrsModule } from '@nestjs/cqrs';
+import {ingredienteModule} from './producto_combo/infraestructure/ingrediente.module'
 
 
 @Module({
@@ -14,8 +15,8 @@ import { CqrsModule } from '@nestjs/cqrs';
       //validationSchema: configValidationSchema,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [/*ConfigModule, collectionModule, styleModule, modelModule, orderModule*/],
-      inject: [/*ConfigService*/],
+      imports: [ingredienteModule,ConfigModule],
+      inject: [ConfigService],
       //entities: [],
       useFactory: async (configService: ConfigService) => {
         const isProduction = configService.get('STAGE') === 'prod';
@@ -35,7 +36,8 @@ import { CqrsModule } from '@nestjs/cqrs';
         };
       },
     }),
-    CqrsModule
+    CqrsModule,
+    ingredienteModule,
     /*collectionModule,
     styleModule,
     modelModule,

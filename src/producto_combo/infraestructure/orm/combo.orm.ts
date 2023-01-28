@@ -10,6 +10,7 @@ import {
   PrimaryGeneratedColumn,
   PrimaryColumn,
 } from 'typeorm';
+import { pdt_cbEntity } from './pdt_cb.orm';
 
 @Entity('combo')
 export class comboEntity extends BaseEntity {
@@ -24,5 +25,8 @@ export class comboEntity extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300, nullable: false })
   precio_unitario_combo: string;
+
+  @OneToMany(() => pdt_cbEntity, (pdt_cb) => pdt_cb.combo)
+  pdt_cb: pdt_cbEntity[];
 
 }

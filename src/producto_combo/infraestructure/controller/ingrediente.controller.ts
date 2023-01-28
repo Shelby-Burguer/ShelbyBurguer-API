@@ -11,11 +11,11 @@ import {
 import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { allIngredienteQuery } from '../queryBus/allIngredientesQuery';
-import { createCollectionDto } from '../../application/dto/collection.create.dto';
+/*import { createCollectionDto } from '../../application/dto/collection.create.dto';
 import { createcollectioncommand } from '../commad/createCollection.commad';
 import { updateCollectioncommand } from '../commad/updateCollection.command';
 import { updateCollectionDto } from '../../application/dto/updateCollection.dto';
-import { idCollectionDto } from '../../application/dto/idCollection.dto';
+import { idCollectionDto } from '../../application/dto/idCollection.dto';*/
 
 @Controller('ingrediente')
 export class ingredienteController {
@@ -26,7 +26,7 @@ export class ingredienteController {
 
   @Get('/all')
   async getAllIngrediente(): Promise<readIngredienteDto[]> {
-    return this._collectionService.execute<
+    return this._ingredienteService.execute<
       allIngredienteQuery,
       readIngredienteDto[]
     >(new allIngredienteQuery());

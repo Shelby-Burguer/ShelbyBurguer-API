@@ -10,19 +10,20 @@ import {
   PrimaryGeneratedColumn,
   PrimaryColumn,
 } from 'typeorm';
+import { igdt_pdtEntity } from './igdt_pdt.orm';
 
 @Entity('ingrediente')
 export class ingredienteEntity extends BaseEntity {
   @PrimaryColumn()
-  combo_id: string;
+  ingrediente_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: false })
-  nombre_combo: string;
+  nombre_ingrediente: string;
 
   @Column({ type: 'varchar', length: 300, nullable: false })
-  tiempo_aprox_preparacion_combo: string;
+  unidad_ingrediente: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
-  precio_unitario_combo: string;
+  @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.ingrediente)
+  igdt_pdt: igdt_pdtEntity[];
 
 }

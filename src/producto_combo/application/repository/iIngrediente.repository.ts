@@ -1,7 +1,8 @@
-import { collectionEntity } from '../../infrestructure/orm/collection.orm';
+import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
 
-export interface icollectionRepository {
-  getIngrediente(): Promise<collectionEntity[]>;
-  createIngrediente(_collection: collectionEntity): Promise<collectionEntity>;
+export interface iIngredienteRepository {
+  getIngrediente(): Promise<ingredienteEntity[]>;
+/*  createIngrediente(_collection: collectionEntity): Promise<collectionEntity>;
   updateIngrediente(_collection: collectionEntity): Promise<collectionEntity>;
+*/
 }
