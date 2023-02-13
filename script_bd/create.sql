@@ -13,9 +13,11 @@
 
 create table INGREDIENTE
 (
-     ingrediente_id varchar(70) not null,
+     ingrediente_id varchar(100) not null,
      nombre_ingrediente varchar(70) not null,
-     unidad_ingrediente varchar(5) null,
+     unidad_ingrediente varchar(70) null,
+     nombre_imagen varchar(70) null,
+     datos_imagen bytea null,
      constraint pk_ingrediente_id primary key (ingrediente_id)	
 
 );

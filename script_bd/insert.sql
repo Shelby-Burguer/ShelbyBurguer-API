@@ -1,14 +1,14 @@
 INSERT INTO INGREDIENTE
-  (ingrediente_id,nombre_ingrediente,unidad_ingrediente)
+  (ingrediente_id,nombre_ingrediente,unidad_ingrediente,nombre_imagen,datos_imagen)
 VALUES
-  ('5c50768e-4524-4e37-9e33-926809f0b957','Tomate','Gramos'),
-  ('fda6d542-2b31-4c2a-b54d-922068df57f4','Lechuga','Gramos'),
-  ('50eb5311-c26f-4f09-a773-410e93c2a73a','Pan','Unidad'),
-  ('15e6300c-2256-440a-adaa-56432c06cb2c','Carne','Unidad'),
-  ('8ea16eda-75bc-433a-af5d-c0c91cb7020b','Queso','Onzas'),
-  ('67d68a20-1b7d-47dd-bf25-67d10749a316','Cebolla','Gramos'),
-  ('6685517f-28c7-4e8f-97fc-6381873fa953','Huevo','Unidad'),
-  ('e2241593-117f-4611-80cd-ec839bc060eb','Pollo','unidad');
+  ('5c50768e-4524-4e37-9e33-926809f0b957','Tomate','Gramos',null, null),
+  ('fda6d542-2b31-4c2a-b54d-922068df57f4','Lechuga','Gramos',null, null),
+  ('50eb5311-c26f-4f09-a773-410e93c2a73a','Pan','Unidad',null, null),
+  ('15e6300c-2256-440a-adaa-56432c06cb2c','Carne','Unidad',null, null),
+  ('8ea16eda-75bc-433a-af5d-c0c91cb7020b','Queso','Onzas',null, null),
+  ('67d68a20-1b7d-47dd-bf25-67d10749a316','Cebolla','Gramos',null, null),
+  ('6685517f-28c7-4e8f-97fc-6381873fa953','Huevo','Unidad',null, null),
+  ('e2241593-117f-4611-80cd-ec839bc060eb','Pollo','unidad',null, null);
   
 INSERT INTO PRODUCTO
   (producto_id,nombre_producto)
