@@ -9,6 +9,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { iIngredienteRepository } from '../repository/iIngrediente.repository';
 import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
+import { createImagenIngredienteDto } from '../dto/createImagenIngrediente.dto';
+
 
 @Injectable()
 export class ingredienteService {
@@ -18,12 +20,21 @@ export class ingredienteService {
     private readonly _mapper: ingredienteDataMapper,
   ) {}
 
-  async getIngrediente(): Promise<ingrediente[]> {
+  async getAllIngrediente(): Promise<ingrediente[]> {
     const ingredienteEntity =
-      await this._iIngredienteRepository.getIngrediente();
+      await this._iIngredienteRepository.getAllIngrediente();
     return ingredienteEntity.map((ingrediente: ingredienteEntity) =>
       this._mapper.toDomain(ingrediente),
     );
+  }
+
+    async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
+    const IngredienteEntity: ingredienteEntity =
+      await this._iIngredienteRepository.getOneIngrediente(
+        this._mapper.toIdEntity(id),
+      );
+    return this._mapper.toDomain(IngredienteEntity);
+
   }
 
   async createIngrediente(ingrediente: ingrediente): Promise<ingrediente> {
@@ -32,6 +43,14 @@ export class ingredienteService {
         this._mapper.toDalEntity(ingrediente),
       );
     return this._mapper.toDomain(createdIngredienteEntity);
+  }
+
+    async createImagenIngrediente(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto): Promise<any> {
+    const createdIngredienteEntity: ingredienteEntity =
+      await this._iIngredienteRepository.createImagenIngrediente(
+        this._mapper.toDalEntityImagen(imagenIngrediente, idIngrediente),
+      );
+    return createdIngredienteEntity;
   }
 
   async updateingrediente(ingrediente: ingrediente): Promise<ingrediente> {

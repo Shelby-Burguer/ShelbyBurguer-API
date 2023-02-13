@@ -11,6 +11,7 @@ import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
 import { idIngrediente } from '../models/idIngrediente';
 import { responseDeleteIngredienteDto } from '../../application/dto/responseDelete.dto';
+import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
 
 //import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
 
@@ -35,11 +36,27 @@ export class ingredienteDataMapper
     return ingreEntity;
   }
 
+    public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
+    const ingreEntity = new ingredienteEntity();
+    ingreEntity.ingrediente_id = idIngrediente.id;
+    ingreEntity.nombre_imagen = imagenIngrediente.nombreImagen;
+    ingreEntity.datos_imagen = imagenIngrediente.datosImagen;
+    return ingreEntity;
+  }
+
   public toDto(dto: ingrediente): readIngredienteDto {
     const ingredienteDto = new readIngredienteDto();
     ingredienteDto.id = dto.id.getId();
     ingredienteDto.nombre = dto.nombre.getString();
     ingredienteDto.unidad = dto.unidad.getString();
+    return ingredienteDto;
+  }
+
+    public toDtoImagen(ingredienteEntity: ingredienteEntity): createImagenIngredienteDto {
+    const ingredienteDto = new createImagenIngredienteDto();
+
+    ingredienteDto.nombreImagen = ingredienteEntity.nombre_imagen
+    ingredienteDto.datosImagen = ingredienteEntity.datos_imagen
     return ingredienteDto;
   }
 
@@ -79,6 +96,26 @@ export class ingredienteDataMapper
     const _ingredientedto = new responseDeleteIngredienteDto();
     _ingredientedto.responseDelete = ingrediente;
     return _ingredientedto;
+  }
+
+  public toIdEntity(_idIngrediente: idIngrediente): ingredienteEntity {
+    const ingreEntity = new ingredienteEntity();
+    ingreEntity.ingrediente_id = _idIngrediente.id.getId();
+    return ingreEntity;
+  }
+
+  public toDomainFromDtoid(dto: idIngredienteDto): ingrediente {
+    const _ingrediente = new ingrediente();
+    _ingrediente.id = idVo.create(dto.id);
+    return _ingrediente;
+  }
+
+    public toDtoId(dto: ingrediente): readIngredienteDto {
+    const ingredienteDto = new readIngredienteDto();
+    ingredienteDto.id = dto.id.getId();
+    ingredienteDto.nombre = dto.nombre.getString();
+    ingredienteDto.unidad = dto.unidad.getString();
+    return ingredienteDto;
   }
 
 }

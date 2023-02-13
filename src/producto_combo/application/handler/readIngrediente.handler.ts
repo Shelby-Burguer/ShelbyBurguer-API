@@ -15,7 +15,7 @@ export class allIngredienteHandler
 
   async execute(): Promise<any> {
     const ingrediente: ingrediente[] =
-      await this._ingredienteService.getIngrediente();
+      await this._ingredienteService.getAllIngrediente();
     return ingrediente.map((coll: ingrediente) => this._mapper.toDto(coll));
   }
 }

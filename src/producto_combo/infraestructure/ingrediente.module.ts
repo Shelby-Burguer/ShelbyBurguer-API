@@ -9,11 +9,13 @@ import { allIngredienteHandler } from '../application/handler/readIngrediente.ha
 import { createIngredientetHandler } from '../application/handler/createingrediente.handler';
 import { updateIngredienteHandler } from '../application/handler/updateIngrediente.handler';
 import { deleteIngredientetHandler } from '../application/handler/deleteIngrediente.handler';
+import { createImagenIngredientetHandler } from '../application/handler/createImagenIngrediente.handler';
 import { ingredienteEntity } from './orm/ingrediente.orm';
 import { productoEntity } from './orm/producto.orm';
 import { comboEntity } from './orm/combo.orm';
 import { igdt_pdtEntity } from './orm/igdt_pdt.orm';
 import { pdt_cbEntity } from './orm/pdt_cb.orm';
+
 
 @Module({
   controllers: [ingredienteController],
@@ -25,6 +27,8 @@ import { pdt_cbEntity } from './orm/pdt_cb.orm';
     createIngredientetHandler,
     updateIngredienteHandler,
     deleteIngredientetHandler,
+    createImagenIngredientetHandler,
+
   ],
   imports: [
     CqrsModule,

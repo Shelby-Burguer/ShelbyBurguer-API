@@ -10,9 +10,15 @@ export class ingredientePersisteceAdapter
   extends Repository<ingredienteEntity>
   implements iIngredienteRepository
 {
-  async getIngrediente(): Promise<ingredienteEntity[]> {
+  async getAllIngrediente(): Promise<ingredienteEntity[]> {
     const ingredienteRepository = getRepository(ingredienteEntity);
     const ingrediente: ingredienteEntity[] = await ingredienteRepository.find();
+    return ingrediente;
+  }
+
+    async getOneIngrediente(_ingredienteEntity: ingredienteEntity,): Promise<ingredienteEntity> {
+    const ingredienteRepository = getRepository(ingredienteEntity);
+    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne(_ingredienteEntity);
     return ingrediente;
   }
 
@@ -25,6 +31,24 @@ export class ingredientePersisteceAdapter
       nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
       unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
     });
+    
+    return ingrediente;
+  }
+
+    async createImagenIngrediente(
+    _ingredienteEntity: ingredienteEntity,
+  ): Promise<any> {
+    const ingredienteRepository = getRepository(ingredienteEntity);
+    const imagenIngrediente = await ingredienteRepository.update(_ingredienteEntity.ingrediente_id,{
+
+      nombre_imagen: _ingredienteEntity.nombre_imagen,
+      datos_imagen: _ingredienteEntity.datos_imagen,
+    });
+
+    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
+    ingrediente_id: _ingredienteEntity.ingrediente_id,
+    });
+
     return ingrediente;
   }
 
