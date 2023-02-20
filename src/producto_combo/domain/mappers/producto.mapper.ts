@@ -12,12 +12,13 @@ import { updateIngredientelDto } from '../../application/dto/updateIngrediente.d
 import { idIngrediente } from '../models/idIngrediente';
 import { responseDeleteIngredienteDto } from '../../application/dto/responseDelete.dto';
 import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
+import { createProductoDto } from '../../application/dto/createProducto.dto';
+import { productoEntity } from '../../infraestructure/orm/producto.orm';
 
 //import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
 
 Injectable();
-export class ingredienteDataMapper
-  implements DataMapper<ingrediente, ingredienteEntity>
+export class productoDataMapper
 {
   public toDomain(entity: ingredienteEntity): ingrediente {
     const ingre = new ingrediente();
@@ -29,7 +30,18 @@ export class ingredienteDataMapper
     return ingre;
   }
 
-  public toDalEntity(ingrediente: ingrediente): ingredienteEntity {
+  public toDalEntityp(producto: createProductoDto): productoEntity {
+    const _productoEntity = new productoEntity();
+    
+    _productoEntity.producto_id =  idVo.create(new UniqueId().getId()).getId();
+    _productoEntity.nombre_producto = producto.nombre
+    _productoEntity.tipo_producto = producto.tipo
+    _productoEntity.costo_producto = producto.costo
+
+    return _productoEntity;
+  }
+
+    public toDalEntity(ingrediente: ingrediente): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
     ingreEntity.ingrediente_id = ingrediente.id.getId();
     ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
@@ -46,15 +58,15 @@ export class ingredienteDataMapper
     return ingreEntity;
   }
 
-  public toDto(dto: ingrediente): readIngredienteDto {
-    const ingredienteDto = new readIngredienteDto();
-    ingredienteDto.id = dto.id.getId();
-    ingredienteDto.nombre = dto.nombre.getString();
-    ingredienteDto.unidad = dto.unidad.getString();
-    ingredienteDto.nombreImagen = dto.nombreImagen;
-    ingredienteDto.datosImagen = dto.datosImagen;
+  public toDto(_producto: productoEntity): createProductoDto {
+    const productoDto = new createProductoDto();
+    productoDto.id = _producto.producto_id;
+    productoDto.nombre = _producto.nombre_producto
+    productoDto.tipo = _producto.tipo_producto
+    productoDto.costo = _producto.costo_producto
 
-    return ingredienteDto; 
+
+    return productoDto; 
   }
 
     public toDtoImagen(ingredienteEntity: ingredienteEntity): createImagenIngredienteDto {

@@ -22,6 +22,12 @@ export class productoEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
   nombre_producto: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: false })
+  tipo_producto: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: false })
+  costo_producto: string;
+
   @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.producto)
   igdt_pdt: igdt_pdtEntity[];
 

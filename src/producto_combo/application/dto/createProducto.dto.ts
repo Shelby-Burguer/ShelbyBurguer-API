@@ -2,7 +2,8 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
 
 @Exclude()
-export class readIngredienteDto {
+export class createProductoDto {
+
   @Expose()
   @IsString()
   id: string;
@@ -13,13 +14,10 @@ export class readIngredienteDto {
 
   @Expose()
   @IsString()
-  unidad: string;
+  tipo: string;
 
   @Expose()
   @IsString()
-  nombreImagen: string;
+  costo: string;
 
-  @Expose()
-  @IsString()
-  datosImagen: Uint8Array;
 }
