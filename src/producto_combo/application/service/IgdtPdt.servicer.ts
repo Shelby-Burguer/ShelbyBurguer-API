@@ -15,42 +15,47 @@ import { iProductoRepository } from '../repository/producto.repository';
 import { productoEntity } from '../../infraestructure/orm/producto.orm';
 import { productoDataMapper } from '../../domain/mappers/producto.mapper';
 import { productoPersisteceAdapter } from '../../infraestructure/adapter/producto.adapter';
+import { createIgdtPdtDto } from '../dto/createIgdtPdt.dto';
+import { igdtPdtDataMapper } from '../../domain/mappers/igdtPdt.mapper';
+import { igdt_pdtEntity } from '../../infraestructure/orm/igdt_pdt.orm';
+import { iIgdtPdtRepository } from '../repository/igdtPdt.repository';
+import { igdtPdtPersisteceAdapter } from '../../infraestructure/adapter/igdtPdt.adapter';
 
 
 @Injectable()
-export class productoService {
+export class igdtPdtService {
   constructor(
-    @InjectRepository(productoPersisteceAdapter)
-    private readonly _iProductoRepository: iProductoRepository,
-    private readonly _mapper: productoDataMapper,
+    @InjectRepository(igdtPdtPersisteceAdapter)
+    private readonly _iIgdtPdtRepository: iIgdtPdtRepository,
+    private readonly _mapper: igdtPdtDataMapper,
   ) {}
 
-  async getAllProducto(): Promise<productoEntity[]> {
-    const productoEntity =
-      await this._iProductoRepository.getAllProducto();
-    return productoEntity;
+  async getAllIgdtPdt(): Promise<igdt_pdtEntity[]> {
+    const igdtPdtEntity =
+      await this._iIgdtPdtRepository.getAllIgdtPdt();
+    return igdtPdtEntity;
   }
 
     async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
     const IngredienteEntity: ingredienteEntity =
-      await this._iProductoRepository.getOneIngrediente(
+      await this._iIgdtPdtRepository.getOneIngrediente(
         this._mapper.toIdEntity(id),
       );
     return this._mapper.toDomain(IngredienteEntity);
 
   }
 
-  async createProducto(producto: createProductoDto): Promise<productoEntity> {
-    const createdIngredienteEntity: productoEntity =
-      await this._iProductoRepository.createProducto(
-        this._mapper.toDalEntityp(producto),
+  async createIgdtPdt(igdtPdt: createIgdtPdtDto): Promise<igdt_pdtEntity> {
+    const createdIngredienteEntity: igdt_pdtEntity =
+      await this._iIgdtPdtRepository.createIgdtPdt(
+        this._mapper.toDalEntity(igdtPdt),
       );
     return createdIngredienteEntity;
   }
 
     async createImagenIngrediente(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto): Promise<any> {
     const createdIngredienteEntity: ingredienteEntity =
-      await this._iProductoRepository.createImagenIngrediente(
+      await this._iIgdtPdtRepository.createImagenIngrediente(
         this._mapper.toDalEntityImagen(imagenIngrediente, idIngrediente),
       );
     return createdIngredienteEntity;
@@ -58,13 +63,13 @@ export class productoService {
 
   async updateProducto(producto: productoEntity): Promise<productoEntity> {
     const UpdateIngredienteEntity: productoEntity =
-      await this._iProductoRepository.updateProducto(producto);
+      await this._iIgdtPdtRepository.updateProducto(producto);
     return UpdateIngredienteEntity;
   }
 
   async deleteProducto(producto: createProductoDto): Promise<string> {
     const deleteIngredienteEntity: string =
-      await this._iProductoRepository.deleteProducto(
+      await this._iIgdtPdtRepository.deleteProducto(
         this._mapper.deletetoDalEntity(producto),
       );
     return deleteIngredienteEntity;

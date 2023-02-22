@@ -74,6 +74,15 @@ export class ingredienteDataMapper
     return _ingrediente;
   }
 
+    public toDomainFromDtoigdtPdt(dto: readIngredienteDto): ingrediente {
+    const _ingrediente = new ingrediente();
+    _ingrediente.id = idVo.create(dto.id);
+    _ingrediente.nombre = stringVo.create(dto.nombre);
+    _ingrediente.unidad = stringVo.create(dto.unidad);
+
+    return _ingrediente;
+  }
+
   public updateDtotoDomain(
     idIngrediente: idIngredienteDto,
     updateIngrediente: updateIngredientelDto,

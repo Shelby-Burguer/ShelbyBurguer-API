@@ -14,10 +14,20 @@ import { responseDeleteIngredienteDto } from '../../application/dto/responseDele
 import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
 import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { productoEntity } from '../../infraestructure/orm/producto.orm';
+import { createIgdtPdtDto } from 'src/producto_combo/application/dto/createIgdtPdt.dto';
+import { igdt_pdtEntity } from '../../infraestructure/orm/igdt_pdt.orm';
+import { ingredienteDataMapper } from './ingrediente.mapper';
+import { productoDataMapper } from './producto.mapper';
 
 Injectable();
-export class productoDataMapper
+export class igdtPdtDataMapper
 {
+
+  constructor(
+    private readonly _mapperIngrediente: ingredienteDataMapper,
+        private readonly _mapperProducto: productoDataMapper,
+  ) {}
+
   public toDomain(entity: ingredienteEntity): ingrediente {
     const ingre = new ingrediente();
     ingre.id = idVo.create(entity.ingrediente_id);
@@ -28,18 +38,26 @@ export class productoDataMapper
     return ingre;
   }
 
-  public toDalEntityp(producto: createProductoDto): productoEntity {
-    const _productoEntity = new productoEntity();
+  public toDalEntity(igdtPdt: createIgdtPdtDto): igdt_pdtEntity {
+    const _igdtPdtEntity = new igdt_pdtEntity();
     
-    _productoEntity.producto_id =  idVo.create(new UniqueId().getId()).getId();
-    _productoEntity.nombre_producto = producto.nombre
-    _productoEntity.tipo_producto = producto.tipo
-    _productoEntity.costo_producto = producto.costo
+    _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
+    _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
+    _igdtPdtEntity.producto_id = igdtPdt.producto_id
+    const pruebaIngrediente = new ingredienteDataMapper
+    const test = igdtPdt.ingrediente?.map((dto: readIngredienteDto) => pruebaIngrediente.toDomainFromDtoigdtPdt(dto))
+  
+    _igdtPdtEntity.ingrediente = test?.map((domain: ingrediente) => pruebaIngrediente.toDalEntity(domain))
+  
 
-    return _productoEntity;
+    const pruebaProducto = new productoDataMapper
+    _igdtPdtEntity.producto = igdtPdt.producto?.map((coll: createProductoDto) => pruebaProducto.toDalEntity(coll))   
+
+    return _igdtPdtEntity;
   }
 
-    public toDalEntity(producto: createProductoDto): productoEntity {
+   /* public toDalEntity(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
     _productoEntity.producto_id = producto.id
     _productoEntity.nombre_producto = producto.nombre
@@ -47,7 +65,7 @@ export class productoDataMapper
     _productoEntity.costo_producto = producto.costo
 
     return _productoEntity;
-  }
+  }*/
 
     public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
@@ -57,15 +75,24 @@ export class productoDataMapper
     return ingreEntity;
   }
 
-  public toDto(_producto: productoEntity): createProductoDto {
-    const productoDto = new createProductoDto();
-    productoDto.id = _producto.producto_id;
-    productoDto.nombre = _producto.nombre_producto
-    productoDto.tipo = _producto.tipo_producto
-    productoDto.costo = _producto.costo_producto
+  public toDto(_igdtPdt: igdt_pdtEntity): createIgdtPdtDto {
+    const igdtPdtDto = new createIgdtPdtDto();
+    igdtPdtDto.id =  _igdtPdt.igdt_pdt_id
+    igdtPdtDto.cantidad = _igdtPdt.cantidad_igdt_pdt
+    igdtPdtDto.ingrediente_id = _igdtPdt.ingrediente_id
+    igdtPdtDto.producto_id = _igdtPdt.producto_id
+    
+    const pruebaIngrediente = new ingredienteDataMapper
+    console.log( _igdtPdt.ingrediente)
+    const test =  _igdtPdt.ingrediente?.map((coll: ingredienteEntity) => pruebaIngrediente.toDomain(coll))
+    
+    igdtPdtDto.ingrediente = test?.map((dto: ingrediente) => pruebaIngrediente.toDto(dto))
 
-
-    return productoDto; 
+    const pruebaProducto = new productoDataMapper
+    
+    igdtPdtDto.producto = _igdtPdt.producto?.map((coll: productoEntity) => pruebaProducto.toDto(coll))
+    
+    return igdtPdtDto; 
   }
 
     public toDtoImagen(ingredienteEntity: ingredienteEntity): createImagenIngredienteDto {

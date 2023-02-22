@@ -21,20 +21,20 @@ export class igdt_pdtEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
   cantidad_igdt_pdt: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   ingrediente_id: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   producto_id: string;
 
   @ManyToOne(() => ingredienteEntity, (ingrediente) => ingrediente.igdt_pdt, {
-    eager: true,
+    eager: true, cascade: true
   })
   @JoinColumn({ name: 'ingrediente_id' })
   ingrediente: ingredienteEntity[];
 
   @ManyToOne(() => productoEntity, (producto) => producto.igdt_pdt, {
-    eager: true,
+    eager: true, cascade: true
   })
   @JoinColumn({ name: 'producto_id' })
   producto: productoEntity[];

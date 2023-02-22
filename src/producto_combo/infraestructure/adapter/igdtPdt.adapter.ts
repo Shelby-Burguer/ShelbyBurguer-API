@@ -5,18 +5,20 @@ import { Repository, EntityRepository, getRepository } from 'typeorm';
 import { ingredienteEntity } from '../orm/ingrediente.orm';
 import { iProductoRepository } from '../../application/repository/producto.repository';
 import { productoEntity } from '../orm/producto.orm';
+import { iIgdtPdtRepository } from 'src/producto_combo/application/repository/igdtPdt.repository';
+import { igdt_pdtEntity } from '../orm/igdt_pdt.orm';
 
-@EntityRepository(ingredienteEntity)
+@EntityRepository(igdt_pdtEntity)
 @Injectable()
-export class productoPersisteceAdapter
-  extends Repository<ingredienteEntity>
-  implements iProductoRepository
+export class igdtPdtPersisteceAdapter
+  extends Repository<igdt_pdtEntity>
+  implements iIgdtPdtRepository
 {
 
-  async getAllProducto(): Promise<productoEntity[]> {
-    const productoRepository = getRepository(productoEntity);
-    const producto: productoEntity[] = await productoRepository.find();
-    return producto;
+  async getAllIgdtPdt(): Promise<igdt_pdtEntity[]> {
+    const igdtPdtRepository = getRepository(igdt_pdtEntity);
+    const igdtPdt: igdt_pdtEntity[] = await igdtPdtRepository.find({relations: ['ingrediente', 'producto'],});
+    return igdtPdt;
   }
 
     async getOneIngrediente(_ingredienteEntity: ingredienteEntity,): Promise<ingredienteEntity> {
@@ -25,18 +27,21 @@ export class productoPersisteceAdapter
     return ingrediente;
   }
 
-  async createProducto(
-    _productoEntity: productoEntity,
-  ): Promise<productoEntity> {
-    const productoRepository = getRepository(productoEntity);
-    const producto: productoEntity = await productoRepository.save({
-      producto_id: _productoEntity.producto_id,
-      nombre_producto: _productoEntity.nombre_producto,
-      tipo_producto: _productoEntity.tipo_producto,
-      costo_producto: _productoEntity.costo_producto
+  async createIgdtPdt(
+    _igdtPdtEntity: igdt_pdtEntity,
+  ): Promise<igdt_pdtEntity> {
+    console.log(_igdtPdtEntity)
+    const igdtPdtRepository = getRepository(igdt_pdtEntity);
+    const igdtPdt: igdt_pdtEntity = await igdtPdtRepository.save({
+      igdt_pdt_id: _igdtPdtEntity.igdt_pdt_id,
+      cantidad_igdt_pdt: _igdtPdtEntity.cantidad_igdt_pdt,
+      ingrediente_id: _igdtPdtEntity.ingrediente_id,
+      producto_id: _igdtPdtEntity.producto_id,
+      ingrediente: _igdtPdtEntity.ingrediente,
+      producto: _igdtPdtEntity.producto
     });
     
-    return producto;
+    return igdtPdt;
   }
 
 

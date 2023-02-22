@@ -20,29 +20,45 @@ import { createProductoHandler } from '../application/handler/createProducto.han
 import { productoDataMapper } from '../domain/mappers/producto.mapper';
 import { productoService } from '../application/service/producto.service';
 import { productoPersisteceAdapter } from './adapter/producto.adapter';
+import { allProductoHandler } from '../application/handler/readProducto.handler';
+import { deleteProductotHandler } from '../application/handler/deleteProducto.handler';
+import { updateProductoHandler } from '../application/handler/updateProducto.handler';
+import { igdtPdtController } from './controller/igdt_pdt.controller';
+import { createIgdtPdtHandler } from '../application/handler/createIgdtPdt.handler';
+import { igdtPdtService } from '../application/service/IgdtPdt.servicer';
+import { igdtPdtPersisteceAdapter } from './adapter/igdtPdt.adapter';
+import { igdtPdtDataMapper } from '../domain/mappers/igdtPdt.mapper';
+import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
 
 
 @Module({
-  controllers: [ingredienteController, productoController],
+  controllers: [ingredienteController, productoController, igdtPdtController],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,
+    igdtPdtDataMapper,
     ingredientePersisteceAdapter,
     ingredienteService,
     productoService,
+    igdtPdtService,
     allIngredienteHandler,
+    allProductoHandler,
+    deleteProductotHandler,
+    updateProductoHandler,
     createIngredientetHandler,
     updateIngredienteHandler,
     deleteIngredientetHandler,
+    createIgdtPdtHandler,
     createImagenIngredientetHandler,
     createProductoHandler,
-
+    allIgdtPdtHandler,
   ],
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([
       ingredientePersisteceAdapter,
       productoPersisteceAdapter,
+      igdtPdtPersisteceAdapter,
       ingredienteEntity,
       productoEntity,
       comboEntity,
