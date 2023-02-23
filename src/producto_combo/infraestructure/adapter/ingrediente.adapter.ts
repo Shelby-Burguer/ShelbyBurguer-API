@@ -30,6 +30,7 @@ export class ingredientePersisteceAdapter
       ingrediente_id: _ingredienteEntity.ingrediente_id,
       nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
       unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
+      objecturl_ingrediente: _ingredienteEntity.objecturl_ingrediente,
     });
     
     return ingrediente;

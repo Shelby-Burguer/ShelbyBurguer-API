@@ -41,6 +41,7 @@ export class productoDataMapper
 
     public toDalEntity(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
+    console.log('Que pasa aqui?', producto.id);
     _productoEntity.producto_id = producto.id
     _productoEntity.nombre_producto = producto.nombre
     _productoEntity.tipo_producto = producto.tipo

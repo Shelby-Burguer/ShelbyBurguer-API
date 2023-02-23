@@ -23,9 +23,9 @@ export class createIgdtPdtDto {
   producto_id: string;
 
   @Expose()
-  ingrediente: readIngredienteDto[];
+  ingrediente: readIngredienteDto;
 
   @Expose()
-  producto: createProductoDto[];
+  producto: createProductoDto;
 
 }

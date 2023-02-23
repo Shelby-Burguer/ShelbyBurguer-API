@@ -24,6 +24,9 @@ export class ingredienteEntity extends BaseEntity {
   unidad_ingrediente: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
+  objecturl_ingrediente: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
   nombre_imagen: string;
 
   @Column({

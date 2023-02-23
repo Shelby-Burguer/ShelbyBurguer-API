@@ -31,12 +31,12 @@ export class igdt_pdtEntity extends BaseEntity {
     eager: true, cascade: true
   })
   @JoinColumn({ name: 'ingrediente_id' })
-  ingrediente: ingredienteEntity[];
+  ingrediente: ingredienteEntity;
 
   @ManyToOne(() => productoEntity, (producto) => producto.igdt_pdt, {
     eager: true, cascade: true
   })
   @JoinColumn({ name: 'producto_id' })
-  producto: productoEntity[];
+  producto: productoEntity;
 
 }

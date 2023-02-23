@@ -29,9 +29,9 @@ export class productoEntity extends BaseEntity {
   costo_producto: string;
 
   @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.producto)
-  igdt_pdt: igdt_pdtEntity[];
+  igdt_pdt: igdt_pdtEntity;
 
   @OneToMany(() => pdt_cbEntity, (pdt_cb) => pdt_cb.producto)
-  pdt_cb: pdt_cbEntity[];
+  pdt_cb: pdt_cbEntity;
 
 }

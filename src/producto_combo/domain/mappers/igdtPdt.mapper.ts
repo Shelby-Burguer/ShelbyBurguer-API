@@ -42,17 +42,33 @@ export class igdtPdtDataMapper
     const _igdtPdtEntity = new igdt_pdtEntity();
     
     _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
-    _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
-    _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
-    _igdtPdtEntity.producto_id = igdtPdt.producto_id
-    const pruebaIngrediente = new ingredienteDataMapper
-    const test = igdtPdt.ingrediente?.map((dto: readIngredienteDto) => pruebaIngrediente.toDomainFromDtoigdtPdt(dto))
-  
-    _igdtPdtEntity.ingrediente = test?.map((domain: ingrediente) => pruebaIngrediente.toDalEntity(domain))
-  
+    
+    if (igdtPdt.cantidad){
+      _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    }
 
-    const pruebaProducto = new productoDataMapper
-    _igdtPdtEntity.producto = igdtPdt.producto?.map((coll: createProductoDto) => pruebaProducto.toDalEntity(coll))   
+    if (igdtPdt.ingrediente_id){
+      _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
+    }
+
+    if (igdtPdt.producto_id){
+      _igdtPdtEntity.producto_id = igdtPdt.producto_id
+    }
+    
+    if (igdtPdt.ingrediente){
+      _igdtPdtEntity.producto_id = igdtPdt.producto_id
+    }
+
+    if (igdtPdt.ingrediente){
+      const pruebaIngrediente = new ingredienteDataMapper
+      const test = pruebaIngrediente.toDomainFromDtoigdtPdt(igdtPdt.ingrediente);
+      _igdtPdtEntity.ingrediente =  pruebaIngrediente.toDalEntity(test);
+    }
+    
+    if (igdtPdt.producto){
+      const pruebaProducto = new productoDataMapper
+      _igdtPdtEntity.producto = pruebaProducto.toDalEntity(igdtPdt.producto);
+    }
 
     return _igdtPdtEntity;
   }
@@ -77,21 +93,38 @@ export class igdtPdtDataMapper
 
   public toDto(_igdtPdt: igdt_pdtEntity): createIgdtPdtDto {
     const igdtPdtDto = new createIgdtPdtDto();
-    igdtPdtDto.id =  _igdtPdt.igdt_pdt_id
-    igdtPdtDto.cantidad = _igdtPdt.cantidad_igdt_pdt
-    igdtPdtDto.ingrediente_id = _igdtPdt.ingrediente_id
-    igdtPdtDto.producto_id = _igdtPdt.producto_id
-    
-    const pruebaIngrediente = new ingredienteDataMapper
-    console.log( _igdtPdt.ingrediente)
-    const test =  _igdtPdt.ingrediente?.map((coll: ingredienteEntity) => pruebaIngrediente.toDomain(coll))
-    
-    igdtPdtDto.ingrediente = test?.map((dto: ingrediente) => pruebaIngrediente.toDto(dto))
 
-    const pruebaProducto = new productoDataMapper
+    if (_igdtPdt.igdt_pdt_id){
+      igdtPdtDto.id =  _igdtPdt.igdt_pdt_id
+    }
+
+    if (_igdtPdt.cantidad_igdt_pdt){
+      igdtPdtDto.cantidad = _igdtPdt.cantidad_igdt_pdt
+    }
     
-    igdtPdtDto.producto = _igdtPdt.producto?.map((coll: productoEntity) => pruebaProducto.toDto(coll))
+    if (_igdtPdt.ingrediente_id){
+      igdtPdtDto.ingrediente_id = _igdtPdt.ingrediente_id
+    }
     
+    if (_igdtPdt.producto_id){
+      igdtPdtDto.producto_id = _igdtPdt.producto_id
+    }
+    
+    if (_igdtPdt.producto_id){
+      igdtPdtDto.producto_id = _igdtPdt.producto_id
+    }
+  
+    if (_igdtPdt.ingrediente){
+      const pruebaIngrediente = new ingredienteDataMapper
+      const test = pruebaIngrediente.toDomain(_igdtPdt.ingrediente)
+      igdtPdtDto.ingrediente = pruebaIngrediente.toDto(test)
+    }
+    
+    if (_igdtPdt.producto){
+      const pruebaProducto = new productoDataMapper
+      igdtPdtDto.producto = pruebaProducto.toDto(_igdtPdt.producto)
+    }
+
     return igdtPdtDto; 
   }
 

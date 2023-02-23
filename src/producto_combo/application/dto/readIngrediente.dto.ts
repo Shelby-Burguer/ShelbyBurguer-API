@@ -17,6 +17,10 @@ export class readIngredienteDto {
 
   @Expose()
   @IsString()
+  objectURL: string;
+
+  @Expose()
+  @IsString()
   nombreImagen: string;
 
   @Expose()

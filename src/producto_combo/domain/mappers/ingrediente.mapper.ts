@@ -24,8 +24,10 @@ export class ingredienteDataMapper
     ingre.id = idVo.create(entity.ingrediente_id);
     ingre.nombre = stringVo.create(entity.nombre_ingrediente);
     ingre.unidad = stringVo.create(entity.unidad_ingrediente);
-    ingre.nombreImagen = entity.nombre_imagen
+    ingre.objectURL = entity.objecturl_ingrediente;
+    ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
+    console.log('hace algo',ingre);
     return ingre;
   }
 
@@ -34,7 +36,7 @@ export class ingredienteDataMapper
     ingreEntity.ingrediente_id = ingrediente.id.getId();
     ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
     ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
-
+    ingreEntity.objecturl_ingrediente = ingrediente.objectURL
     return ingreEntity;
   }
 
@@ -51,6 +53,7 @@ export class ingredienteDataMapper
     ingredienteDto.id = dto.id.getId();
     ingredienteDto.nombre = dto.nombre.getString();
     ingredienteDto.unidad = dto.unidad.getString();
+    ingredienteDto.objectURL = dto.objectURL
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
 
@@ -70,6 +73,7 @@ export class ingredienteDataMapper
     _ingrediente.id = idVo.create(new UniqueId().getId());
     _ingrediente.nombre = stringVo.create(dto.nombre);
     _ingrediente.unidad = stringVo.create(dto.unidad);
+    _ingrediente.objectURL = dto.objectURL
 
     return _ingrediente;
   }

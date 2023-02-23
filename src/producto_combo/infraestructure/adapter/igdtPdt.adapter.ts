@@ -37,8 +37,9 @@ export class igdtPdtPersisteceAdapter
       cantidad_igdt_pdt: _igdtPdtEntity.cantidad_igdt_pdt,
       ingrediente_id: _igdtPdtEntity.ingrediente_id,
       producto_id: _igdtPdtEntity.producto_id,
-      ingrediente: _igdtPdtEntity.ingrediente,
-      producto: _igdtPdtEntity.producto
+      /*ingrediente: _igdtPdtEntity.ingrediente,
+      producto: _igdtPdtEntity.producto*/
+      /*relations: ['ingrediente', 'producto'],*/
     });
     
     return igdtPdt;
