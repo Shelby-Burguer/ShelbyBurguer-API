@@ -26,35 +26,37 @@ import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { createIgdtPdtDto } from '../../application/dto/createIgdtPdt.dto';
 import { createIgdtPdtcommand } from '../command/createIgdtPdt.command';
 import { allIgdtPdtQuery } from '../queryBus/allIgdtPdt.Query';
+import { AllIgdtPdtIdQuery } from '../queryBus/AllIgdtPdtId.Query';
 
 @Controller('ingredienteProducto')
 export class igdtPdtController {
   constructor(
-    private readonly _ingredienteService: QueryBus,
+    private readonly _igdtPdtService: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
 
   @Get('/all')
   async getAllIgdtPdt(): Promise<createIgdtPdtDto[]> {
-    return this._ingredienteService.execute<
+    return this._igdtPdtService.execute<
       allIgdtPdtQuery,
       createIgdtPdtDto[]
     >(new allIgdtPdtQuery());
   }
 
   @Get('/all/:id')
-  async getOneIngrediente(
-   @Param() ingredienteId: idIngredienteDto,
-  ): Promise<readIngredienteDto[]> {
-    return this._ingredienteService.execute<
-      OneIngredienteQuery,
-      readIngredienteDto[]
-    >(new OneIngredienteQuery(ingredienteId));
+  async getAllIgdtPdtId(
+   @Param() ingredienteId: createIgdtPdtDto,
+  ): Promise<createIgdtPdtDto[]> {
+    return this._igdtPdtService.execute<
+      AllIgdtPdtIdQuery,
+      createIgdtPdtDto[]
+    >(new AllIgdtPdtIdQuery(ingredienteId));
   }
+
 
   @Post('/create')
   async create(
-    @Body() _createIgdtPdtDto: createIgdtPdtDto,
+    @Body() _createIgdtPdtDto: createIgdtPdtDto[],
   ): Promise<any>{
     return await this.commandBus.execute<
       createIgdtPdtcommand,

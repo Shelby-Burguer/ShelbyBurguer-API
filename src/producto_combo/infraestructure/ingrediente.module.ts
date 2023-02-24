@@ -29,6 +29,7 @@ import { igdtPdtService } from '../application/service/IgdtPdt.servicer';
 import { igdtPdtPersisteceAdapter } from './adapter/igdtPdt.adapter';
 import { igdtPdtDataMapper } from '../domain/mappers/igdtPdt.mapper';
 import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
+import { IgdtPdtIdHandler } from '../application/handler/readIgdtPdtId.handler';
 
 
 @Module({
@@ -52,6 +53,7 @@ import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
     createImagenIngredientetHandler,
     createProductoHandler,
     allIgdtPdtHandler,
+    IgdtPdtIdHandler,
   ],
   imports: [
     CqrsModule,

@@ -21,15 +21,19 @@ export class igdtPdtPersisteceAdapter
     return igdtPdt;
   }
 
-    async getOneIngrediente(_ingredienteEntity: ingredienteEntity,): Promise<ingredienteEntity> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne(_ingredienteEntity);
-    return ingrediente;
+    async getAllIgdtPdtid(_igdtPdtEntity: igdt_pdtEntity): Promise<igdt_pdtEntity[]> {
+    const igdtPdtRepository = getRepository(igdt_pdtEntity);
+    const igdtPdt: igdt_pdtEntity[] = await igdtPdtRepository.find({         
+        where: { producto_id:_igdtPdtEntity.igdt_pdt_id},
+        relations: ['ingrediente', 'producto']
+        });
+    console.log('test res', igdtPdt);
+    return igdtPdt;
   }
 
   async createIgdtPdt(
     _igdtPdtEntity: igdt_pdtEntity,
-  ): Promise<igdt_pdtEntity> {
+  ): Promise<string> {
     console.log(_igdtPdtEntity)
     const igdtPdtRepository = getRepository(igdt_pdtEntity);
     const igdtPdt: igdt_pdtEntity = await igdtPdtRepository.save({
@@ -41,8 +45,8 @@ export class igdtPdtPersisteceAdapter
       producto: _igdtPdtEntity.producto*/
       /*relations: ['ingrediente', 'producto'],*/
     });
-    
-    return igdtPdt;
+    let messageDelete: string = 'Eiminación realizada';
+    return messageDelete;
   }
 
 

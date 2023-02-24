@@ -21,10 +21,10 @@ export class createIgdtPdtHandler
 
   async execute({
     createIgdtPdtRequest,
-  }: createIgdtPdtcommand): Promise<createIgdtPdtDto> {
-    const igdtPdt: igdt_pdtEntity =
-      await this._productoService.createIgdtPdt(createIgdtPdtRequest);
-    
-    return this._mapper.toDto(igdtPdt);
+  }: createIgdtPdtcommand): Promise<any> {
+    const igdtPdt =
+      await this._productoService.createIgdtPdt(createIgdtPdtRequest)
+      
+    return igdtPdt;
   }
 }

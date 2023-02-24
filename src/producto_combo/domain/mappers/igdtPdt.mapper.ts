@@ -73,6 +73,39 @@ export class igdtPdtDataMapper
     return _igdtPdtEntity;
   }
 
+    public toDalEntitytest(igdtPdt: createIgdtPdtDto): igdt_pdtEntity {
+    const _igdtPdtEntity = new igdt_pdtEntity();
+    
+    if (igdtPdt.id){
+    _igdtPdtEntity.igdt_pdt_id =  igdtPdt.id
+    }
+
+    if (igdtPdt.cantidad){
+      _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    }
+
+    if (igdtPdt.ingrediente_id){
+      _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
+    }
+
+    if (igdtPdt.producto_id){
+      _igdtPdtEntity.producto_id = igdtPdt.producto_id
+    }
+    
+    if (igdtPdt.ingrediente){
+      const pruebaIngrediente = new ingredienteDataMapper
+      const test = pruebaIngrediente.toDomainFromDtoigdtPdt(igdtPdt.ingrediente);
+      _igdtPdtEntity.ingrediente =  pruebaIngrediente.toDalEntity(test);
+    }
+    
+    if (igdtPdt.producto){
+      const pruebaProducto = new productoDataMapper
+      _igdtPdtEntity.producto = pruebaProducto.toDalEntity(igdtPdt.producto);
+    }
+
+    return _igdtPdtEntity;
+  }
+
    /* public toDalEntity(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
     _productoEntity.producto_id = producto.id
@@ -163,10 +196,6 @@ export class igdtPdtDataMapper
     return _productoEntity;
   }
 
-  public toIdEntity(_idIngrediente: idIngrediente): ingredienteEntity {
-    const ingreEntity = new ingredienteEntity();
-    ingreEntity.ingrediente_id = _idIngrediente.id.getId();
-    return ingreEntity;
-  }
+
 
 }

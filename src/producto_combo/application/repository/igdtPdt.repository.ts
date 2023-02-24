@@ -5,8 +5,8 @@ import { createIgdtPdtDto } from '../dto/createIgdtPdt.dto';
 
 export interface iIgdtPdtRepository {
  getAllIgdtPdt(): Promise<igdt_pdtEntity[]>;
- getOneIngrediente(_ingrediente: ingredienteEntity): Promise<ingredienteEntity>;
- createIgdtPdt(_igdtPdt: igdt_pdtEntity): Promise<igdt_pdtEntity>;
+ getAllIgdtPdtid(_ingrediente: igdt_pdtEntity): Promise<igdt_pdtEntity[]>;
+ createIgdtPdt(_igdtPdt: igdt_pdtEntity): Promise<string>;
  createImagenIngrediente(_ingrediente: ingredienteEntity): Promise<ingredienteEntity>;
  updateProducto(_producto: productoEntity): Promise<productoEntity>;
  deleteProducto(_ingrediente: productoEntity): Promise<string>
