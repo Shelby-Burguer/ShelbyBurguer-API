@@ -27,7 +27,7 @@ export class ingredienteDataMapper
     ingre.objectURL = entity.objecturl_ingrediente;
     ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
-    console.log('hace algo',ingre);
+    ingre.proteina = entity.proteina_ingrediente
     return ingre;
   }
 
@@ -36,7 +36,9 @@ export class ingredienteDataMapper
     ingreEntity.ingrediente_id = ingrediente.id.getId();
     ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
     ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
-    ingreEntity.objecturl_ingrediente = ingrediente.objectURL
+    ingreEntity.objecturl_ingrediente = ingrediente.objectURL;
+    ingreEntity.proteina_ingrediente = ingrediente.proteina
+
     return ingreEntity;
   }
 
@@ -56,6 +58,7 @@ export class ingredienteDataMapper
     ingredienteDto.objectURL = dto.objectURL
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
+    ingredienteDto.proteina = dto.proteina;
 
     return ingredienteDto; 
   }

@@ -28,4 +28,8 @@ export class createIgdtPdtDto {
   @Expose()
   producto: createProductoDto;
 
+  @Expose()
+  @IsString()
+  proteina: string;
+
 }

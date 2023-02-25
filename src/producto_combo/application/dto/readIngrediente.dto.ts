@@ -26,4 +26,8 @@ export class readIngredienteDto {
   @Expose()
   @IsString()
   datosImagen: Uint8Array;
+
+  @Expose()
+  @IsString()
+  proteina: string;
 }

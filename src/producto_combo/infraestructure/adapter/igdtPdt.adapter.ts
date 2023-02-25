@@ -27,7 +27,6 @@ export class igdtPdtPersisteceAdapter
         where: { producto_id:_igdtPdtEntity.igdt_pdt_id},
         relations: ['ingrediente', 'producto']
         });
-    console.log('test res', igdtPdt);
     return igdtPdt;
   }
 

@@ -41,12 +41,11 @@ export class productoDataMapper
 
     public toDalEntity(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
-    console.log('Que pasa aqui?', producto.id);
     _productoEntity.producto_id = producto.id
     _productoEntity.nombre_producto = producto.nombre
     _productoEntity.tipo_producto = producto.tipo
     _productoEntity.costo_producto = producto.costo
-
+    _productoEntity.nombre_imagen = producto.imagen
     return _productoEntity;
   }
 
@@ -64,7 +63,7 @@ export class productoDataMapper
     productoDto.nombre = _producto.nombre_producto
     productoDto.tipo = _producto.tipo_producto
     productoDto.costo = _producto.costo_producto
-
+    productoDto.imagen = _producto.nombre_imagen
 
     return productoDto; 
   }

@@ -8,4 +8,5 @@ export class ingrediente {
   public objectURL: string;
   public nombreImagen: string;
   public datosImagen: Uint8Array;
+  public proteina: string;
 }

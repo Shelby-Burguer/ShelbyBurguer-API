@@ -34,6 +34,9 @@ export class ingredienteEntity extends BaseEntity {
   })
   datos_imagen: Uint8Array;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  proteina_ingrediente: string;
+
 
   @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.ingrediente)
   igdt_pdt: igdt_pdtEntity[];

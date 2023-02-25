@@ -20,4 +20,8 @@ export class createProductoDto {
   @IsString()
   costo: string;
 
+  @Expose()
+  @IsString()
+  imagen: string;
+
 }
