@@ -16,7 +16,6 @@ import { productoEntity } from '../../infraestructure/orm/producto.orm';
 import { productoDataMapper } from '../../domain/mappers/producto.mapper';
 import { productoPersisteceAdapter } from '../../infraestructure/adapter/producto.adapter';
 
-
 @Injectable()
 export class productoService {
   constructor(
@@ -26,18 +25,16 @@ export class productoService {
   ) {}
 
   async getAllProducto(): Promise<productoEntity[]> {
-    const productoEntity =
-      await this._iProductoRepository.getAllProducto();
+    const productoEntity = await this._iProductoRepository.getAllProducto();
     return productoEntity;
   }
 
-    async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
+  async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
     const IngredienteEntity: ingredienteEntity =
       await this._iProductoRepository.getOneIngrediente(
         this._mapper.toIdEntity(id),
       );
     return this._mapper.toDomain(IngredienteEntity);
-
   }
 
   async createProducto(producto: createProductoDto): Promise<productoEntity> {
@@ -48,7 +45,10 @@ export class productoService {
     return createdIngredienteEntity;
   }
 
-    async createImagenIngrediente(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto): Promise<any> {
+  async createImagenIngrediente(
+    imagenIngrediente: createImagenIngredienteDto,
+    idIngrediente: idIngredienteDto,
+  ): Promise<any> {
     const createdIngredienteEntity: ingredienteEntity =
       await this._iProductoRepository.createImagenIngrediente(
         this._mapper.toDalEntityImagen(imagenIngrediente, idIngrediente),

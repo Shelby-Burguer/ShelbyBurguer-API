@@ -14,9 +14,7 @@ export default class stringVo implements IValueObject {
 
   public static create(name: string) {
     if (name == undefined || name == null) {
-      throw new messageException(
-        'La casilla no puede estar vacia',
-      );
+      throw new messageException('La casilla no puede estar vacia');
     }
 
     return new stringVo(name);

@@ -13,11 +13,10 @@ import {
 import { igdt_pdtEntity } from './igdt_pdt.orm';
 import { pdt_cbEntity } from './pdt_cb.orm';
 
-
 @Entity('producto')
 export class productoEntity extends BaseEntity {
   @PrimaryColumn()
-   producto_id: string;
+  producto_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   nombre_producto: string;
@@ -36,5 +35,4 @@ export class productoEntity extends BaseEntity {
 
   @OneToMany(() => pdt_cbEntity, (pdt_cb) => pdt_cb.producto)
   pdt_cb: pdt_cbEntity;
-
 }
