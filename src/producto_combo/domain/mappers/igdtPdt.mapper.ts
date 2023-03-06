@@ -40,8 +40,11 @@ export class igdtPdtDataMapper
 
   public toDalEntity(igdtPdt: createIgdtPdtDto): igdt_pdtEntity {
     const _igdtPdtEntity = new igdt_pdtEntity();
+    console.log('Llegue aqui en mapper', igdtPdt);
+    if (igdtPdt.id == null){
+      _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
+    }
     
-    _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
     
     if (igdtPdt.cantidad){
       _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
@@ -52,10 +55,6 @@ export class igdtPdtDataMapper
     }
 
     if (igdtPdt.producto_id){
-      _igdtPdtEntity.producto_id = igdtPdt.producto_id
-    }
-    
-    if (igdtPdt.ingrediente){
       _igdtPdtEntity.producto_id = igdtPdt.producto_id
     }
 
@@ -70,6 +69,42 @@ export class igdtPdtDataMapper
       _igdtPdtEntity.producto = pruebaProducto.toDalEntity(igdtPdt.producto);
     }
 
+    console.log('Llegue aqui en Final mapper', _igdtPdtEntity);
+    return _igdtPdtEntity;
+  }
+
+    public toDalEntityUpdate(igdtPdt: createIgdtPdtDto): igdt_pdtEntity {
+    const _igdtPdtEntity = new igdt_pdtEntity();
+    console.log('Llegue aqui en mapper', igdtPdt);
+    if (igdtPdt.id == null){
+      _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
+    }
+    
+    
+    if (igdtPdt.cantidad){
+      _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    }
+
+    if (igdtPdt.ingrediente_id){
+      _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
+    }
+
+    if (igdtPdt.producto_id){
+      _igdtPdtEntity.producto_id = igdtPdt.producto_id
+    }
+
+    if (igdtPdt.ingrediente){
+      const pruebaIngrediente = new ingredienteDataMapper
+      const test = pruebaIngrediente.toDomainFromDtoigdtPdt(igdtPdt.ingrediente);
+      _igdtPdtEntity.ingrediente =  pruebaIngrediente.toDalEntity(test);
+    }
+    
+    if (igdtPdt.producto){
+      const pruebaProducto = new productoDataMapper
+      _igdtPdtEntity.producto = pruebaProducto.toDalEntity(igdtPdt.producto);
+    }
+
+    console.log('Llegue aqui en Final mapper', _igdtPdtEntity);
     return _igdtPdtEntity;
   }
 

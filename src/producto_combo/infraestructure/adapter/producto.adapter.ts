@@ -33,13 +33,14 @@ export class productoPersisteceAdapter
       producto_id: _productoEntity.producto_id,
       nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
-      costo_producto: _productoEntity.costo_producto
+      costo_producto: _productoEntity.costo_producto,
+      nombre_imagen: _productoEntity.nombre_imagen
     });
     
     return producto;
   }
 
-
+  
     async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {

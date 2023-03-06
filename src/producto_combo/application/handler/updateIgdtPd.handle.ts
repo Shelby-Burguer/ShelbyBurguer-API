@@ -2,11 +2,12 @@ import { ICommandHandler, CommandHandler } from '@nestjs/cqrs';
 import { createIgdtPdtcommand } from '../../infraestructure/command/createIgdtPdt.command';
 import { igdtPdtService } from '../service/IgdtPdt.servicer';
 import { igdtPdtDataMapper } from '../../domain/mappers/igdtPdt.mapper';
+import { updateIgdtPdtcommand } from '../../infraestructure/command/updateIgdtpdt.command';
 
 
-@CommandHandler(createIgdtPdtcommand)
-export class createIgdtPdtHandler
-  implements ICommandHandler<createIgdtPdtcommand>
+@CommandHandler(updateIgdtPdtcommand)
+export class updateIgdtPdtHandler
+  implements ICommandHandler<updateIgdtPdtcommand>
 {
   constructor(
     private readonly _productoService: igdtPdtService,
@@ -14,11 +15,12 @@ export class createIgdtPdtHandler
   ) {}
 
   async execute({
-    createIgdtPdtRequest,
-  }: createIgdtPdtcommand): Promise<any> {
+    updateProductoRequest,
+    updateIgdtPdtRequest,
+  }: updateIgdtPdtcommand) {
+  console.log('Handler update', updateProductoRequest, updateIgdtPdtRequest)
     const igdtPdt =
-    console.log('Handler', createIgdtPdtRequest)
-      await this._productoService.createIgdtPdt(createIgdtPdtRequest)
+      await this._productoService.updateIgdtPdt(updateProductoRequest, updateIgdtPdtRequest)
       
     return igdtPdt;
   }

@@ -19,16 +19,16 @@ export class productoEntity extends BaseEntity {
   @PrimaryColumn()
    producto_id: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   nombre_producto: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   tipo_producto: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   costo_producto: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   nombre_imagen: string;
 
   @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.producto)

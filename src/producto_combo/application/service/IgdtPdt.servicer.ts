@@ -20,7 +20,7 @@ import { igdtPdtDataMapper } from '../../domain/mappers/igdtPdt.mapper';
 import { igdt_pdtEntity } from '../../infraestructure/orm/igdt_pdt.orm';
 import { iIgdtPdtRepository } from '../repository/igdtPdt.repository';
 import { igdtPdtPersisteceAdapter } from '../../infraestructure/adapter/igdtPdt.adapter';
-
+import { updateIgdtPdtDto } from '../dto/updateIgftPdt.dto';
 
 @Injectable()
 export class igdtPdtService {
@@ -28,36 +28,42 @@ export class igdtPdtService {
     @InjectRepository(igdtPdtPersisteceAdapter)
     private readonly _iIgdtPdtRepository: iIgdtPdtRepository,
     private readonly _mapper: igdtPdtDataMapper,
+    private readonly _mapperP: productoDataMapper,
   ) {}
 
   async getAllIgdtPdt(): Promise<igdt_pdtEntity[]> {
-    const igdtPdtEntity =
-      await this._iIgdtPdtRepository.getAllIgdtPdt();
+    const igdtPdtEntity = await this._iIgdtPdtRepository.getAllIgdtPdt();
     return igdtPdtEntity;
   }
 
-    async getAllIgdtPdtid(id: createIgdtPdtDto): Promise<igdt_pdtEntity[]> {
+  async getAllIgdtPdtid(id: createIgdtPdtDto): Promise<igdt_pdtEntity[]> {
     const igdtPdtEntity: igdt_pdtEntity[] =
       await this._iIgdtPdtRepository.getAllIgdtPdtid(
         this._mapper.toDalEntitytest(id),
       );
-    const res: createIgdtPdtDto[] =
-    igdtPdtEntity.map((data: igdt_pdtEntity) => this._mapper.toDto(data));
+    const res: createIgdtPdtDto[] = igdtPdtEntity.map((data: igdt_pdtEntity) =>
+      this._mapper.toDto(data),
+    );
     return igdtPdtEntity;
-
   }
 
   async createIgdtPdt(igdtPdt: createIgdtPdtDto[]): Promise<string> {
-  const prueba = igdtPdt.map((test: createIgdtPdtDto) => this._mapper.toDalEntity(test))
-    const createdIngredienteEntity =
-      await prueba.map((test: igdt_pdtEntity) => this._iIgdtPdtRepository.createIgdtPdt(test) );
+    const prueba = igdtPdt.map((test: createIgdtPdtDto) =>
+      this._mapper.toDalEntity(test),
+    );
+    const createdIngredienteEntity = await prueba.map((test: igdt_pdtEntity) =>
+      this._iIgdtPdtRepository.createIgdtPdt(test),
+    );
 
-      let res: string;
-    createdIngredienteEntity[0].then((dato) => res = dato)
+    let res: string;
+    createdIngredienteEntity[0].then((dato) => (res = dato));
     return res;
   }
 
-    async createImagenIngrediente(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto): Promise<any> {
+  async createImagenIngrediente(
+    imagenIngrediente: createImagenIngredienteDto,
+    idIngrediente: idIngredienteDto,
+  ): Promise<any> {
     const createdIngredienteEntity: ingredienteEntity =
       await this._iIgdtPdtRepository.createImagenIngrediente(
         this._mapper.toDalEntityImagen(imagenIngrediente, idIngrediente),
@@ -65,10 +71,27 @@ export class igdtPdtService {
     return createdIngredienteEntity;
   }
 
-  async updateProducto(producto: productoEntity): Promise<productoEntity> {
-    const UpdateIngredienteEntity: productoEntity =
-      await this._iIgdtPdtRepository.updateProducto(producto);
-    return UpdateIngredienteEntity;
+  async updateIgdtPdt(productId: createProductoDto,  igdtPdtArray:updateIgdtPdtDto) {
+  
+    /*const _igdtPdtArray = igdtPdtArray.updateIgdtPdt.map((test: createIgdtPdtDto) =>
+      this._mapper.toDalEntity(igdtPdtArray.producto),
+    );
+
+    const _igdtPdtArray = this._mapper.toDalEntity(igdtPdtArray.updateIgdtPdt);*/
+
+
+    const _producto = this._mapperP.toDalEntity(igdtPdtArray.producto);
+  
+
+
+
+
+   const _productId = this._mapperP.toDalEntityp(productId)
+  console.log('Service _productId', _productId);
+
+    const createdIngredienteEntity = this._iIgdtPdtRepository.updateIgdtPdt(_productId, _producto, igdtPdtArray.updateIgdtPdt);
+
+
   }
 
   async deleteProducto(producto: createProductoDto): Promise<string> {

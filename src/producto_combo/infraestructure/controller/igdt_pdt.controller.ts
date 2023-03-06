@@ -27,6 +27,9 @@ import { createIgdtPdtDto } from '../../application/dto/createIgdtPdt.dto';
 import { createIgdtPdtcommand } from '../command/createIgdtPdt.command';
 import { allIgdtPdtQuery } from '../queryBus/allIgdtPdt.Query';
 import { AllIgdtPdtIdQuery } from '../queryBus/AllIgdtPdtId.Query';
+import { updateIgdtPdtcommand } from '../command/updateIgdtpdt.command';
+import { createProductoDto } from '../../application/dto/createProducto.dto';
+import { updateIgdtPdtDto } from 'src/producto_combo/application/dto/updateIgftPdt.dto';
 
 @Controller('ingredienteProducto')
 export class igdtPdtController {
@@ -64,13 +67,13 @@ export class igdtPdtController {
     >(new createIgdtPdtcommand(_createIgdtPdtDto));
   }
 
- @Patch('/update/:id')
+ @Put('/update/:id')
   async update(
-    @Param() ingredienteId: idIngredienteDto,
-    @Body() ingrediente: updateIngredientelDto,
-  ): Promise<any> {
-   return await  this.commandBus.execute<updateIngredientecommand,updateIngredientelDto>(
-      new updateIngredientecommand(ingrediente, ingredienteId),
+    @Param() productoId: createProductoDto,
+    @Body() _createIgdtPdtDto: updateIgdtPdtDto,
+  ) {
+   return await  this.commandBus.execute<updateIgdtPdtcommand,createIgdtPdtDto>(
+      new updateIgdtPdtcommand(productoId, _createIgdtPdtDto),
     );
   } 
 
