@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { LugarDto } from 'src/ordenar_pedidos/application/dto/lugar.dto';
-import { LugarService } from 'src/ordenar_pedidos/application/service/lugar.service';
+import { LugarService } from '../../../ordenar_pedidos/application/service/lugar.service';
 
 @Controller('lugares')
 export default class LugarController {
@@ -19,12 +19,12 @@ export default class LugarController {
     return await this.lugarService.findAll();
   }
 
-  @Get(':id')
+  @Get('id/:id')
   async findById(@Param('id') id: string): Promise<LugarDto> {
     return await this.lugarService.findById(id);
   }
 
-  @Get(':nombre')
+  @Get('nombre/:nombre')
   async findByNombre(@Param('nombre') nombre: string): Promise<LugarDto> {
     return await this.lugarService.findByNombre(nombre);
   }

@@ -15,7 +15,7 @@ import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
       //validationSchema: configValidationSchema,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ingredienteModule, ConfigModule],
+      imports: [ingredienteModule, ConfigModule, LugarModule],
       inject: [ConfigService],
       //entities: [],
       useFactory: async (configService: ConfigService) => {
