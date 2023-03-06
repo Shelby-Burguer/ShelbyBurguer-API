@@ -17,12 +17,16 @@ export class LugarRepositoryImpl implements ILugarRepository {
   }
 
   async findById(id: string): Promise<Lugar | undefined> {
-    const entity = await this.lugarRepository.findOne(id);
+    const entity = await this.lugarRepository.findOne({
+      where: { id_lugar: id },
+    });
     return LugarAdapter.toDomain(entity);
   }
 
   async findByNombre(nombre: string): Promise<Lugar | undefined> {
-    const entity = await this.lugarRepository.findOne(nombre);
+    const entity = await this.lugarRepository.findOne({
+      where: { nombre_lugar: nombre },
+    });
     return LugarAdapter.toDomain(entity);
   }
 

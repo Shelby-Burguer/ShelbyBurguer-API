@@ -30,13 +30,13 @@ export default class LugarController {
   }
 
   @Post()
-  async create(@Body() lugarDto: LugarDto): Promise<LugarDto> {
+  async create(@Body() lugarDto: LugarDto): Promise<void> {
     return await this.lugarService.create(lugarDto);
   }
 
   @Put(':id')
-  async update(@Body() lugarDto: LugarDto) {
-    return await this.lugarService.update(lugarDto);
+  async update(@Param('id') id: string, @Body() lugarDto: LugarDto) {
+    return await this.lugarService.update(id, lugarDto);
   }
 
   @Delete(':id')
