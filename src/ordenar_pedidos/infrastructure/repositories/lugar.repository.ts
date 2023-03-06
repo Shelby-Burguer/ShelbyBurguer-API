@@ -1,28 +1,39 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { Lugar } from 'src/ordenar_pedidos/domain/models/lugar';
-import { LugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar.repository.interface';
+import { ILugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar.repository.interface';
 import { Repository } from 'typeorm/repository/Repository';
+import LugarAdapter from '../adapters/lugar.adapter';
+import { LugarEntity } from '../entities/lugar.entity';
 
-export class LugarRepositoryImpl implements LugarRepository {
-  constructor(private readonly lugarRepository: Repository<Lugar>) {}
+export class LugarRepositoryImpl implements ILugarRepository {
+  constructor(
+    @InjectRepository(LugarEntity)
+    private readonly lugarRepository: Repository<LugarEntity>,
+  ) {}
+
+  async create(lugar: Lugar): Promise<void> {
+    const entity = LugarAdapter.toEntity(lugar);
+    await this.lugarRepository.save(entity);
+  }
 
   async findById(id: string): Promise<Lugar | undefined> {
-    return this.lugarRepository.findOne(id);
+    const entity = await this.lugarRepository.findOne(id);
+    return LugarAdapter.toDomain(entity);
   }
 
   async findByNombre(nombre: string): Promise<Lugar | undefined> {
-    return this.lugarRepository.findOne({ where: { nombre } });
+    const entity = await this.lugarRepository.findOne(nombre);
+    return LugarAdapter.toDomain(entity);
   }
 
   async findAll(): Promise<Lugar[]> {
-    return this.lugarRepository.find();
+    const entities = await this.lugarRepository.find();
+    return entities.map((entity) => LugarAdapter.toDomain(entity));
   }
 
-  async create(lugar: Lugar): Promise<Lugar> {
-    return this.lugarRepository.save(lugar);
-  }
-
-  async update(lugar: Lugar): Promise<Lugar> {
-    return this.lugarRepository.save(lugar);
+  async update(id: string, lugar: Lugar): Promise<void> {
+    const entity = LugarAdapter.toEntity(lugar);
+    await this.lugarRepository.update(id, entity);
   }
 
   async delete(id: string): Promise<void> {
