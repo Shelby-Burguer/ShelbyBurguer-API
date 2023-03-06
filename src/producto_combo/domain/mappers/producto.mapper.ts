@@ -15,8 +15,6 @@ import { createImagenIngredienteDto } from '../../application/dto/createImagenIn
 import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { productoEntity } from '../../infraestructure/orm/producto.orm';
 
-//import { readcreateCollectionDto } from '../../application/dto/createReadCollection.dto';
-
 Injectable();
 export class productoDataMapper
 {
@@ -32,22 +30,42 @@ export class productoDataMapper
 
   public toDalEntityp(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
+
+    if (producto.id){
+      _productoEntity.producto_id = producto.id
+    }else{
+      _productoEntity.producto_id =  idVo.create(new UniqueId().getId()).getId();
+    };
+
+    if (producto.nombre){
+      _productoEntity.nombre_producto = producto.nombre
+    }
     
-    _productoEntity.producto_id =  idVo.create(new UniqueId().getId()).getId();
-    _productoEntity.nombre_producto = producto.nombre
-    _productoEntity.tipo_producto = producto.tipo
-    _productoEntity.costo_producto = producto.costo
+    if (producto.tipo){
+      _productoEntity.tipo_producto = producto.tipo
+    }
+
+    if (producto.tipo){
+      _productoEntity.costo_producto = producto.costo
+    }
+
+    if (producto.tipo){
+      _productoEntity.nombre_imagen = producto.imagen
+    }
+
+    console.log('Llegue a producto',_productoEntity)
 
     return _productoEntity;
   }
 
-    public toDalEntity(ingrediente: ingrediente): ingredienteEntity {
-    const ingreEntity = new ingredienteEntity();
-    ingreEntity.ingrediente_id = ingrediente.id.getId();
-    ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
-    ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
-
-    return ingreEntity;
+    public toDalEntity(producto: createProductoDto): productoEntity {
+    const _productoEntity = new productoEntity();
+    _productoEntity.producto_id = producto.id
+    _productoEntity.nombre_producto = producto.nombre
+    _productoEntity.tipo_producto = producto.tipo
+    _productoEntity.costo_producto = producto.costo
+    _productoEntity.nombre_imagen = producto.imagen
+    return _productoEntity;
   }
 
     public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
@@ -64,7 +82,7 @@ export class productoDataMapper
     productoDto.nombre = _producto.nombre_producto
     productoDto.tipo = _producto.tipo_producto
     productoDto.costo = _producto.costo_producto
-
+    productoDto.imagen = _producto.nombre_imagen
 
     return productoDto; 
   }
@@ -86,53 +104,28 @@ export class productoDataMapper
     return _ingrediente;
   }
 
-  public updateDtotoDomain(
-    idIngrediente: idIngredienteDto,
-    updateIngrediente: updateIngredientelDto,
-  ): ingrediente {
-    const _ingrediente = new ingrediente();
-    _ingrediente.id = idVo.create(idIngrediente.id);
-    _ingrediente.nombre = stringVo.create(updateIngrediente.nombre);
-    _ingrediente.unidad = stringVo.create(updateIngrediente.unidad);
-    return _ingrediente;
+  public updateEntity(
+    updateProducto: createProductoDto,
+    idProducto: createProductoDto,
+  ): productoEntity {
+    const _producto = new productoEntity();
+    _producto.producto_id = idProducto.id
+    _producto.nombre_producto = updateProducto.nombre
+    _producto.tipo_producto = updateProducto.tipo
+    _producto.costo_producto = updateProducto.costo
+    return _producto;
   }
 
-  public deleteDtotoDomain(
-    idIngredienteDto: idIngredienteDto): idIngrediente {
-    const _idIngreidiente = new idIngrediente()
-    _idIngreidiente.id = idVo.create(idIngredienteDto.id);
-    return _idIngreidiente;
-  }
-
-  public deletetoDalEntity(ingrediente: idIngrediente): ingredienteEntity {
-    const _ingredienteEntity = new ingredienteEntity();
-    _ingredienteEntity.ingrediente_id = ingrediente.id.getId();
-    return _ingredienteEntity;
-  }
-  public todeleteDto(ingrediente: string): responseDeleteIngredienteDto {
-    const _ingredientedto = new responseDeleteIngredienteDto();
-    _ingredientedto.responseDelete = ingrediente;
-    return _ingredientedto;
+  public deletetoDalEntity(producto: createProductoDto): productoEntity {
+    const _productoEntity = new productoEntity();
+    _productoEntity.producto_id = producto.id;
+    return _productoEntity;
   }
 
   public toIdEntity(_idIngrediente: idIngrediente): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
     ingreEntity.ingrediente_id = _idIngrediente.id.getId();
     return ingreEntity;
-  }
-
-  public toDomainFromDtoid(dto: idIngredienteDto): ingrediente {
-    const _ingrediente = new ingrediente();
-    _ingrediente.id = idVo.create(dto.id);
-    return _ingrediente;
-  }
-
-    public toDtoId(dto: ingrediente): readIngredienteDto {
-    const ingredienteDto = new readIngredienteDto();
-    ingredienteDto.id = dto.id.getId();
-    ingredienteDto.nombre = dto.nombre.getString();
-    ingredienteDto.unidad = dto.unidad.getString();
-    return ingredienteDto;
   }
 
 }

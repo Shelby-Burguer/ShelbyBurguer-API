@@ -9,41 +9,41 @@ import {
   Patch,
   Delete,
 } from '@nestjs/common';
-import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
+
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { allIngredienteQuery } from '../queryBus/allIngredientesQuery';
-import { OneIngredienteQuery } from '../queryBus/oneIngrediente.Queryt';
 import { createProductoDto } from '../../application/dto/createProducto.dto';
-import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
 import { createProductocommand } from '../command/createProducto.command';
-import { createImagenIngredientecommand } from '../command/createImage.command';
 import { updateIngredientecommand } from '../command/updateIngrediente.command';
 import { deleteingredientecommand } from '../command/deleteIngrediente.comand';
 import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { allProductoQuery } from '../queryBus/allProductoQuery';
+import { deleteProductocommand } from '../command/deleteProducto.command';
+import { updateproductocommand } from '../command/updateProducto.command';
 
 @Controller('productos')
 export class productoController {
   constructor(
-    private readonly _ingredienteService: QueryBus,
+    private readonly queryBus: QueryBus,
     private readonly commandBus: CommandBus,
   ) {}
 
   @Get('/all')
-  async getAllIngrediente(): Promise<readIngredienteDto[]> {
-    return this._ingredienteService.execute<
-      allIngredienteQuery,
-      readIngredienteDto[]
-    >(new allIngredienteQuery());
+  async getAllProducto(): Promise<createProductoDto[]> {
+    return this.queryBus.execute<
+      allProductoQuery,
+      createProductoDto[]
+    >(new allProductoQuery());
   }
 /*
   @Get('/all/:id')
   async getOneIngrediente(
    @Param() ingredienteId: idIngredienteDto,
   ): Promise<readIngredienteDto[]> {
-    return this._ingredienteService.execute<
+    return this.queryBus.execute<
       OneIngredienteQuery,
       readIngredienteDto[]
     >(new OneIngredienteQuery(ingredienteId));
@@ -59,22 +59,22 @@ export class productoController {
     >(new createProductocommand(_createProductoDto));
   }
 
- @Patch('/update/:id')
+ @Put('/update/:id')
   async update(
-    @Param() ingredienteId: idIngredienteDto,
-    @Body() ingrediente: updateIngredientelDto,
+    @Param() ingredienteId: createProductoDto,
+    @Body() ingrediente: createProductoDto,
   ): Promise<any> {
-   return await  this.commandBus.execute<updateIngredientecommand,updateIngredientelDto>(
-      new updateIngredientecommand(ingrediente, ingredienteId),
+   return await  this.commandBus.execute<updateproductocommand,createProductoDto>(
+      new updateproductocommand(ingrediente, ingredienteId),
     );
   } 
 
   @Delete('/delete/:id')
   async delete(
-  @Param() ingredienteId: idIngredienteDto,
+  @Param() productoId: createProductoDto,
   ): Promise<any> {
-   return await  this.commandBus.execute<deleteingredientecommand,idIngredienteDto>(
-      new deleteingredientecommand(ingredienteId),
+   return await  this.commandBus.execute<deleteProductocommand,createProductoDto>(
+      new deleteProductocommand(productoId),
     );
   }
 

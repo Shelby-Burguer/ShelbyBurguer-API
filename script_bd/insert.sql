@@ -1,23 +1,23 @@
 INSERT INTO INGREDIENTE
-  (ingrediente_id,nombre_ingrediente,unidad_ingrediente,nombre_imagen,datos_imagen)
+  (ingrediente_id,nombre_ingrediente,unidad_ingrediente,objectURL_ingrediente,nombre_imagen,datos_imagen,proteina_ingrediente)
 VALUES
-  ('5c50768e-4524-4e37-9e33-926809f0b957','Tomate','Gramos',null, null),
-  ('fda6d542-2b31-4c2a-b54d-922068df57f4','Lechuga','Gramos',null, null),
-  ('50eb5311-c26f-4f09-a773-410e93c2a73a','Pan','Unidad',null, null),
-  ('15e6300c-2256-440a-adaa-56432c06cb2c','Carne','Unidad',null, null),
-  ('8ea16eda-75bc-433a-af5d-c0c91cb7020b','Queso','Onzas',null, null),
-  ('67d68a20-1b7d-47dd-bf25-67d10749a316','Cebolla','Gramos',null, null),
-  ('6685517f-28c7-4e8f-97fc-6381873fa953','Huevo','Unidad',null, null),
-  ('e2241593-117f-4611-80cd-ec839bc060eb','Pollo','unidad',null, null);
+  ('5c50768e-4524-4e37-9e33-926809f0b957','Tomate','Gramos',null,null, null,'No'),
+  ('fda6d542-2b31-4c2a-b54d-922068df57f4','Lechuga','Gramos',null,null, null,'No'),
+  ('50eb5311-c26f-4f09-a773-410e93c2a73a','Pan','Unidad',null,null, null,'No'),
+  ('15e6300c-2256-440a-adaa-56432c06cb2c','Carne','Unidad',null,null, null,'Si'),
+  ('8ea16eda-75bc-433a-af5d-c0c91cb7020b','Queso','Onzas',null,null, null,'No'),
+  ('67d68a20-1b7d-47dd-bf25-67d10749a316','Cebolla','Gramos',null,null, null,'No'),
+  ('6685517f-28c7-4e8f-97fc-6381873fa953','Huevo','Unidad',null,null, null,'No'),
+  ('e2241593-117f-4611-80cd-ec839bc060eb','Pollo','unidad',null,null, null,'Si');
   
 INSERT INTO PRODUCTO
-  (producto_id,nombre_producto)
+  (producto_id,nombre_producto,tipo_producto,costo_producto,nombre_imagen)
 VALUES
-  ('41feae1f-8693-447f-9cbc-7a7376cdb952','Hamburguesa Mixta'),
-  ('7311087b-66a2-4823-b2d0-f339025f5074','Hamburguesa Simple'),
-  ('34512c69-846c-452c-a614-4a188b2f4655','Papas fritas'),
-  ('028fe195-d3b5-478f-8b23-7b2c41be3f3f','Papas fritas con queso'),
-  ('d1d58dd1-6fb4-4c68-a9a0-bc3f5ebc6677','Hamburguesa de pollo');
+  ('41feae1f-8693-447f-9cbc-7a7376cdb952','Hamburguesa Mixta','Hamburguesa', '20','16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'),
+  ('7311087b-66a2-4823-b2d0-f339025f5074','Hamburguesa Simple','Hamburguesa', '20','16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'),
+  ('34512c69-846c-452c-a614-4a188b2f4655','Papas fritas','Hamburguesa', '20','16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'),
+  ('028fe195-d3b5-478f-8b23-7b2c41be3f3f','Papas fritas con queso','Hamburguesa', '20','16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'),
+  ('d1d58dd1-6fb4-4c68-a9a0-bc3f5ebc6677','Hamburguesa de pollo','Hamburguesa', '20','16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg');
 
 INSERT INTO COMBO
   (combo_id,nombre_combo,tiempo_aprox_preparacion_combo,precio_unitario_combo)

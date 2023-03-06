@@ -13,10 +13,10 @@ export class productoPersisteceAdapter
   implements iProductoRepository
 {
 
-  async getAllIngrediente(): Promise<ingredienteEntity[]> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    const ingrediente: ingredienteEntity[] = await ingredienteRepository.find();
-    return ingrediente;
+  async getAllProducto(): Promise<productoEntity[]> {
+    const productoRepository = getRepository(productoEntity);
+    const producto: productoEntity[] = await productoRepository.find();
+    return producto;
   }
 
     async getOneIngrediente(_ingredienteEntity: ingredienteEntity,): Promise<ingredienteEntity> {
@@ -33,13 +33,14 @@ export class productoPersisteceAdapter
       producto_id: _productoEntity.producto_id,
       nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
-      costo_producto: _productoEntity.costo_producto
+      costo_producto: _productoEntity.costo_producto,
+      nombre_imagen: _productoEntity.nombre_imagen
     });
     
     return producto;
   }
 
-
+  
     async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
@@ -57,24 +58,26 @@ export class productoPersisteceAdapter
     return ingrediente;
   }
 
-  async updateIngrediente(
-    _ingredienteEntity: ingredienteEntity,
-  ): Promise<ingredienteEntity> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    await ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
-      nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
-      unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
+  async updateProducto(
+    _productoEntity: productoEntity,
+  ): Promise<productoEntity> {
+    const productoRepository = getRepository(productoEntity);
+    await productoRepository.update(_productoEntity.producto_id, {
+      nombre_producto: _productoEntity.nombre_producto ,
+      tipo_producto: _productoEntity.tipo_producto,
+      costo_producto: _productoEntity.costo_producto
     });
 
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
-      ingrediente_id: _ingredienteEntity.ingrediente_id,
+    const ingrediente: productoEntity = await productoRepository.findOne({
+      producto_id: _productoEntity.producto_id,
     });
     return ingrediente;
   }
 
-  async deleteIngrediente(_ingredienteEntity: ingredienteEntity): Promise<any> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    await ingredienteRepository.delete(_ingredienteEntity.ingrediente_id);
+  async deleteProducto(_productoEntity: productoEntity): Promise<string> {
+    const ingredienteRepository = getRepository(productoEntity);
+    console.log(_productoEntity);
+    await ingredienteRepository.delete(_productoEntity.producto_id);
     let messageDelete: string = 'Eiminación realizada';
 
     return messageDelete;

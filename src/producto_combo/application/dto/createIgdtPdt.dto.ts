@@ -1,33 +1,35 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsString } from 'class-validator';
+import { createProductoDto } from './createProducto.dto';
+import { readIngredienteDto } from './readingrediente.dto';
 
 @Exclude()
-export class readIngredienteDto {
+export class createIgdtPdtDto {
+
   @Expose()
   @IsString()
   id: string;
 
   @Expose()
   @IsString()
-  nombre: string;
+  cantidad: string;
 
   @Expose()
   @IsString()
-  unidad: string;
+  ingrediente_id: string;
 
   @Expose()
   @IsString()
-  objectURL: string;
+  producto_id: string;
 
   @Expose()
-  @IsString()
-  nombreImagen: string;
+  ingrediente: readIngredienteDto;
 
   @Expose()
-  @IsString()
-  datosImagen: Uint8Array;
+  producto: createProductoDto;
 
   @Expose()
   @IsString()
   proteina: string;
+
 }

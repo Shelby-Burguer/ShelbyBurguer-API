@@ -25,12 +25,10 @@ export class productoService {
     private readonly _mapper: productoDataMapper,
   ) {}
 
-  async getAllIngrediente(): Promise<ingrediente[]> {
-    const ingredienteEntity =
-      await this._iProductoRepository.getAllIngrediente();
-    return ingredienteEntity.map((ingrediente: ingredienteEntity) =>
-      this._mapper.toDomain(ingrediente),
-    );
+  async getAllProducto(): Promise<productoEntity[]> {
+    const productoEntity =
+      await this._iProductoRepository.getAllProducto();
+    return productoEntity;
   }
 
     async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
@@ -47,7 +45,6 @@ export class productoService {
       await this._iProductoRepository.createProducto(
         this._mapper.toDalEntityp(producto),
       );
-    console.log('que te pasa baby', createdIngredienteEntity)
     return createdIngredienteEntity;
   }
 
@@ -59,18 +56,16 @@ export class productoService {
     return createdIngredienteEntity;
   }
 
-  async updateingrediente(ingrediente: ingrediente): Promise<ingrediente> {
-    const UpdateIngredienteEntity: ingredienteEntity =
-      await this._iProductoRepository.updateIngrediente(
-        this._mapper.toDalEntity(ingrediente),
-      );
-    return this._mapper.toDomain(UpdateIngredienteEntity);
+  async updateProducto(producto: productoEntity): Promise<productoEntity> {
+    const UpdateIngredienteEntity: productoEntity =
+      await this._iProductoRepository.updateProducto(producto);
+    return UpdateIngredienteEntity;
   }
 
-  async deleteIngrediente(ingrediente: idIngrediente): Promise<string> {
+  async deleteProducto(producto: createProductoDto): Promise<string> {
     const deleteIngredienteEntity: string =
-      await this._iProductoRepository.deleteIngrediente(
-        this._mapper.deletetoDalEntity(ingrediente),
+      await this._iProductoRepository.deleteProducto(
+        this._mapper.deletetoDalEntity(producto),
       );
     return deleteIngredienteEntity;
   }

@@ -24,8 +24,10 @@ export class ingredienteDataMapper
     ingre.id = idVo.create(entity.ingrediente_id);
     ingre.nombre = stringVo.create(entity.nombre_ingrediente);
     ingre.unidad = stringVo.create(entity.unidad_ingrediente);
+    ingre.objectURL = entity.objecturl_ingrediente;
     ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
+    ingre.proteina = entity.proteina_ingrediente
     return ingre;
   }
 
@@ -34,6 +36,8 @@ export class ingredienteDataMapper
     ingreEntity.ingrediente_id = ingrediente.id.getId();
     ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
     ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
+    ingreEntity.objecturl_ingrediente = ingrediente.objectURL;
+    ingreEntity.proteina_ingrediente = ingrediente.proteina
 
     return ingreEntity;
   }
@@ -54,8 +58,10 @@ export class ingredienteDataMapper
     ingredienteDto.id = dto.id.getId();
     ingredienteDto.nombre = dto.nombre.getString();
     ingredienteDto.unidad = dto.unidad.getString();
+    ingredienteDto.objectURL = dto.objectURL
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
+    ingredienteDto.proteina = dto.proteina;
 
     return ingredienteDto;
   }
@@ -73,6 +79,16 @@ export class ingredienteDataMapper
   public toDomainFromDto(dto: createIngredienteDto): ingrediente {
     const _ingrediente = new ingrediente();
     _ingrediente.id = idVo.create(new UniqueId().getId());
+    _ingrediente.nombre = stringVo.create(dto.nombre);
+    _ingrediente.unidad = stringVo.create(dto.unidad);
+    _ingrediente.objectURL = dto.objectURL
+
+    return _ingrediente;
+  }
+
+    public toDomainFromDtoigdtPdt(dto: readIngredienteDto): ingrediente {
+    const _ingrediente = new ingrediente();
+    _ingrediente.id = idVo.create(dto.id);
     _ingrediente.nombre = stringVo.create(dto.nombre);
     _ingrediente.unidad = stringVo.create(dto.unidad);
 
