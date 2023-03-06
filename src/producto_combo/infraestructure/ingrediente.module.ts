@@ -32,7 +32,6 @@ import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
 import { IgdtPdtIdHandler } from '../application/handler/readIgdtPdtId.handler';
 import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle';
 
-
 @Module({
   controllers: [ingredienteController, productoController, igdtPdtController],
   providers: [

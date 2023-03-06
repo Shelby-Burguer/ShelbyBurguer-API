@@ -22,9 +22,9 @@ export class productoPersisteceAdapter
     _ingredienteEntity: ingredienteEntity,
   ): Promise<ingredienteEntity> {
     const ingredienteRepository = getRepository(ingredienteEntity);
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne(
-      _ingredienteEntity,
-    );
+    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
+      where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
+    });
     return ingrediente;
   }
 
@@ -56,7 +56,7 @@ export class productoPersisteceAdapter
     );
 
     const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
-      ingrediente_id: _ingredienteEntity.ingrediente_id,
+      where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
     });
 
     return ingrediente;
@@ -73,7 +73,7 @@ export class productoPersisteceAdapter
     });
 
     const ingrediente: productoEntity = await productoRepository.findOne({
-      producto_id: _productoEntity.producto_id,
+      where: { producto_id: _productoEntity.producto_id },
     });
     return ingrediente;
   }
@@ -82,7 +82,7 @@ export class productoPersisteceAdapter
     const ingredienteRepository = getRepository(productoEntity);
     console.log(_productoEntity);
     await ingredienteRepository.delete(_productoEntity.producto_id);
-    let messageDelete: string = 'Eiminación realizada';
+    const messageDelete = 'Eiminación realizada';
 
     return messageDelete;
   }
