@@ -24,7 +24,7 @@ export class ingredienteDataMapper
     ingre.id = idVo.create(entity.ingrediente_id);
     ingre.nombre = stringVo.create(entity.nombre_ingrediente);
     ingre.unidad = stringVo.create(entity.unidad_ingrediente);
-    ingre.nombreImagen = entity.nombre_imagen
+    ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
     return ingre;
   }
@@ -38,7 +38,10 @@ export class ingredienteDataMapper
     return ingreEntity;
   }
 
-    public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
+  public toDalEntityImagen(
+    imagenIngrediente: createImagenIngredienteDto,
+    idIngrediente: idIngredienteDto,
+  ): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
     ingreEntity.ingrediente_id = idIngrediente.id;
     ingreEntity.nombre_imagen = imagenIngrediente.nombreImagen;
@@ -54,14 +57,16 @@ export class ingredienteDataMapper
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
 
-    return ingredienteDto; 
+    return ingredienteDto;
   }
 
-    public toDtoImagen(ingredienteEntity: ingredienteEntity): createImagenIngredienteDto {
+  public toDtoImagen(
+    ingredienteEntity: ingredienteEntity,
+  ): createImagenIngredienteDto {
     const ingredienteDto = new createImagenIngredienteDto();
 
-    ingredienteDto.nombreImagen = ingredienteEntity.nombre_imagen
-    ingredienteDto.datosImagen = ingredienteEntity.datos_imagen
+    ingredienteDto.nombreImagen = ingredienteEntity.nombre_imagen;
+    ingredienteDto.datosImagen = ingredienteEntity.datos_imagen;
     return ingredienteDto;
   }
 
@@ -85,9 +90,8 @@ export class ingredienteDataMapper
     return _ingrediente;
   }
 
-  public deleteDtotoDomain(
-    idIngredienteDto: idIngredienteDto): idIngrediente {
-    const _idIngreidiente = new idIngrediente()
+  public deleteDtotoDomain(idIngredienteDto: idIngredienteDto): idIngrediente {
+    const _idIngreidiente = new idIngrediente();
     _idIngreidiente.id = idVo.create(idIngredienteDto.id);
     return _idIngreidiente;
   }
@@ -115,12 +119,11 @@ export class ingredienteDataMapper
     return _ingrediente;
   }
 
-    public toDtoId(dto: ingrediente): readIngredienteDto {
+  public toDtoId(dto: ingrediente): readIngredienteDto {
     const ingredienteDto = new readIngredienteDto();
     ingredienteDto.id = dto.id.getId();
     ingredienteDto.nombre = dto.nombre.getString();
     ingredienteDto.unidad = dto.unidad.getString();
     return ingredienteDto;
   }
-
 }

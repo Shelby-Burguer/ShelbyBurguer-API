@@ -5,8 +5,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 //import { configValidationSchema } from './config/config.shema';
 import { CqrsModule } from '@nestjs/cqrs';
-import {ingredienteModule} from './producto_combo/infraestructure/ingrediente.module'
-
+import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.module';
 
 @Module({
   imports: [
@@ -15,7 +14,7 @@ import {ingredienteModule} from './producto_combo/infraestructure/ingrediente.mo
       //validationSchema: configValidationSchema,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ingredienteModule,ConfigModule],
+      imports: [ingredienteModule, ConfigModule],
       inject: [ConfigService],
       //entities: [],
       useFactory: async (configService: ConfigService) => {
@@ -47,4 +46,3 @@ import {ingredienteModule} from './producto_combo/infraestructure/ingrediente.mo
   providers: [AppService],
 })
 export class AppModule {}
-
