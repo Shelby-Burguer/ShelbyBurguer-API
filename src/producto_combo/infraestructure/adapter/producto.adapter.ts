@@ -12,16 +12,19 @@ export class productoPersisteceAdapter
   extends Repository<ingredienteEntity>
   implements iProductoRepository
 {
-
   async getAllProducto(): Promise<productoEntity[]> {
     const productoRepository = getRepository(productoEntity);
     const producto: productoEntity[] = await productoRepository.find();
     return producto;
   }
 
-    async getOneIngrediente(_ingredienteEntity: ingredienteEntity,): Promise<ingredienteEntity> {
+  async getOneIngrediente(
+    _ingredienteEntity: ingredienteEntity,
+  ): Promise<ingredienteEntity> {
     const ingredienteRepository = getRepository(ingredienteEntity);
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne(_ingredienteEntity);
+    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne(
+      _ingredienteEntity,
+    );
     return ingrediente;
   }
 
@@ -34,25 +37,26 @@ export class productoPersisteceAdapter
       nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
       costo_producto: _productoEntity.costo_producto,
-      nombre_imagen: _productoEntity.nombre_imagen
+      nombre_imagen: _productoEntity.nombre_imagen,
     });
-    
+
     return producto;
   }
 
-  
-    async createImagenIngrediente(
+  async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
     const ingredienteRepository = getRepository(ingredienteEntity);
-    const imagenIngrediente = await ingredienteRepository.update(_ingredienteEntity.ingrediente_id,{
-
-      nombre_imagen: _ingredienteEntity.nombre_imagen,
-      datos_imagen: _ingredienteEntity.datos_imagen,
-    });
+    const imagenIngrediente = await ingredienteRepository.update(
+      _ingredienteEntity.ingrediente_id,
+      {
+        nombre_imagen: _ingredienteEntity.nombre_imagen,
+        datos_imagen: _ingredienteEntity.datos_imagen,
+      },
+    );
 
     const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
-    ingrediente_id: _ingredienteEntity.ingrediente_id,
+      ingrediente_id: _ingredienteEntity.ingrediente_id,
     });
 
     return ingrediente;
@@ -63,9 +67,9 @@ export class productoPersisteceAdapter
   ): Promise<productoEntity> {
     const productoRepository = getRepository(productoEntity);
     await productoRepository.update(_productoEntity.producto_id, {
-      nombre_producto: _productoEntity.nombre_producto ,
+      nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
-      costo_producto: _productoEntity.costo_producto
+      costo_producto: _productoEntity.costo_producto,
     });
 
     const ingrediente: productoEntity = await productoRepository.findOne({
