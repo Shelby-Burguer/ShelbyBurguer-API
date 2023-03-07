@@ -1,38 +1,35 @@
-import { Injectable } from '@nestjs/common';
-//import { collectionEntity } from '../orm/collection.orm';
-import { iIngredienteRepository } from '../../application/repository/iIngrediente.repository';
-import { Repository, EntityRepository, getRepository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { ingredienteEntity } from '../orm/ingrediente.orm';
 import { iProductoRepository } from '../../application/repository/producto.repository';
 import { productoEntity } from '../orm/producto.orm';
+import { InjectRepository } from '@nestjs/typeorm';
 
-@EntityRepository(ingredienteEntity)
-@Injectable()
-export class productoPersisteceAdapter
-  extends Repository<ingredienteEntity>
-  implements iProductoRepository
-{
+export class productoPersisteceAdapter implements iProductoRepository {
+  constructor(
+    @InjectRepository(ingredienteEntity)
+    private readonly ingredienteRepository: Repository<ingredienteEntity>,
+    @InjectRepository(productoEntity)
+    private readonly productoRepository: Repository<productoEntity>,
+  ) {}
   async getAllProducto(): Promise<productoEntity[]> {
-    const productoRepository = getRepository(productoEntity);
-    const producto: productoEntity[] = await productoRepository.find();
+    const producto: productoEntity[] = await this.productoRepository.find();
     return producto;
   }
 
   async getOneIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<ingredienteEntity> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
-      where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
-    });
+    const ingrediente: ingredienteEntity =
+      await this.ingredienteRepository.findOne({
+        where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
+      });
     return ingrediente;
   }
 
   async createProducto(
     _productoEntity: productoEntity,
   ): Promise<productoEntity> {
-    const productoRepository = getRepository(productoEntity);
-    const producto: productoEntity = await productoRepository.save({
+    const producto: productoEntity = await this.productoRepository.save({
       producto_id: _productoEntity.producto_id,
       nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
@@ -46,18 +43,15 @@ export class productoPersisteceAdapter
   async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
-    const ingredienteRepository = getRepository(ingredienteEntity);
-    const imagenIngrediente = await ingredienteRepository.update(
-      _ingredienteEntity.ingrediente_id,
-      {
-        nombre_imagen: _ingredienteEntity.nombre_imagen,
-        datos_imagen: _ingredienteEntity.datos_imagen,
-      },
-    );
-
-    const ingrediente: ingredienteEntity = await ingredienteRepository.findOne({
-      where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
+    await this.ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
+      nombre_imagen: _ingredienteEntity.nombre_imagen,
+      datos_imagen: _ingredienteEntity.datos_imagen,
     });
+
+    const ingrediente: ingredienteEntity =
+      await this.ingredienteRepository.findOne({
+        where: { ingrediente_id: _ingredienteEntity.ingrediente_id },
+      });
 
     return ingrediente;
   }
@@ -65,23 +59,21 @@ export class productoPersisteceAdapter
   async updateProducto(
     _productoEntity: productoEntity,
   ): Promise<productoEntity> {
-    const productoRepository = getRepository(productoEntity);
-    await productoRepository.update(_productoEntity.producto_id, {
+    await this.productoRepository.update(_productoEntity.producto_id, {
       nombre_producto: _productoEntity.nombre_producto,
       tipo_producto: _productoEntity.tipo_producto,
       costo_producto: _productoEntity.costo_producto,
     });
 
-    const ingrediente: productoEntity = await productoRepository.findOne({
+    const ingrediente: productoEntity = await this.productoRepository.findOne({
       where: { producto_id: _productoEntity.producto_id },
     });
     return ingrediente;
   }
 
   async deleteProducto(_productoEntity: productoEntity): Promise<string> {
-    const ingredienteRepository = getRepository(productoEntity);
     console.log(_productoEntity);
-    await ingredienteRepository.delete(_productoEntity.producto_id);
+    await this.ingredienteRepository.delete(_productoEntity.producto_id);
     const messageDelete = 'Eiminación realizada';
 
     return messageDelete;

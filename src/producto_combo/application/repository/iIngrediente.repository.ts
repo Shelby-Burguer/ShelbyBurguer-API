@@ -1,5 +1,4 @@
 import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
-import { idIngrediente } from '../../domain/models/idIngrediente';
 export interface iIngredienteRepository {
   getAllIngrediente(): Promise<ingredienteEntity[]>;
   getOneIngrediente(

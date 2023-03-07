@@ -36,7 +36,6 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
   imports: [
     CqrsModule,
     TypeOrmModule.forFeature([
-      productoPersisteceAdapter,
       igdtPdtPersisteceAdapter,
       ingredienteEntity,
       productoEntity,
@@ -53,6 +52,10 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
     {
       provide: 'iIngredienteRepository',
       useClass: ingredientePersisteceAdapter,
+    },
+    {
+      provide: 'iProductoRepository',
+      useClass: productoPersisteceAdapter,
     },
     ingredienteService,
     productoService,

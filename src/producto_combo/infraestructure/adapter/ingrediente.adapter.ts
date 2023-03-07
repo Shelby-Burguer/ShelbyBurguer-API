@@ -1,4 +1,3 @@
-//import { collectionEntity } from '../orm/collection.orm';
 import { iIngredienteRepository } from '../../application/repository/iIngrediente.repository';
 import { Repository } from 'typeorm';
 import { ingredienteEntity } from '../orm/ingrediente.orm';
@@ -43,13 +42,10 @@ export class ingredientePersisteceAdapter implements iIngredienteRepository {
   async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
-    const imagenIngrediente = await this.ingredienteRepository.update(
-      _ingredienteEntity.ingrediente_id,
-      {
-        nombre_imagen: _ingredienteEntity.nombre_imagen,
-        datos_imagen: _ingredienteEntity.datos_imagen,
-      },
-    );
+    await this.ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
+      nombre_imagen: _ingredienteEntity.nombre_imagen,
+      datos_imagen: _ingredienteEntity.datos_imagen,
+    });
 
     const ingrediente: ingredienteEntity =
       await this.ingredienteRepository.findOne({

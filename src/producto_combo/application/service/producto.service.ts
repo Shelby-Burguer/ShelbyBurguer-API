@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ingrediente } from '../../domain/models/ingrediente';
 import { idIngrediente } from '../../domain/models/idIngrediente';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { createImagenIngredienteDto } from '../dto/createImagenIngrediente.dto';
@@ -9,12 +8,11 @@ import { createProductoDto } from '../dto/createProducto.dto';
 import { iProductoRepository } from '../repository/producto.repository';
 import { productoEntity } from '../../infraestructure/orm/producto.orm';
 import { productoDataMapper } from '../../domain/mappers/producto.mapper';
-import { productoPersisteceAdapter } from '../../infraestructure/adapter/producto.adapter';
 
 @Injectable()
 export class productoService {
   constructor(
-    @InjectRepository(productoPersisteceAdapter)
+    @Inject('iProductoRepository')
     private readonly _iProductoRepository: iProductoRepository,
     private readonly _mapper: productoDataMapper,
   ) {}
