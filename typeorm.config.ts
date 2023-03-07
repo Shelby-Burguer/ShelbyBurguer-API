@@ -3,7 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { config } from 'dotenv';
 import { LugarEntity } from './src/ordenar_pedidos/infrastructure/entities/lugar.entity';
 import { ClienteEntity } from './src/ordenar_pedidos/infrastructure/entities/cliente.entity';
-import { MigrationLugar1678136053882 } from './migrations/1678136053882-migration_lugar';
+import { comboEntity } from './src/producto_combo/infraestructure/orm/combo.orm';
+import { igdt_pdtEntity } from './src/producto_combo/infraestructure/orm/igdt_pdt.orm';
+import { ingredienteEntity } from './src/producto_combo/infraestructure/orm/ingrediente.orm';
+import { pdt_cbEntity } from './src/producto_combo/infraestructure/orm/pdt_cb.orm';
+import { productoEntity } from './src/producto_combo/infraestructure/orm/producto.orm';
+import { MigrationProductoYLugar1678210783717 } from './migrations/1678210783717-migr_producto_lugar';
 
 config();
 
@@ -16,6 +21,14 @@ export default new DataSource({
   username: configService.get('DB_USER'),
   password: configService.get('DB_PASSWORD'),
   database: configService.get('DB_DATABASE'),
-  entities: [LugarEntity, ClienteEntity],
-  migrations: [MigrationLugar1678136053882],
+  entities: [
+    LugarEntity,
+    ClienteEntity,
+    comboEntity,
+    igdt_pdtEntity,
+    ingredienteEntity,
+    pdt_cbEntity,
+    productoEntity,
+  ],
+  migrations: [MigrationProductoYLugar1678210783717],
 });
