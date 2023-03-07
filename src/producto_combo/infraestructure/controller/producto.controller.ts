@@ -5,21 +5,12 @@ import {
   Post,
   Param,
   Put,
-  ParseIntPipe,
-  Patch,
   Delete,
 } from '@nestjs/common';
 
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import { allIngredienteQuery } from '../queryBus/allIngredientesQuery';
 import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { createProductocommand } from '../command/createProducto.command';
-import { updateIngredientecommand } from '../command/updateIngrediente.command';
-import { deleteingredientecommand } from '../command/deleteIngrediente.comand';
-import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
-import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
-import { UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { allProductoQuery } from '../queryBus/allProductoQuery';
 import { deleteProductocommand } from '../command/deleteProducto.command';
 import { updateproductocommand } from '../command/updateProducto.command';

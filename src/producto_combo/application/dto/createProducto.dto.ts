@@ -3,7 +3,6 @@ import { IsString } from 'class-validator';
 
 @Exclude()
 export class createProductoDto {
-
   @Expose()
   @IsString()
   id: string;
@@ -23,5 +22,4 @@ export class createProductoDto {
   @Expose()
   @IsString()
   imagen: string;
-
 }
