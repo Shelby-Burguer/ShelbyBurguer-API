@@ -1,21 +1,16 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
-import { plainToClass } from 'class-transformer';
+import { Inject, Injectable } from '@nestjs/common';
 import { ingrediente } from '../../domain/models/ingrediente';
 import { idIngrediente } from '../../domain/models/idIngrediente';
-import { forwardRef } from '@nestjs/common';
 import { ingredienteDataMapper } from '../../domain/mappers/ingrediente.mapper';
-import { ingredientePersisteceAdapter } from '../../infraestructure/adapter/ingrediente.adapter';
-import { InjectRepository } from '@nestjs/typeorm';
 import { iIngredienteRepository } from '../repository/iIngrediente.repository';
 import { ingredienteEntity } from '../../infraestructure/orm/ingrediente.orm';
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { createImagenIngredienteDto } from '../dto/createImagenIngrediente.dto';
 
-
 @Injectable()
 export class ingredienteService {
   constructor(
-    @InjectRepository(ingredientePersisteceAdapter)
+    @Inject('iIngredienteRepository')
     private readonly _iIngredienteRepository: iIngredienteRepository,
     private readonly _mapper: ingredienteDataMapper,
   ) {}
@@ -28,13 +23,12 @@ export class ingredienteService {
     );
   }
 
-    async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
+  async getOneIngrediente(id: idIngrediente): Promise<ingrediente> {
     const IngredienteEntity: ingredienteEntity =
       await this._iIngredienteRepository.getOneIngrediente(
         this._mapper.toIdEntity(id),
       );
     return this._mapper.toDomain(IngredienteEntity);
-
   }
 
   async createIngrediente(ingrediente: ingrediente): Promise<ingrediente> {
@@ -45,7 +39,10 @@ export class ingredienteService {
     return this._mapper.toDomain(createdIngredienteEntity);
   }
 
-    async createImagenIngrediente(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto): Promise<any> {
+  async createImagenIngrediente(
+    imagenIngrediente: createImagenIngredienteDto,
+    idIngrediente: idIngredienteDto,
+  ): Promise<any> {
     const createdIngredienteEntity: ingredienteEntity =
       await this._iIngredienteRepository.createImagenIngrediente(
         this._mapper.toDalEntityImagen(imagenIngrediente, idIngrediente),
