@@ -5,23 +5,15 @@ import {
   Post,
   Param,
   Put,
-  ParseIntPipe,
-  Patch,
   Delete,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
-import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import { allIngredienteQuery } from '../queryBus/allIngredientesQuery';
-import { OneIngredienteQuery } from '../queryBus/oneIngrediente.Queryt';
-import { createIngredienteDto } from '../../application/dto/createIngrediente.dto';
 import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
-import { createIngredientecommand } from '../command/createIngrediente.command';
 import { createImagenIngredientecommand } from '../command/createImage.command';
-import { updateIngredientecommand } from '../command/updateIngrediente.command';
 import { deleteingredientecommand } from '../command/deleteIngrediente.comand';
-import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
-import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { createIgdtPdtDto } from '../../application/dto/createIgdtPdt.dto';
 import { createIgdtPdtcommand } from '../command/createIgdtPdt.command';
@@ -40,70 +32,60 @@ export class igdtPdtController {
 
   @Get('/all')
   async getAllIgdtPdt(): Promise<createIgdtPdtDto[]> {
-    return this._igdtPdtService.execute<
-      allIgdtPdtQuery,
-      createIgdtPdtDto[]
-    >(new allIgdtPdtQuery());
+    return this._igdtPdtService.execute<allIgdtPdtQuery, createIgdtPdtDto[]>(
+      new allIgdtPdtQuery(),
+    );
   }
 
   @Get('/all/:id')
   async getAllIgdtPdtId(
-   @Param() ingredienteId: createIgdtPdtDto,
+    @Param() ingredienteId: createIgdtPdtDto,
   ): Promise<createIgdtPdtDto[]> {
-    return this._igdtPdtService.execute<
-      AllIgdtPdtIdQuery,
-      createIgdtPdtDto[]
-    >(new AllIgdtPdtIdQuery(ingredienteId));
+    return this._igdtPdtService.execute<AllIgdtPdtIdQuery, createIgdtPdtDto[]>(
+      new AllIgdtPdtIdQuery(ingredienteId),
+    );
   }
 
-
   @Post('/create')
-  async create(
-    @Body() _createIgdtPdtDto: createIgdtPdtDto[],
-  ): Promise<any>{
+  async create(@Body() _createIgdtPdtDto: createIgdtPdtDto[]): Promise<any> {
     return await this.commandBus.execute<
       createIgdtPdtcommand,
       createIgdtPdtDto
     >(new createIgdtPdtcommand(_createIgdtPdtDto));
   }
 
- @Put('/update/:id')
+  @Put('/update/:id')
   async update(
     @Param() productoId: createProductoDto,
     @Body() _createIgdtPdtDto: updateIgdtPdtDto,
   ) {
-   return await  this.commandBus.execute<updateIgdtPdtcommand,createIgdtPdtDto>(
-      new updateIgdtPdtcommand(productoId, _createIgdtPdtDto),
-    );
-  } 
-
-  @Delete('/delete/:id')
-  async delete(
-  @Param() ingredienteId: idIngredienteDto,
-  ): Promise<any> {
-   return await  this.commandBus.execute<deleteingredientecommand,idIngredienteDto>(
-      new deleteingredientecommand(ingredienteId),
-    );
+    return await this.commandBus.execute<
+      updateIgdtPdtcommand,
+      createIgdtPdtDto
+    >(new updateIgdtPdtcommand(productoId, _createIgdtPdtDto));
   }
 
+  @Delete('/delete/:id')
+  async delete(@Param() ingredienteId: idIngredienteDto): Promise<any> {
+    return await this.commandBus.execute<
+      deleteingredientecommand,
+      idIngredienteDto
+    >(new deleteingredientecommand(ingredienteId));
+  }
 
- 
   @Put('/create/upload/:id')
-  @UseInterceptors( FileInterceptor('file'))
+  @UseInterceptors(FileInterceptor('file'))
   async upload(
     @Param() ingredienteId: idIngredienteDto,
-    @UploadedFile() file: Express.Multer.File
-  ): Promise<any>{
-
-
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<any> {
     const ImagenDto = new createImagenIngredienteDto();
     ImagenDto.nombreImagen = file.originalname;
     ImagenDto.datosImagen = file.buffer;
 
     return await this.commandBus.execute<
-    createImagenIngredientecommand,      
-    createImagenIngredienteDto
+      createImagenIngredientecommand,
+      createImagenIngredienteDto
     >(new createImagenIngredientecommand(ImagenDto, ingredienteId));
   }
-
 }

@@ -19,7 +19,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "typeorm": "ts-node ./node_modules/typeorm/cli",
+    "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./typeOrm.config.ts",
+    "typeorm:generate-migration": "npm run typeorm -- -d ./typeOrm.config.ts migration:generate ./migrations/$npm_config_name",
+    "typeorm:create-migration": "npm run typeorm -- migration:create ./migrations/$npm_config_name",
+    "typeorm:revert-migration": "npm run typeorm -- -d ./typeOrm.config.ts migration:revert"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -27,15 +32,16 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/cqrs": "^8.0.3",
     "@nestjs/platform-express": "^8.0.0",
-    "@nestjs/typeorm": "^8.0.3",
+    "@nestjs/typeorm": "^9.0.1",
     "class-transformer": "^0.4.0",
-    "class-validator": "^0.4.0",
-    "pg": "^8.8.0",
+    "class-validator": "^0.13.2",
+    "dotenv": "^16.0.3",
+    "pg": "^8.9.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "shallow-equal-object": "^1.1.1",
-    "typeorm": "^0.2.45"
+    "typeorm": "^0.3.12"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -59,8 +65,7 @@
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.0.0",
-    "typeorm-uml": "^1.6.5",
-    "typescript": "^4.3.5"
+    "typescript": "^4.9.5"
   },
   "jest": {
     "moduleFileExtensions": [

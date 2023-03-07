@@ -32,14 +32,34 @@ import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
 import { IgdtPdtIdHandler } from '../application/handler/readIgdtPdtId.handler';
 import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle';
 
-
 @Module({
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([
+      ingredienteEntity,
+      productoEntity,
+      comboEntity,
+      igdt_pdtEntity,
+      pdt_cbEntity,
+    ]),
+  ],
   controllers: [ingredienteController, productoController, igdtPdtController],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,
     igdtPdtDataMapper,
-    ingredientePersisteceAdapter,
+    {
+      provide: 'iIngredienteRepository',
+      useClass: ingredientePersisteceAdapter,
+    },
+    {
+      provide: 'iProductoRepository',
+      useClass: productoPersisteceAdapter,
+    },
+    {
+      provide: 'iIgdtPdtRepository',
+      useClass: igdtPdtPersisteceAdapter,
+    },
     ingredienteService,
     productoService,
     igdtPdtService,
@@ -56,19 +76,6 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
     allIgdtPdtHandler,
     IgdtPdtIdHandler,
     updateIgdtPdtHandler,
-  ],
-  imports: [
-    CqrsModule,
-    TypeOrmModule.forFeature([
-      ingredientePersisteceAdapter,
-      productoPersisteceAdapter,
-      igdtPdtPersisteceAdapter,
-      ingredienteEntity,
-      productoEntity,
-      comboEntity,
-      igdt_pdtEntity,
-      pdt_cbEntity,
-    ]),
   ],
 })
 export class ingredienteModule {}

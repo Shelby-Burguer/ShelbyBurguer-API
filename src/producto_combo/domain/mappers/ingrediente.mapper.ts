@@ -27,7 +27,7 @@ export class ingredienteDataMapper
     ingre.objectURL = entity.objecturl_ingrediente;
     ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
-    ingre.proteina = entity.proteina_ingrediente
+    ingre.proteina = entity.proteina_ingrediente;
     return ingre;
   }
 
@@ -37,7 +37,7 @@ export class ingredienteDataMapper
     ingreEntity.nombre_ingrediente = ingrediente.nombre.getString();
     ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
     ingreEntity.objecturl_ingrediente = ingrediente.objectURL;
-    ingreEntity.proteina_ingrediente = ingrediente.proteina
+    ingreEntity.proteina_ingrediente = ingrediente.proteina;
 
     return ingreEntity;
   }
@@ -58,7 +58,7 @@ export class ingredienteDataMapper
     ingredienteDto.id = dto.id.getId();
     ingredienteDto.nombre = dto.nombre.getString();
     ingredienteDto.unidad = dto.unidad.getString();
-    ingredienteDto.objectURL = dto.objectURL
+    ingredienteDto.objectURL = dto.objectURL;
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
     ingredienteDto.proteina = dto.proteina;
@@ -81,12 +81,12 @@ export class ingredienteDataMapper
     _ingrediente.id = idVo.create(new UniqueId().getId());
     _ingrediente.nombre = stringVo.create(dto.nombre);
     _ingrediente.unidad = stringVo.create(dto.unidad);
-    _ingrediente.objectURL = dto.objectURL
+    _ingrediente.objectURL = dto.objectURL;
 
     return _ingrediente;
   }
 
-    public toDomainFromDtoigdtPdt(dto: readIngredienteDto): ingrediente {
+  public toDomainFromDtoigdtPdt(dto: readIngredienteDto): ingrediente {
     const _ingrediente = new ingrediente();
     _ingrediente.id = idVo.create(dto.id);
     _ingrediente.nombre = stringVo.create(dto.nombre);

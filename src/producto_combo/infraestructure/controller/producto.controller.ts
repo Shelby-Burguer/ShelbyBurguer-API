@@ -5,21 +5,12 @@ import {
   Post,
   Param,
   Put,
-  ParseIntPipe,
-  Patch,
   Delete,
 } from '@nestjs/common';
 
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
-import { allIngredienteQuery } from '../queryBus/allIngredientesQuery';
 import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { createProductocommand } from '../command/createProducto.command';
-import { updateIngredientecommand } from '../command/updateIngrediente.command';
-import { deleteingredientecommand } from '../command/deleteIngrediente.comand';
-import { updateIngredientelDto } from '../../application/dto/updateIngrediente.dto';
-import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
-import { UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { allProductoQuery } from '../queryBus/allProductoQuery';
 import { deleteProductocommand } from '../command/deleteProducto.command';
 import { updateproductocommand } from '../command/updateProducto.command';
@@ -33,12 +24,11 @@ export class productoController {
 
   @Get('/all')
   async getAllProducto(): Promise<createProductoDto[]> {
-    return this.queryBus.execute<
-      allProductoQuery,
-      createProductoDto[]
-    >(new allProductoQuery());
+    return this.queryBus.execute<allProductoQuery, createProductoDto[]>(
+      new allProductoQuery(),
+    );
   }
-/*
+  /*
   @Get('/all/:id')
   async getOneIngrediente(
    @Param() ingredienteId: idIngredienteDto,
@@ -50,35 +40,33 @@ export class productoController {
   }
 */
   @Post('/create')
-  async create(
-    @Body() _createProductoDto: createProductoDto,
-  ): Promise<any>{
+  async create(@Body() _createProductoDto: createProductoDto): Promise<any> {
     return await this.commandBus.execute<
       createProductocommand,
       createProductoDto
     >(new createProductocommand(_createProductoDto));
   }
 
- @Put('/update/:id')
+  @Put('/update/:id')
   async update(
     @Param() ingredienteId: createProductoDto,
     @Body() ingrediente: createProductoDto,
   ): Promise<any> {
-   return await  this.commandBus.execute<updateproductocommand,createProductoDto>(
-      new updateproductocommand(ingrediente, ingredienteId),
-    );
-  } 
-
-  @Delete('/delete/:id')
-  async delete(
-  @Param() productoId: createProductoDto,
-  ): Promise<any> {
-   return await  this.commandBus.execute<deleteProductocommand,createProductoDto>(
-      new deleteProductocommand(productoId),
-    );
+    return await this.commandBus.execute<
+      updateproductocommand,
+      createProductoDto
+    >(new updateproductocommand(ingrediente, ingredienteId));
   }
 
-/*
+  @Delete('/delete/:id')
+  async delete(@Param() productoId: createProductoDto): Promise<any> {
+    return await this.commandBus.execute<
+      deleteProductocommand,
+      createProductoDto
+    >(new deleteProductocommand(productoId));
+  }
+
+  /*
   @Put('/create/upload/:id')
   @UseInterceptors( FileInterceptor('file'))
   async upload(
@@ -96,5 +84,4 @@ export class productoController {
     createImagenIngredienteDto
     >(new createImagenIngredientecommand(ImagenDto, ingredienteId));
   }*/
-
 }

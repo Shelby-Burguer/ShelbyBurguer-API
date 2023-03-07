@@ -16,14 +16,13 @@ import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { productoEntity } from '../../infraestructure/orm/producto.orm';
 
 Injectable();
-export class productoDataMapper
-{
+export class productoDataMapper {
   public toDomain(entity: ingredienteEntity): ingrediente {
     const ingre = new ingrediente();
     ingre.id = idVo.create(entity.ingrediente_id);
     ingre.nombre = stringVo.create(entity.nombre_ingrediente);
     ingre.unidad = stringVo.create(entity.unidad_ingrediente);
-    ingre.nombreImagen = entity.nombre_imagen
+    ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
     return ingre;
   }
@@ -31,44 +30,47 @@ export class productoDataMapper
   public toDalEntityp(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
 
-    if (producto.id){
-      _productoEntity.producto_id = producto.id
-    }else{
-      _productoEntity.producto_id =  idVo.create(new UniqueId().getId()).getId();
-    };
-
-    if (producto.nombre){
-      _productoEntity.nombre_producto = producto.nombre
-    }
-    
-    if (producto.tipo){
-      _productoEntity.tipo_producto = producto.tipo
+    if (producto.id) {
+      _productoEntity.producto_id = producto.id;
+    } else {
+      _productoEntity.producto_id = idVo.create(new UniqueId().getId()).getId();
     }
 
-    if (producto.tipo){
-      _productoEntity.costo_producto = producto.costo
+    if (producto.nombre) {
+      _productoEntity.nombre_producto = producto.nombre;
     }
 
-    if (producto.tipo){
-      _productoEntity.nombre_imagen = producto.imagen
+    if (producto.tipo) {
+      _productoEntity.tipo_producto = producto.tipo;
     }
 
-    console.log('Llegue a producto',_productoEntity)
+    if (producto.tipo) {
+      _productoEntity.costo_producto = producto.costo;
+    }
+
+    if (producto.tipo) {
+      _productoEntity.nombre_imagen = producto.imagen;
+    }
+
+    console.log('Llegue a producto', _productoEntity);
 
     return _productoEntity;
   }
 
-    public toDalEntity(producto: createProductoDto): productoEntity {
+  public toDalEntity(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
-    _productoEntity.producto_id = producto.id
-    _productoEntity.nombre_producto = producto.nombre
-    _productoEntity.tipo_producto = producto.tipo
-    _productoEntity.costo_producto = producto.costo
-    _productoEntity.nombre_imagen = producto.imagen
+    _productoEntity.producto_id = producto.id;
+    _productoEntity.nombre_producto = producto.nombre;
+    _productoEntity.tipo_producto = producto.tipo;
+    _productoEntity.costo_producto = producto.costo;
+    _productoEntity.nombre_imagen = producto.imagen;
     return _productoEntity;
   }
 
-    public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
+  public toDalEntityImagen(
+    imagenIngrediente: createImagenIngredienteDto,
+    idIngrediente: idIngredienteDto,
+  ): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
     ingreEntity.ingrediente_id = idIngrediente.id;
     ingreEntity.nombre_imagen = imagenIngrediente.nombreImagen;
@@ -79,19 +81,21 @@ export class productoDataMapper
   public toDto(_producto: productoEntity): createProductoDto {
     const productoDto = new createProductoDto();
     productoDto.id = _producto.producto_id;
-    productoDto.nombre = _producto.nombre_producto
-    productoDto.tipo = _producto.tipo_producto
-    productoDto.costo = _producto.costo_producto
-    productoDto.imagen = _producto.nombre_imagen
+    productoDto.nombre = _producto.nombre_producto;
+    productoDto.tipo = _producto.tipo_producto;
+    productoDto.costo = _producto.costo_producto;
+    productoDto.imagen = _producto.nombre_imagen;
 
-    return productoDto; 
+    return productoDto;
   }
 
-    public toDtoImagen(ingredienteEntity: ingredienteEntity): createImagenIngredienteDto {
+  public toDtoImagen(
+    ingredienteEntity: ingredienteEntity,
+  ): createImagenIngredienteDto {
     const ingredienteDto = new createImagenIngredienteDto();
 
-    ingredienteDto.nombreImagen = ingredienteEntity.nombre_imagen
-    ingredienteDto.datosImagen = ingredienteEntity.datos_imagen
+    ingredienteDto.nombreImagen = ingredienteEntity.nombre_imagen;
+    ingredienteDto.datosImagen = ingredienteEntity.datos_imagen;
     return ingredienteDto;
   }
 
@@ -109,10 +113,10 @@ export class productoDataMapper
     idProducto: createProductoDto,
   ): productoEntity {
     const _producto = new productoEntity();
-    _producto.producto_id = idProducto.id
-    _producto.nombre_producto = updateProducto.nombre
-    _producto.tipo_producto = updateProducto.tipo
-    _producto.costo_producto = updateProducto.costo
+    _producto.producto_id = idProducto.id;
+    _producto.nombre_producto = updateProducto.nombre;
+    _producto.tipo_producto = updateProducto.tipo;
+    _producto.costo_producto = updateProducto.costo;
     return _producto;
   }
 
@@ -127,5 +131,4 @@ export class productoDataMapper
     ingreEntity.ingrediente_id = _idIngrediente.id.getId();
     return ingreEntity;
   }
-
 }

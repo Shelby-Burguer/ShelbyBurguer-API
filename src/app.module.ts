@@ -1,11 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-//import { configValidationSchema } from './config/config.shema';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.module';
+import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
 
 @Module({
   imports: [
@@ -37,10 +37,11 @@ import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.
     }),
     CqrsModule,
     ingredienteModule,
-    /*collectionModule,
-    styleModule,
-    modelModule,
-    orderModule,*/
+    LugarModule,
+    // collectionModule,
+    // styleModule,
+    // modelModule,
+    // orderModule
   ],
   controllers: [AppController],
   providers: [AppService],

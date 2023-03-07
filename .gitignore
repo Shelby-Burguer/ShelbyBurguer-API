@@ -35,3 +35,4 @@ lerna-debug.log*
 
 # Environment variables
 .env
+/http_requests
