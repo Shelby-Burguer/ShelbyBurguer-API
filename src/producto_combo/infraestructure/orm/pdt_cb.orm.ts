@@ -3,11 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
   PrimaryColumn,
 } from 'typeorm';
 import { productoEntity } from './producto.orm';
@@ -16,7 +12,7 @@ import { comboEntity } from './combo.orm';
 @Entity('pdt_cb')
 export class pdt_cbEntity extends BaseEntity {
   @PrimaryColumn()
-   pdt_cd_id: string;
+  pdt_cd_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: false })
   cantidad_pdt_cb: string;
