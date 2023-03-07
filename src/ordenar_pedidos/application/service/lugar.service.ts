@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { Lugar } from 'src/ordenar_pedidos/domain/models/lugar';
-import { ILugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar.repository.interface';
+import { Inject, Injectable } from '@nestjs/common';
+import { Lugar } from '../../../ordenar_pedidos/domain/models/lugar';
+import { ILugarRepository } from '../../../ordenar_pedidos/domain/repositories/lugar-repository.interface';
 import { LugarDto } from '../dto/lugar.dto';
 import { LugarMapper } from '../mappers/lugar.mapper';
 
 @Injectable()
 export class LugarService {
   constructor(
-    private iLugarRepository: ILugarRepository,
+    @Inject('ILugarRepository')
+    private readonly iLugarRepository: ILugarRepository,
     private readonly _mapper: LugarMapper,
   ) {}
 
@@ -27,12 +28,12 @@ export class LugarService {
   }
 
   async create(lugarDTO: LugarDto): Promise<void> {
-    const lugar: Lugar = await this._mapper.toDomain(lugarDTO);
+    const lugar: Lugar = this._mapper.toDomain(lugarDTO);
     await this.iLugarRepository.create(lugar);
   }
 
   async update(id: string, lugarDTO: LugarDto): Promise<void> {
-    const lugar: Lugar = await this._mapper.toDomain(lugarDTO);
+    const lugar: Lugar = this._mapper.toDomain(lugarDTO);
     await this.iLugarRepository.update(id, lugar);
   }
 

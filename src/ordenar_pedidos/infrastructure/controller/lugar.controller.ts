@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { LugarDto } from 'src/ordenar_pedidos/application/dto/lugar.dto';
+import { LugarDto } from '../../../ordenar_pedidos/application/dto/lugar.dto';
 import { LugarService } from '../../../ordenar_pedidos/application/service/lugar.service';
 
 @Controller('lugares')

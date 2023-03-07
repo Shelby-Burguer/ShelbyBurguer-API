@@ -1,6 +1,6 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Lugar } from 'src/ordenar_pedidos/domain/models/lugar';
-import { ILugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar.repository.interface';
+import { ILugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar-repository.interface';
 import { Repository } from 'typeorm/repository/Repository';
 import LugarAdapter from '../adapters/lugar.adapter';
 import { LugarEntity } from '../entities/lugar.entity';

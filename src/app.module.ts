@@ -1,9 +1,8 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-//import { configValidationSchema } from './config/config.shema';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.module';
 import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
@@ -15,7 +14,7 @@ import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
       //validationSchema: configValidationSchema,
     }),
     TypeOrmModule.forRootAsync({
-      imports: [ingredienteModule, ConfigModule, LugarModule],
+      imports: [ingredienteModule, ConfigModule],
       inject: [ConfigService],
       //entities: [],
       useFactory: async (configService: ConfigService) => {

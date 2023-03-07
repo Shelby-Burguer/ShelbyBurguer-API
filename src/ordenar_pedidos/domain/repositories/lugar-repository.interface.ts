@@ -1,5 +1,3 @@
-// UserRepository.ts (Capa de dominio)
-
 import { Lugar } from '../models/lugar';
 
 export interface ILugarRepository {

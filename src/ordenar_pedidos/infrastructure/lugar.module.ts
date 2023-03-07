@@ -10,19 +10,18 @@ import { LugarEntity } from './entities/lugar.entity';
 import { LugarRepositoryImpl } from './repositories/lugar.repository';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([LugarEntity, LugarRepositoryImpl, ClienteEntity]),
-  ],
+  imports: [TypeOrmModule.forFeature([LugarEntity, ClienteEntity])],
   controllers: [LugarController],
   providers: [
-    {
-      provide: LugarService,
-      useValue: LugarRepositoryImpl,
-    },
+    LugarService,
     LugarMapper,
     LugarAdapter,
     LugarDto,
+    {
+      provide: 'ILugarRepository',
+      useClass: LugarRepositoryImpl,
+    },
   ],
-  exports: [LugarService],
+  exports: [],
 })
 export class LugarModule {}
