@@ -1,8 +1,10 @@
 import { Exclude, Expose } from 'class-transformer';
 import { IsNumber, IsString } from 'class-validator';
+import { createProductoDto } from './createProducto.dto';
+import { readIngredienteDto } from './readingrediente.dto';
 
 @Exclude()
-export class createProductoDto {
+export class createComboDto {
 
   @Expose()
   @IsString()
@@ -14,18 +16,13 @@ export class createProductoDto {
 
   @Expose()
   @IsString()
-  tipo: string;
+  precio_unitario: string;
 
   @Expose()
-  @IsString()
-  costo: string;
+  @IsNumber()
+  tiempo_aprox: string;
 
   @Expose()
-  @IsString()
-  imagen: string;
-  
-  @Expose()
-  @IsString()
-  cantidad: number;
+  producto: createProductoDto[];
 
 }

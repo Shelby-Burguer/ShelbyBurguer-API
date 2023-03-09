@@ -30,12 +30,12 @@ export class pdt_cbEntity extends BaseEntity {
   @ManyToOne(() => productoEntity, (producto) => producto.pdt_cb, {
     eager: true,
   })
-  @JoinColumn({ name: 'pdt_cd_id' })
+  @JoinColumn({ name: 'producto_id' })
   producto: productoEntity[];
 
   @ManyToOne(() => comboEntity, (combo) => combo.pdt_cb, {
     eager: true,
   })
-  @JoinColumn({ name: 'producto_id' })
+  @JoinColumn({ name: 'combo_id' })
   combo: comboEntity[];
 }
