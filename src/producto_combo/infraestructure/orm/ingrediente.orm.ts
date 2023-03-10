@@ -1,15 +1,4 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryGeneratedColumn,
-  PrimaryColumn,
-} from 'typeorm';
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { igdt_pdtEntity } from './igdt_pdt.orm';
 
 @Entity('ingrediente')
@@ -30,15 +19,14 @@ export class ingredienteEntity extends BaseEntity {
   nombre_imagen: string;
 
   @Column({
-    type: 'bytea', nullable: true
+    type: 'bytea',
+    nullable: true,
   })
   datos_imagen: Uint8Array;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   proteina_ingrediente: string;
 
-
   @OneToMany(() => igdt_pdtEntity, (igdt_pdt) => igdt_pdt.ingrediente)
   igdt_pdt: igdt_pdtEntity[];
-
 }

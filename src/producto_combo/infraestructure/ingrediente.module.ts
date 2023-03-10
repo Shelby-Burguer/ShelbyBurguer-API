@@ -35,14 +35,34 @@ import { comboController } from './controller/combo.controller';
 import { comboService } from '../application/service/combo.service';
 import { comboPersisteceAdapter } from './adapter/combo.adapter';
 
-
 @Module({
-  controllers: [ingredienteController, productoController, igdtPdtController, comboController],
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([
+      ingredienteEntity,
+      productoEntity,
+      comboEntity,
+      igdt_pdtEntity,
+      pdt_cbEntity,
+    ]),
+  ],
+  controllers: [ingredienteController, productoController, igdtPdtController],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,
     igdtPdtDataMapper,
-    ingredientePersisteceAdapter,
+    {
+      provide: 'iIngredienteRepository',
+      useClass: ingredientePersisteceAdapter,
+    },
+    {
+      provide: 'iProductoRepository',
+      useClass: productoPersisteceAdapter,
+    },
+    {
+      provide: 'iIgdtPdtRepository',
+      useClass: igdtPdtPersisteceAdapter,
+    },
     ingredienteService,
     productoService,
     igdtPdtService,
@@ -60,20 +80,6 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
     allIgdtPdtHandler,
     IgdtPdtIdHandler,
     updateIgdtPdtHandler,
-  ],
-  imports: [
-    CqrsModule,
-    TypeOrmModule.forFeature([
-      ingredientePersisteceAdapter,
-      productoPersisteceAdapter,
-      igdtPdtPersisteceAdapter,
-      comboPersisteceAdapter,
-      ingredienteEntity,
-      productoEntity,
-      comboEntity,
-      igdt_pdtEntity,
-      pdt_cbEntity,
-    ]),
   ],
 })
 export class ingredienteModule {}

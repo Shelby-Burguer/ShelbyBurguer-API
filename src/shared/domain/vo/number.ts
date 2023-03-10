@@ -1,5 +1,5 @@
 import { IValueObject } from '../IValueObjects';
-import messageException  from '../mesageExeptions';
+import messageException from '../mesageExeptions';
 
 export default class numberVo implements IValueObject {
   private constructor(readonly id: number) {}
@@ -14,9 +14,7 @@ export default class numberVo implements IValueObject {
 
   public static create(id: number) {
     if (id == undefined || id == null) {
-      throw new messageException(
-        'La casilla no puede estar vacia',
-      );
+      throw new messageException('La casilla no puede estar vacia');
     }
 
     return new numberVo(id);

@@ -5,7 +5,6 @@ import { readIngredienteDto } from './readingrediente.dto';
 
 @Exclude()
 export class createIgdtPdtDto {
-
   @Expose()
   @IsString()
   id: string;
@@ -31,5 +30,4 @@ export class createIgdtPdtDto {
   @Expose()
   @IsString()
   proteina: string;
-
 }
