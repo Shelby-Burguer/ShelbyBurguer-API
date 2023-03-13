@@ -46,7 +46,7 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
       pdt_cbEntity,
     ]),
   ],
-  controllers: [ingredienteController, productoController, igdtPdtController],
+  controllers: [ingredienteController, productoController, igdtPdtController, comboController],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,
@@ -62,6 +62,10 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
     {
       provide: 'iIgdtPdtRepository',
       useClass: igdtPdtPersisteceAdapter,
+    },
+    {
+      provide: 'icomboRepository',
+      useClass: comboPersisteceAdapter,
     },
     ingredienteService,
     productoService,

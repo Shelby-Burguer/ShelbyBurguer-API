@@ -22,14 +22,14 @@ import { iIgdtPdtRepository } from '../repository/igdtPdt.repository';
 import { igdtPdtPersisteceAdapter } from '../../infraestructure/adapter/igdtPdt.adapter';
 import { updateIgdtPdtDto } from '../dto/updateIgftPdt.dto';
 import { comboPersisteceAdapter } from '../../infraestructure/adapter/combo.adapter';
-import { comboRepository } from '../repository/combo.repository';
+import { icomboRepository } from '../repository/combo.repository';
 import { createComboDto } from '../dto/createCombo.dto';
 
 @Injectable()
 export class comboService {
   constructor(
-    @InjectRepository(comboPersisteceAdapter)
-    private readonly iCombo: comboRepository,
+    @Inject('icomboRepository')
+    private readonly iCombo: icomboRepository,
     private readonly _mapper: igdtPdtDataMapper,
     private readonly _mapperP: productoDataMapper,
   ) {}

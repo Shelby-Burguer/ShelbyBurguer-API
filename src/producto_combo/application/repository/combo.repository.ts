@@ -5,8 +5,8 @@ import { createComboDto } from '../dto/createCombo.dto';
 import { createIgdtPdtDto } from '../dto/createIgdtPdt.dto';
 import { createProductoDto } from '../dto/createProducto.dto';
 
-export interface comboRepository {
- getAllCombo(): Promise<any[]>;
- createCombo(combo: createComboDto): Promise<any[]>;
- deleteCombo(combo: createComboDto): Promise<any[]>;
+export interface icomboRepository {
+  getAllCombo(): Promise<any[]>;
+  createCombo(combo: createComboDto): Promise<any[]>;
+  deleteCombo(combo: createComboDto): Promise<any[]>;
 }
