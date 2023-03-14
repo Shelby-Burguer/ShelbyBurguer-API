@@ -6,35 +6,51 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
+import { ClienteDTO } from '../../../ordenar_pedidos/application/dto/cliente.dto';
+import { ClienteService } from '../../../ordenar_pedidos/application/service/cliente.service';
 
 @Controller('clientes')
 export default class ClienteController {
-  constructor(private readonly clienteService: any) {}
+  constructor(private readonly clienteService: ClienteService) {}
 
   @Get()
-  async findAll(): Promise<void> {
+  async findAll(): Promise<ClienteDTO[]> {
     return await this.clienteService.findAll();
   }
 
-  @Get(':id')
-  async findById(@Param('id') id: string): Promise<void> {
-    return await this.clienteService.findById(id);
+  @Get('id/:id')
+  async findById(@Param('id') id: string): Promise<ClienteDTO> {
+    return await this.clienteService.findByText(id, 'id_cliente');
   }
 
-  @Get(':nombre')
-  async findByNombre(@Param('nombre') nombre: string): Promise<void> {
-    return await this.clienteService.findByNombre(nombre);
+  @Get('cedula/:cedula')
+  async findByCedula(@Param('cedula') cedula: string): Promise<ClienteDTO> {
+    return await this.clienteService.findByText(cedula, 'cedula_cliente');
+  }
+
+  @Get('telefono/:telefono')
+  async findByTlf(@Param('telefono') telefono: string): Promise<ClienteDTO> {
+    return await this.clienteService.findByText(telefono, 'telefono_cliente');
+  }
+
+  @Get('/nombre-completo')
+  async findAllByNombreCompleto(
+    @Query('nombre') nombre: string,
+    @Query('apellido') apellido: string,
+  ): Promise<ClienteDTO[]> {
+    return await this.clienteService.findAllByNombreCompleto(nombre, apellido);
   }
 
   @Post()
-  async create(@Body() clienteDto: void): Promise<void> {
-    return await this.clienteService.create(clienteDto);
+  async create(@Body() clienteDTO: ClienteDTO): Promise<void> {
+    return await this.clienteService.create(clienteDTO);
   }
 
   @Put(':id')
-  async update(@Body() clienteDto: void) {
-    return await this.clienteService.update(clienteDto);
+  async update(@Param('id') id: string, @Body() clienteDTO: ClienteDTO) {
+    return await this.clienteService.update(id, clienteDTO);
   }
 
   @Delete(':id')

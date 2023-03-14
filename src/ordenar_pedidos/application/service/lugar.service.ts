@@ -27,6 +27,11 @@ export class LugarService {
     return this._mapper.toDto(lugar);
   }
 
+  async findAllByTipo(tipo: string): Promise<LugarDto[]> {
+    const lugares: Lugar[] = await this.iLugarRepository.findAllByTipo(tipo);
+    return lugares.map((lugar) => this._mapper.toDto(lugar));
+  }
+
   async create(lugarDTO: LugarDto): Promise<void> {
     const lugar: Lugar = this._mapper.toDomain(lugarDTO);
     await this.iLugarRepository.create(lugar);

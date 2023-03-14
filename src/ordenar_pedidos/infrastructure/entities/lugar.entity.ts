@@ -15,7 +15,7 @@ enum TipoLugar {
   Referencia = 'Referencia',
 }
 
-@Entity()
+@Entity('lugar')
 export class LugarEntity extends BaseEntity {
   @PrimaryColumn()
   id_lugar: string;
@@ -27,12 +27,15 @@ export class LugarEntity extends BaseEntity {
   tipo_lugar: string;
 
   @Column({ type: 'real', nullable: true })
-  precio: number;
+  precio_lugar: number;
+
+  @Column({ type: 'string', nullable: true })
+  id_padre_lugar: string;
 
   @OneToMany(() => ClienteEntity, (cliente) => cliente.lugar)
   clientes: ClienteEntity[];
 
-  @JoinColumn({ name: 'id_lugar_padre' })
+  @JoinColumn({ name: 'id_padre_lugar' })
   @ManyToOne(() => LugarEntity, (lugar) => lugar.lugaresHijos, {
     nullable: true,
   })

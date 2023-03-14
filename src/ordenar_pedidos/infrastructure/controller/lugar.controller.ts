@@ -29,6 +29,11 @@ export default class LugarController {
     return await this.lugarService.findByNombre(nombre);
   }
 
+  @Get('/:tipo')
+  async findByTipo(@Param('tipo') tipo: string): Promise<LugarDto[]> {
+    return await this.lugarService.findAllByTipo(tipo);
+  }
+
   @Post()
   async create(@Body() lugarDto: LugarDto): Promise<void> {
     return await this.lugarService.create(lugarDto);
