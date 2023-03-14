@@ -8,7 +8,7 @@ import { igdt_pdtEntity } from './src/producto_combo/infraestructure/orm/igdt_pd
 import { ingredienteEntity } from './src/producto_combo/infraestructure/orm/ingrediente.orm';
 import { pdt_cbEntity } from './src/producto_combo/infraestructure/orm/pdt_cb.orm';
 import { productoEntity } from './src/producto_combo/infraestructure/orm/producto.orm';
-import { MigrationProductoYLugar1678210783717 } from './migrations/1678210783717-migr_producto_lugar';
+import { migr_1678798365761 } from './migrations/1678798365761-migr_';
 
 config();
 
@@ -30,5 +30,5 @@ export default new DataSource({
     pdt_cbEntity,
     productoEntity,
   ],
-  migrations: [MigrationProductoYLugar1678210783717],
+  migrations: [migr_1678798365761],
 });

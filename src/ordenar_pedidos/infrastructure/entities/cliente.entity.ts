@@ -19,10 +19,10 @@ export class ClienteEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 20, nullable: false })
   nombre_cliente: string;
 
-  @Column({ type: 'varchar', length: 20, nullable: false })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   apellido_cliente: string;
 
-  @Column({ type: 'varchar', length: 11, nullable: false })
+  @Column({ type: 'varchar', length: 11, nullable: true })
   telefono_cliente: string;
 
   @Column({ type: 'string', nullable: true })
