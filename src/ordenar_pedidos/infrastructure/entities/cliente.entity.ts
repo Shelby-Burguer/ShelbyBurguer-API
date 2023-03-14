@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { LugarEntity } from './lugar.entity';
 
-@Entity()
+@Entity('cliente')
 export class ClienteEntity extends BaseEntity {
   @PrimaryColumn()
   id_cliente: string;
@@ -25,7 +25,12 @@ export class ClienteEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 11, nullable: false })
   telefono_cliente: string;
 
-  @ManyToOne(() => LugarEntity, (lugar) => lugar.clientes)
+  @Column({ type: 'string', nullable: true })
+  id_lugar_cliente: string;
+
   @JoinColumn({ name: 'id_lugar_cliente' })
+  @ManyToOne(() => LugarEntity, (lugar) => lugar.clientes, {
+    nullable: true,
+  })
   lugar: LugarEntity;
 }
