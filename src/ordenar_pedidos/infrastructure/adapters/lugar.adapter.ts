@@ -15,6 +15,12 @@ export default class LugarAdapter {
     return toEntity(lugar, LugarEntity);
   }
 
+  static toEntityForCreate(lugar: Lugar): LugarEntity {
+    const lugarEntity = toEntity(lugar, LugarEntity);
+    lugarEntity.id_lugar = lugar.id.getId(); // Aquí se transforma el Value Object a string
+    return lugarEntity;
+  }
+
   public static toDto(entity: LugarEntity): LugarDto {
     return plainToClass(LugarDto, toDTO(entity));
   }

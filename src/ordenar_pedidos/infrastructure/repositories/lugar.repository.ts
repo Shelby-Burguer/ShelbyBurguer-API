@@ -2,6 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Lugar } from 'src/ordenar_pedidos/domain/models/lugar';
 import { ILugarRepository } from 'src/ordenar_pedidos/domain/repositories/lugar-repository.interface';
 import { Repository } from 'typeorm/repository/Repository';
+import UniqueId from '../../../shared/domain/UniqueUUID';
+import idVo from '../../../shared/domain/vo/id';
 import LugarAdapter from '../adapters/lugar.adapter';
 import { LugarEntity } from '../entities/lugar.entity';
 
@@ -12,7 +14,8 @@ export class LugarRepositoryImpl implements ILugarRepository {
   ) {}
 
   async create(lugar: Lugar): Promise<void> {
-    const entity = LugarAdapter.toEntity(lugar);
+    lugar.id = idVo.create(new UniqueId().getId());
+    const entity = LugarAdapter.toEntityForCreate(lugar);
     await this.lugarRepository.save(entity);
   }
 
@@ -28,6 +31,14 @@ export class LugarRepositoryImpl implements ILugarRepository {
       where: { nombre_lugar: nombre },
     });
     return LugarAdapter.toDomain(entity);
+  }
+
+  async findAllByTipo(tipo: string): Promise<Lugar[] | undefined> {
+    const capTipo = tipo.charAt(0).toUpperCase() + tipo.slice(1);
+    const entities = await this.lugarRepository.find({
+      where: { tipo_lugar: capTipo },
+    });
+    return entities.map((entity) => LugarAdapter.toDomain(entity));
   }
 
   async findAll(): Promise<Lugar[]> {
