@@ -72,8 +72,7 @@ export class productoPersisteceAdapter implements iProductoRepository {
   }
 
   async deleteProducto(_productoEntity: productoEntity): Promise<string> {
-    console.log(_productoEntity);
-    await this.ingredienteRepository.delete(_productoEntity.producto_id);
+    await this.productoRepository.delete(_productoEntity.producto_id);
     const messageDelete = 'Eiminación realizada';
 
     return messageDelete;

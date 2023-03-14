@@ -31,6 +31,9 @@ import { igdtPdtDataMapper } from '../domain/mappers/igdtPdt.mapper';
 import { allIgdtPdtHandler } from '../application/handler/readIgdtPdt.handler';
 import { IgdtPdtIdHandler } from '../application/handler/readIgdtPdtId.handler';
 import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle';
+import { comboController } from './controller/combo.controller';
+import { comboService } from '../application/service/combo.service';
+import { comboPersisteceAdapter } from './adapter/combo.adapter';
 
 @Module({
   imports: [
@@ -43,7 +46,7 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
       pdt_cbEntity,
     ]),
   ],
-  controllers: [ingredienteController, productoController, igdtPdtController],
+  controllers: [ingredienteController, productoController, igdtPdtController, comboController],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,
@@ -60,9 +63,14 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
       provide: 'iIgdtPdtRepository',
       useClass: igdtPdtPersisteceAdapter,
     },
+    {
+      provide: 'icomboRepository',
+      useClass: comboPersisteceAdapter,
+    },
     ingredienteService,
     productoService,
     igdtPdtService,
+    comboService,
     allIngredienteHandler,
     allProductoHandler,
     deleteProductotHandler,

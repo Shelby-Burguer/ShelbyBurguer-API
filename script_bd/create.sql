@@ -39,7 +39,7 @@ create table PRODUCTO
      nombre_producto varchar(70) not null,
      tipo_producto varchar(70) not null,
      costo_producto varchar(70) not null,
-     nombre_imagen varchar(70) not null,
+     nombre_imagen varchar(70) null,
      constraint pk_producto_id primary key (producto_id) 	
 );
 
@@ -61,12 +61,32 @@ create table COMBO
      constraint pk_combo_id primary key (combo_id) 	
 );
 
+create table ORDEN
+(	 
+     orden_id  varchar(70) not null,
+     fecha_orden varchar(70) null,
+     hora_orden varchar(20) null,
+     numero_mesa varchar(10) null ,
+     descuento  varchar(70) null ,
+     tipo_orden varchar(70)  null,
+     constraint pk_orden_id primary key (orden_id)	
+);
+
+create table CARRITO
+(	 
+     carrito_id  varchar(70) not null,
+     producto_id varchar(70) null,
+     orden_id varchar(70) null,
+     constraint pk_orden primary key (carrito_id)
+);
+
+
 alter table IGDT_PDT
-    add constraint fk_id_igdt_pdt_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id),
-    add constraint fk_id_igdt_pdt_producto foreign key (producto_id) references PRODUCTO(producto_id)
+    add constraint fk_id_igdt_pdt_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id) ON DELETE CASCADE,
+    add constraint fk_id_igdt_pdt_producto foreign key (producto_id) references PRODUCTO(producto_id) ON DELETE CASCADE
 ;
 
 alter table PDT_CB
-    add constraint fk_id_igdt_pdt_ingrediente foreign key (producto_id) references PRODUCTO(producto_id),
-    add constraint fk_id_igdt_pdt_producto foreign key (combo_id) references COMBO(combo_id)
+    add constraint fk_id_igdt_pdt_ingrediente foreign key (producto_id) references PRODUCTO(producto_id) ON DELETE CASCADE,
+    add constraint fk_id_igdt_pdt_producto foreign key (combo_id) references COMBO(combo_id) ON DELETE CASCADE
 ;
