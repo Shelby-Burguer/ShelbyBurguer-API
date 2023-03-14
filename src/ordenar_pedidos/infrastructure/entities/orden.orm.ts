@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { pdt_cbEntity } from './pdt_cb.orm';
+import { pdt_cbEntity } from '../../../producto_combo/infraestructure/orm/pdt_cb.orm';
 
-@Entity('combo')
+@Entity('orden')
 export class OrdenEntity extends BaseEntity {
   @PrimaryColumn()
   orden_id: string;
@@ -20,5 +20,4 @@ export class OrdenEntity extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300, nullable: false })
   tipo_orden: string;
-
 }

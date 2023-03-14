@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.module';
 import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
+import { ordenModule } from './ordenar_pedidos/infrastructure/orden.module';
+import { carritoModule } from './ordenar_pedidos/infrastructure/carrito.module';
 
 @Module({
   imports: [
@@ -38,6 +40,8 @@ import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
     CqrsModule,
     ingredienteModule,
     LugarModule,
+    ordenModule,
+    carritoModule,
     // collectionModule,
     // styleModule,
     // modelModule,

@@ -1,7 +1,7 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { pdt_cbEntity } from './pdt_cb.orm';
+import { pdt_cbEntity } from '../../../producto_combo/infraestructure/orm/pdt_cb.orm';
 
-@Entity('combo')
+@Entity('carrito')
 export class carritoEntity extends BaseEntity {
   @PrimaryColumn()
   carrito_id: string;
