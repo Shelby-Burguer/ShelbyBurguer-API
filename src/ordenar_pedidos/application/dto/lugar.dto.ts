@@ -16,4 +16,9 @@ export class LugarDto {
   @IsNumber()
   @IsOptional()
   readonly precio: number;
+
+  @IsString()
+  readonly id_padre: string;
+
+  readonly lugar_padre: LugarDto;
 }
