@@ -1,3 +1,4 @@
+import { pdtcb_odEntity } from 'src/orden/infraestructure/entities/pdtcb_od.orm';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { pdt_cbEntity } from './pdt_cb.orm';
 
@@ -17,4 +18,7 @@ export class comboEntity extends BaseEntity {
 
   @OneToMany(() => pdt_cbEntity, (pdt_cb) => pdt_cb.combo)
   pdt_cb: pdt_cbEntity[];
+
+  @OneToMany(() => pdtcb_odEntity, (pdtcb_od) => pdtcb_od.combo)
+  pdtcb_od: pdt_cbEntity[];
 }

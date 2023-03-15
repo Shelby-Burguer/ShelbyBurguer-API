@@ -1,5 +1,4 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
-import { pdt_cbEntity } from '../../../producto_combo/infraestructure/orm/pdt_cb.orm';
 
 @Entity('orden')
 export class OrdenEntity extends BaseEntity {

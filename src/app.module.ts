@@ -6,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.module';
 import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
-import { ordenModule } from './ordenar_pedidos/infrastructure/orden.module';
-import { carritoModule } from './ordenar_pedidos/infrastructure/carrito.module';
+import { ordenModule } from './orden/infraestructure/orden.module';
+import { carritoModule } from './carrito/infraestructure/carrito.module';
 
 @Module({
   imports: [
