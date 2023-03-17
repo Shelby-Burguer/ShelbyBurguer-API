@@ -78,17 +78,16 @@ create table CARRITO
      constraint pk_orden primary key (carrito_id)
 );
 
-create table ORDEN
-(	 
-     orden_id  varchar(70) not null,
-     fecha_orden varchar(70) null,
-     hora_orden varchar(20) null,
-     numero_mesa varchar(10) null ,
-     descuento  varchar(70) null ,
-     tipo_orden varchar(70)  null,
-     constraint pk_orden_id primary key (orden_id)	
+CREATE TABLE ORDEN (
+  orden_id varchar(70) not null,
+  fecha_orden varchar(70) null,
+  hora_orden varchar(20) null,
+  numero_mesa varchar(10) null,
+  descuento varchar(70) null,
+  tipo_orden varchar(70) null,
+  numero_orden number not null,
+  constraint pk_orden_id primary key (orden_id)
 );
-
 
 
 alter table IGDT_PDT
