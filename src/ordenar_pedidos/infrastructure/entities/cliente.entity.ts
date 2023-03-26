@@ -1,3 +1,4 @@
+import { OrdenEntity } from 'src/orden/infraestructure/entities/orden.orm';
 import {
   Entity,
   Column,
@@ -5,6 +6,7 @@ import {
   PrimaryColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany
 } from 'typeorm';
 import { LugarEntity } from './lugar.entity';
 
@@ -33,4 +35,7 @@ export class ClienteEntity extends BaseEntity {
     nullable: true,
   })
   lugar: LugarEntity;
+
+ @OneToMany(() => OrdenEntity, (orden) => orden.lugar)
+  orden: OrdenEntity[];
 }

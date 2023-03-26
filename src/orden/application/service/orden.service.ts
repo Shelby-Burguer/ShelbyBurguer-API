@@ -35,6 +35,7 @@ export class ordenService {
   async procesarOrdenId(orderId: createOrdenIdDto, orden: OrdenDto): Promise<any[]> {
     const resOrden = await this.iOrden.procesarOrdenId(orderId, orden);
     return resOrden;
-  } 
+  }
+  
   
 }

@@ -20,5 +20,5 @@ export class comboEntity extends BaseEntity {
   pdt_cb: pdt_cbEntity[];
 
   @OneToMany(() => pdtcb_odEntity, (pdtcb_od) => pdtcb_od.combo)
-  pdtcb_od: pdt_cbEntity[];
+  pdtcb_od: pdtcb_odEntity[];
 }

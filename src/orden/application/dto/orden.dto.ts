@@ -31,4 +31,8 @@ export class OrdenDto {
   @IsString()
   numero_orden: string;
 
+  @Expose()
+  @IsString()
+  lugar_id: string;
+
 }

@@ -74,11 +74,21 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     const horaActual = new Date();
     const horaOrden = horaActual.toLocaleTimeString();
 
-    const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString() });
-
-    if (result.affected === 0) {
+    if(orden.numero_mesa){
+     const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.lugar_id, numero_mesa: orden.numero_mesa});
+    
+      if (result.affected === 0) {
         throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
+      }
+    } else {
+        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.lugar_id});
+
+        if (result.affected === 0) {
+            throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
+        }
     }
+
+
 
     return {};
 }
