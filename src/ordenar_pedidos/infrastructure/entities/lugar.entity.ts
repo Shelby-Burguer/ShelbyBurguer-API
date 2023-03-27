@@ -1,3 +1,4 @@
+
 import {
   Entity,
   Column,
@@ -8,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ClienteEntity } from './cliente.entity';
+import { orden_lugarEntity } from 'src/orden/infraestructure/entities/orden_lugar.orm';
 
 enum TipoLugar {
   Zona = 'Zona',
@@ -45,4 +47,7 @@ export class LugarEntity extends BaseEntity {
     nullable: true,
   })
   lugaresHijos: LugarEntity[];
+
+  @OneToMany(() => orden_lugarEntity, (orden_lugar) => orden_lugar.lugar)
+  orden_lugar: orden_lugarEntity[];
 }
