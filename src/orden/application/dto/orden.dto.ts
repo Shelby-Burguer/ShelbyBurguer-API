@@ -35,4 +35,12 @@ export class OrdenDto {
   @IsString()
   lugar_id: string;
 
+  @Expose()
+  @IsString()
+  cliente_id: string;
+
+  @Expose()
+  @IsString()
+  direccion: string;
+
 }
