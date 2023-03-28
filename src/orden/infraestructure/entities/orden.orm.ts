@@ -40,5 +40,5 @@ export class OrdenEntity extends BaseEntity {
     nullable: true,
   })
   @JoinColumn({ name: 'cliente_id' })
-  lugar: ClienteEntity;
+  cliente: ClienteEntity;
 }

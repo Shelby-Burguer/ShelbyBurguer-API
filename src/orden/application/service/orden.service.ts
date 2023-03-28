@@ -37,5 +37,9 @@ export class ordenService {
     return resOrden;
   }
   
+  async obtenerTodasLasOrdenesConDetalle(): Promise<any[]>{
+    const resOrden = await this.iOrden.obtenerTodasLasOrdenesConDetalle();
+    return resOrden;
+  }
   
 }

@@ -42,6 +42,11 @@ export class ordenController {
     return await this._ordenService.deleteOrderId(orderId);
   }
 
+  @Get('/All')
+  async getAllOrden(): Promise<any> {
+    return await this._ordenService.obtenerTodasLasOrdenesConDetalle();
+  }
+
   /*
   @Delete('/delete/:id')
   async delete(

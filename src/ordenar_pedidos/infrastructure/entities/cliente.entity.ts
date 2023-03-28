@@ -36,6 +36,6 @@ export class ClienteEntity extends BaseEntity {
   })
   lugar: LugarEntity;
 
- @OneToMany(() => OrdenEntity, (orden) => orden.lugar)
+ @OneToMany(() => OrdenEntity, (orden) => orden.cliente)
   orden: OrdenEntity[];
 }
