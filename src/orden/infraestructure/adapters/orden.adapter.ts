@@ -113,7 +113,6 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
         await this.ordenLugarRepository.save(ordenLugar);
 
       }
-
         if (result.affected === 0) {
             throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
         }
@@ -130,43 +129,51 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     return {};
 }
 
-  async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
-    const ordenes = await this.ordenRepository.find({
-      relations: ['cliente', 'orden_lugar', 'pdtcb_od', 'pdtcb_od.producto', 'pdtcb_od.combo'],
-    });
-    console.log('Vamo a ver que tal', ordenes);
-    
-    const resultado = ordenes.map((orden) => ({
-      orden_id: orden.orden_id,
-      fecha_orden: orden.fecha_orden,
-      hora_orden: orden.hora_orden,
-      numero_mesa: orden.numero_mesa,
-      descuento: orden.descuento,
-      tipo_orden: orden.tipo_orden,
-      numero_orden: orden.numero_orden,
-      cliente: {
-        id_cliente: orden.cliente.id_cliente,
-        cedula_cliente: orden.cliente.cedula_cliente,
-        nombre_cliente: orden.cliente.nombre_cliente,
-        apellido_cliente: orden.cliente.apellido_cliente,
-        telefono_cliente: orden.cliente.telefono_cliente,
-        lugar: orden.cliente.lugar,
+async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
+  const ordenes = await this.ordenRepository.find({
+    relations: ['cliente', 'orden_lugar', 'orden_lugar.lugar', 'orden_lugar.lugar.lugarPadre', 'pdtcb_od', 'pdtcb_od.producto', 'pdtcb_od.combo'],
+  });
+  console.log('Vamo a ver que tal', ordenes);
+  
+  const resultado = ordenes.map((orden) => ({
+    orden_id: orden.orden_id,
+    fecha_orden: orden.fecha_orden,
+    hora_orden: orden.hora_orden,
+    numero_mesa: orden.numero_mesa,
+    descuento: orden.descuento,
+    tipo_orden: orden.tipo_orden,
+    numero_orden: orden.numero_orden,
+    cliente: {
+      id_cliente: orden.cliente.id_cliente,
+      cedula_cliente: orden.cliente.cedula_cliente,
+      nombre_cliente: orden.cliente.nombre_cliente,
+      apellido_cliente: orden.cliente.apellido_cliente,
+      telefono_cliente: orden.cliente.telefono_cliente,
+      lugar: orden.cliente.lugar,
+    },
+    lugar: orden.orden_lugar.map((ordenLugar) => ({
+      orden_lugar_id: ordenLugar.orden_lugar_id,
+      lugar_id: ordenLugar.lugar_id,
+      lugar: {
+        lugar_id: ordenLugar.lugar.id_lugar,
+        nombre: ordenLugar.lugar.nombre_lugar,
+        lugarPadre: {
+          lugar_id: ordenLugar.lugar.lugarPadre?.id_lugar,
+          nombre: ordenLugar.lugar.lugarPadre?.nombre_lugar,
+        },
       },
-      lugar: orden.orden_lugar.map((ordenLugar) => ({
-        orden_lugar_id: ordenLugar.orden_lugar_id,
-        lugar_id: ordenLugar.lugar_id,
-        precio_historico: ordenLugar.precio_historico,
-      })),
-      productos: orden.pdtcb_od.map((productoOrden) => ({
-        pdtcb_od_id: productoOrden.pdtcb_od_id,
-        producto_id: productoOrden.producto?.producto_id,
-        producto_nombre: productoOrden.producto?.nombre_producto,
-        combo_id: productoOrden.combo?.combo_id,
-        combo_nombre: productoOrden.combo?.nombre_combo,
-      })),
-    }));
+      precio_historico: ordenLugar.precio_historico,
+    })),
+    productos: orden.pdtcb_od.map((productoOrden) => ({
+      pdtcb_od_id: productoOrden.pdtcb_od_id,
+      producto_id: productoOrden.producto?.producto_id,
+      producto_nombre: productoOrden.producto?.nombre_producto,
+      combo_id: productoOrden.combo?.combo_id,
+      combo_nombre: productoOrden.combo?.nombre_combo,
+    })),
+  }));
 
-    return resultado;
-  }
+  return resultado;
+}
 
 }
