@@ -10,9 +10,8 @@ import { pdt_cbEntity } from './src/producto_combo/infraestructure/orm/pdt_cb.or
 import { productoEntity } from './src/producto_combo/infraestructure/orm/producto.orm';
 import { OrdenEntity } from './src/orden/infraestructure/entities/orden.orm';
 import { pdtcb_odEntity } from './src/orden/infraestructure/entities/pdtcb_od.orm';
-import { migr_1678798365761 } from './migrations/1678798365761-migr_';
-
-
+import { migr_carrito_1678815849795 } from './migrations/1678815849795-migr_carrito';
+import { carritoEntity } from './src/carrito/infraestructure/entities/carrito.orm';
 
 config();
 
@@ -28,6 +27,8 @@ export default new DataSource({
   entities: [
     LugarEntity,
     ClienteEntity,
+    carritoEntity,
+    OrdenEntity,
     comboEntity,
     igdt_pdtEntity,
     ingredienteEntity,
@@ -36,5 +37,5 @@ export default new DataSource({
     OrdenEntity,
     pdtcb_odEntity,
   ],
-  migrations: [migr_1678798365761],
+  migrations: [migr_carrito_1678815849795],
 });
