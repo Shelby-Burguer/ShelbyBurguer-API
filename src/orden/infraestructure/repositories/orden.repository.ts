@@ -7,4 +7,5 @@ export interface iOrdenRepository {
   getOrderId(orderId: createOrdenIdDto): Promise<any[]>;
   procesarOrdenId(orderId: createOrdenIdDto, orden: OrdenDto): Promise<any>;
   deleteOrderId(orderId: createOrdenIdDto): Promise<any>;
+  obtenerTodasLasOrdenesConDetalle(): Promise<any[]>
 }

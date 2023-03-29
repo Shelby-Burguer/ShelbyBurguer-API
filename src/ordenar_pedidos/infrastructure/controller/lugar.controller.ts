@@ -36,6 +36,7 @@ export default class LugarController {
 
   @Post()
   async create(@Body() lugarDto: LugarDto): Promise<void> {
+    console.log('Llega bien la estructura?S', lugarDto);
     return await this.lugarService.create(lugarDto);
   }
 

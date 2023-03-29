@@ -1,5 +1,6 @@
 import { ClienteEntity } from 'src/ordenar_pedidos/infrastructure/entities/cliente.entity';
 import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { estado_ordenEntity } from './estado_orden.orm';
 import { orden_lugarEntity } from './orden_lugar.orm';
 import { pdtcb_odEntity } from './pdtcb_od.orm';
 
@@ -35,10 +36,13 @@ export class OrdenEntity extends BaseEntity {
   @OneToMany(() => orden_lugarEntity, (orden_lugar) => orden_lugar.orden)
   orden_lugar: orden_lugarEntity[];
 
+  @OneToMany(() => estado_ordenEntity, (estado_orden) => estado_orden.orden)
+  estado_orden: estado_ordenEntity[];
+
   @ManyToOne(() => ClienteEntity, (cliente) => cliente.orden, {
     eager: true,
     nullable: true,
   })
   @JoinColumn({ name: 'cliente_id' })
-  lugar: ClienteEntity;
+  cliente: ClienteEntity;
 }
