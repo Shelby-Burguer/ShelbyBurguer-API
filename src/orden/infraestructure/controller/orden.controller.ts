@@ -47,6 +47,11 @@ export class ordenController {
     return await this._ordenService.obtenerTodasLasOrdenesConDetalle();
   }
 
+    @Get('/estados/All')
+  async getAllEstados(): Promise<any> {
+    return await this._ordenService.getEstados();
+  }
+
   /*
   @Delete('/delete/:id')
   async delete(
