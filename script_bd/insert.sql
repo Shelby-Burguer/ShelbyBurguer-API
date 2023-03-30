@@ -9,6 +9,15 @@ VALUES
   ('67d68a20-1b7d-47dd-bf25-67d10749a316','Cebolla','Gramos',null,null, null,'No'),
   ('6685517f-28c7-4e8f-97fc-6381873fa953','Huevo','Unidad',null,null, null,'No'),
   ('e2241593-117f-4611-80cd-ec839bc060eb','Pollo','unidad',null,null, null,'Si');
+
+INSERT INTO estado
+  (estado_id, nombre_estado)
+VALUES
+  ('137d5ed8-0845-437d-85fe-11503254c0b4','En proceso'),
+  ('3226cb55-f1b1-44d6-b66f-0c30c2c928cb','Cancelado'),
+  ('e9272c77-8204-49a2-86d0-8ebbde572d66','Terminado'),
+  ('60d50c1c-6da9-4ab2-b464-0bf2477a5ed8','En camino'),
+  ('72f0eb68-4ce3-4f9f-a2bb-6df9244ba391','Entregado');
   
 INSERT INTO PRODUCTO
   (producto_id,nombre_producto,tipo_producto,costo_producto,nombre_imagen)
