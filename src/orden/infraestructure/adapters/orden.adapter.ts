@@ -9,6 +9,8 @@ import { pdtcb_odEntity } from '../entities/pdtcb_od.orm';
 import { OrdenDto } from 'src/orden/application/dto/orden.dto';
 import { LugarEntity } from 'src/ordenar_pedidos/infrastructure/entities/lugar.entity';
 import { orden_lugarEntity } from '../entities/orden_lugar.orm';
+import { estadoEntity } from '../entities/estado.orm';
+import { estado_ordenEntity } from '../entities/estado_orden.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -21,6 +23,10 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     private readonly lugarRepository: Repository<LugarEntity>,
     @InjectRepository(orden_lugarEntity)
     private readonly ordenLugarRepository: Repository<orden_lugarEntity>,
+    @InjectRepository(estadoEntity)
+    private readonly estadoRepository: Repository<estadoEntity>,
+    @InjectRepository(estado_ordenEntity)
+    private readonly estadoOrdenRepository: Repository<estadoEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -124,16 +130,47 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
         }
     }
 
+    const estadoProceso = await this.estadoRepository.findOne({
+      where: { nombre_estado: 'En proceso' },
+    });
 
+    
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    const estado_orden = new estado_ordenEntity();
+    estado_orden.estado_orden_id = new UniqueId().getId();
+    estado_orden.estado_id = estadoProceso.estado_id;
+    estado_orden.orden_id = orderId.id;
+    estado_orden.fecha_historial = formattedDate;
+
+    await this.estadoOrdenRepository.save(estado_orden);
 
     return {};
 }
 
 async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
   const ordenes = await this.ordenRepository.find({
-    relations: ['cliente', 'orden_lugar', 'orden_lugar.lugar', 'orden_lugar.lugar.lugarPadre', 'pdtcb_od', 'pdtcb_od.producto', 'pdtcb_od.combo'],
+    relations: [
+      'cliente',
+      'orden_lugar',
+      'orden_lugar.lugar',
+      'orden_lugar.lugar.lugarPadre',
+      'pdtcb_od',
+      'pdtcb_od.producto',
+      'pdtcb_od.combo',
+      'estado_orden',
+      'estado_orden.estado',
+    ],
   });
-  console.log('Vamo a ver que tal', ordenes);
   
   const resultado = ordenes.map((orden) => ({
     orden_id: orden.orden_id,
@@ -171,9 +208,25 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       combo_id: productoOrden.combo?.combo_id,
       combo_nombre: productoOrden.combo?.nombre_combo,
     })),
+    estado: orden.estado_orden.map((estadoOrden) => ({
+      estado_orden_id: estadoOrden.estado_orden_id,
+      fecha_historial: estadoOrden.fecha_historial,
+      orden_id: estadoOrden.orden_id,
+      estado_id: estadoOrden.estado_id,
+      estado: {
+        estado_id: estadoOrden.estado?.estado_id,
+        nombre_estado: estadoOrden.estado?.nombre_estado,
+      },
+    })),
   }));
 
   return resultado;
 }
+
+  async getEstados(): Promise<any[]> {
+    const estados = await this.estadoRepository.find();
+    return estados;
+  }
+
 
 }
