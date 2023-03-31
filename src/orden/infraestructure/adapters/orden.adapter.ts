@@ -11,6 +11,7 @@ import { LugarEntity } from 'src/ordenar_pedidos/infrastructure/entities/lugar.e
 import { orden_lugarEntity } from '../entities/orden_lugar.orm';
 import { estadoEntity } from '../entities/estado.orm';
 import { estado_ordenEntity } from '../entities/estado_orden.orm';
+import { ordenEstadoDto } from 'src/orden/application/dto/ordenEstado.dto';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -226,6 +227,32 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
   async getEstados(): Promise<any[]> {
     const estados = await this.estadoRepository.find();
     return estados;
+  }
+
+
+  async createOrdenEstado(estadoOrden: ordenEstadoDto): Promise<any> {
+    const orden = new OrdenEntity();
+    orden.orden_id = new UniqueId().getId();
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    const estado_orden = new estado_ordenEntity();
+    estado_orden.estado_orden_id = new UniqueId().getId();
+    estado_orden.estado_id = estadoOrden.estado_id;
+    estado_orden.orden_id = estadoOrden.orden_id;
+    estado_orden.fecha_historial = formattedDate;
+    await this.estadoOrdenRepository.save(estado_orden);
+
+
+    return {};
   }
 
 
