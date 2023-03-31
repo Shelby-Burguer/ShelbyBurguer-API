@@ -12,6 +12,7 @@ import {
 import { ordenService } from '../../application/service/orden.service';
 import { createOrdenIdDto } from '../../application/dto/createOrdenId.dto';
 import { OrdenDto } from 'src/orden/application/dto/orden.dto';
+import { ordenEstadoDto } from 'src/orden/application/dto/ordenEstado.dto';
 
 @Controller('orden')
 export class ordenController {
@@ -50,6 +51,12 @@ export class ordenController {
     @Get('/estados/All')
   async getAllEstados(): Promise<any> {
     return await this._ordenService.getEstados();
+  }
+
+
+  @Post('/ordenEstado/create')
+  async createordenEstado(@Body() estadoOrden: ordenEstadoDto): Promise<any> {
+    return await this._ordenService.createOrdenEstado(estadoOrden);
   }
 
   /*
