@@ -46,7 +46,12 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
       pdt_cbEntity,
     ]),
   ],
-  controllers: [ingredienteController, productoController, igdtPdtController, comboController],
+  controllers: [
+    ingredienteController,
+    productoController,
+    igdtPdtController,
+    comboController,
+  ],
   providers: [
     ingredienteDataMapper,
     productoDataMapper,

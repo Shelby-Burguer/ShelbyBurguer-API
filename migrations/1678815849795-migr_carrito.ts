@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class migr_1678798365761 implements MigrationInterface {
-  name = 'migr_1678798365761';
+export class migr_carrito_1678815849795 implements MigrationInterface {
+  name = 'migr_carrito_1678815849795';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -29,6 +29,12 @@ export class migr_1678798365761 implements MigrationInterface {
       `CREATE TABLE "combo" ("combo_id" character varying NOT NULL, "nombre_combo" character varying(300) NOT NULL, "tiempo_aprox_preparacion_combo" character varying(300) NOT NULL, "precio_unitario_combo" character varying(300) NOT NULL, CONSTRAINT "PK_8d813bcc2c55a1b44a857e51ff1" PRIMARY KEY ("combo_id"))`,
     );
     await queryRunner.query(
+      `CREATE TABLE "carrito" ("carrito_id" character varying NOT NULL, "producto_id" character varying(300) NOT NULL, "orden_id" character varying(300) NOT NULL, CONSTRAINT "PK_37279f964ad199e1cdef0336f2d" PRIMARY KEY ("carrito_id"))`,
+    );
+    await queryRunner.query(
+      `CREATE TABLE "orden" ("orden_id" character varying NOT NULL, "fecha_orden" character varying(300) NOT NULL, "hora_orden" character varying(300) NOT NULL, "numero_mesa" character varying(300) NOT NULL, "descuento" character varying(300) NOT NULL, "tipo_orden" character varying(300) NOT NULL, CONSTRAINT "PK_63b8fab08205966e438737283d0" PRIMARY KEY ("orden_id"))`,
+    );
+    await queryRunner.query(
       `ALTER TABLE "cliente" ADD CONSTRAINT "FK_d9cf8c718ba2133c20c14db42c3" FOREIGN KEY ("id_lugar_cliente") REFERENCES "lugar"("id_lugar") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
@@ -41,19 +47,19 @@ export class migr_1678798365761 implements MigrationInterface {
       `ALTER TABLE "igdt_pdt" ADD CONSTRAINT "FK_0119d5c053ac86813e45d52e9d3" FOREIGN KEY ("producto_id") REFERENCES "producto"("producto_id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "pdt_cb" ADD CONSTRAINT "FK_a0b4ffbb7714019823fb9506f2c" FOREIGN KEY ("pdt_cd_id") REFERENCES "producto"("producto_id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+      `ALTER TABLE "pdt_cb" ADD CONSTRAINT "FK_c0ccf942ac1165070b9bd921051" FOREIGN KEY ("producto_id") REFERENCES "producto"("producto_id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
     await queryRunner.query(
-      `ALTER TABLE "pdt_cb" ADD CONSTRAINT "FK_c0ccf942ac1165070b9bd921051" FOREIGN KEY ("producto_id") REFERENCES "combo"("combo_id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
+      `ALTER TABLE "pdt_cb" ADD CONSTRAINT "FK_48658b7f34c94035a7d2b93fd35" FOREIGN KEY ("combo_id") REFERENCES "combo"("combo_id") ON DELETE NO ACTION ON UPDATE NO ACTION`,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE "pdt_cb" DROP CONSTRAINT "FK_c0ccf942ac1165070b9bd921051"`,
+      `ALTER TABLE "pdt_cb" DROP CONSTRAINT "FK_48658b7f34c94035a7d2b93fd35"`,
     );
     await queryRunner.query(
-      `ALTER TABLE "pdt_cb" DROP CONSTRAINT "FK_a0b4ffbb7714019823fb9506f2c"`,
+      `ALTER TABLE "pdt_cb" DROP CONSTRAINT "FK_c0ccf942ac1165070b9bd921051"`,
     );
     await queryRunner.query(
       `ALTER TABLE "igdt_pdt" DROP CONSTRAINT "FK_0119d5c053ac86813e45d52e9d3"`,
@@ -67,6 +73,8 @@ export class migr_1678798365761 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "cliente" DROP CONSTRAINT "FK_d9cf8c718ba2133c20c14db42c3"`,
     );
+    await queryRunner.query(`DROP TABLE "orden"`);
+    await queryRunner.query(`DROP TABLE "carrito"`);
     await queryRunner.query(`DROP TABLE "combo"`);
     await queryRunner.query(`DROP TABLE "pdt_cb"`);
     await queryRunner.query(`DROP TABLE "producto"`);

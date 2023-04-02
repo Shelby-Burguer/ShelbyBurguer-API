@@ -3,7 +3,6 @@ import { IsString } from 'class-validator';
 
 @Exclude()
 export class updateIngredientelDto {
-
   @Expose()
   @IsString()
   nombre: string;
@@ -12,4 +11,7 @@ export class updateIngredientelDto {
   @IsString()
   unidad: string;
 
+  @Expose()
+  @IsString()
+  proteina: string;
 }

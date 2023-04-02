@@ -15,10 +15,14 @@ export class createImagenIngredientetHandler
   ) {}
 
   async execute({
-    createImagenIngredienteRequest, idIngredienteRequest
+    createImagenIngredienteRequest,
+    idIngredienteRequest,
   }: createImagenIngredientecommand): Promise<createImagenIngredienteDto> {
     const ingrediente: ingredienteEntity =
-    await this._ingredienteService.createImagenIngrediente(createImagenIngredienteRequest, idIngredienteRequest);
+      await this._ingredienteService.createImagenIngrediente(
+        createImagenIngredienteRequest,
+        idIngredienteRequest,
+      );
 
     return this._mapper.toDtoImagen(ingrediente);
   }
