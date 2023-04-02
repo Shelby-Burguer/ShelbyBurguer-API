@@ -33,12 +33,13 @@ export class ingredientePersisteceAdapter implements iIngredienteRepository {
         ingrediente_id: _ingredienteEntity.ingrediente_id,
         nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
         unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
+        proteina_ingrediente: _ingredienteEntity.proteina_ingrediente,
         objecturl_ingrediente: _ingredienteEntity.objecturl_ingrediente,
       });
 
     return ingrediente;
   }
-  // TODO: imagenIngrediente no está siendo usado
+
   async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
@@ -61,6 +62,7 @@ export class ingredientePersisteceAdapter implements iIngredienteRepository {
     await this.ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
       nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
       unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
+      proteina_ingrediente: _ingredienteEntity.proteina_ingrediente,
     });
 
     const ingrediente: ingredienteEntity =

@@ -16,9 +16,11 @@ export class OneIngredienteHandler
 
   async execute({
     idIngredienteRequest,
-  }: OneIngredienteQuery): Promise<readIngredienteDto>  {
+  }: OneIngredienteQuery): Promise<readIngredienteDto> {
     const ingrediente: ingrediente =
-      await this._ingredienteService.getOneIngrediente(this._mapper.toDomainFromDtoid(idIngredienteRequest));
+      await this._ingredienteService.getOneIngrediente(
+        this._mapper.toDomainFromDtoid(idIngredienteRequest),
+      );
     return this._mapper.toDto(ingrediente);
   }
 }

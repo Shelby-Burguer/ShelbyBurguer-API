@@ -1,10 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { iIngredienteRepository } from '../../application/repository/iIngrediente.repository';
-import { Repository, EntityRepository, getRepository } from 'typeorm';
-import { ingredienteEntity } from '../orm/ingrediente.orm';
-import { iProductoRepository } from '../../application/repository/producto.repository';
-import { productoEntity } from '../orm/producto.orm';
+import { Repository } from 'typeorm';
 import { comboEntity } from '../orm/combo.orm';
 import { pdt_cbEntity } from '../orm/pdt_cb.orm';
 import { createComboDto } from '../../application/dto/createCombo.dto';
@@ -12,9 +8,8 @@ import { icomboRepository } from '../../application/repository/combo.repository'
 import UniqueId from '../../../shared/domain/UniqueUUID';
 import { InjectRepository } from '@nestjs/typeorm';
 
-
 @Injectable()
-export class comboPersisteceAdapter implements icomboRepository{
+export class comboPersisteceAdapter implements icomboRepository {
   constructor(
     @InjectRepository(comboEntity)
     private readonly comboRepository: Repository<comboEntity>,
@@ -38,9 +33,7 @@ export class comboPersisteceAdapter implements icomboRepository{
     }));
   }
 
-
   async createCombo(createComboDto: createComboDto): Promise<any> {
- 
     // Crear un nuevo combo y guardar la información excepto los productos
     const combo = new comboEntity();
     combo.combo_id = new UniqueId().getId();
@@ -60,11 +53,10 @@ export class comboPersisteceAdapter implements icomboRepository{
       await this.pdt_cbRepository.save(producto);
     }
 
-      const combos = await this.comboRepository.findOne({
-        where: { combo_id: combo.combo_id },
-        relations: ['pdt_cb', 'pdt_cb.producto'],
-      });
-
+    const combos = await this.comboRepository.findOne({
+      where: { combo_id: combo.combo_id },
+      relations: ['pdt_cb', 'pdt_cb.producto'],
+    });
 
     return {
       combo_id: combos.combo_id,
@@ -76,15 +68,11 @@ export class comboPersisteceAdapter implements icomboRepository{
         cantidad_pdt_cb: pdt_cb.cantidad_pdt_cb,
       })),
     };
-
   }
 
-
   async deleteCombo(deleteComboDto: createComboDto): Promise<any> {
-
     await this.comboRepository.delete(deleteComboDto.id);
-    let messageDelete: string = 'Eiminación realizada';
-
+    const messageDelete = 'Eiminación realizada';
     return messageDelete;
   }
 }

@@ -15,11 +15,15 @@ export class updateIngredienteHandler
   ) {}
 
   async execute({
-    updateIngredienteRequest, idIngredienteRequest
+    updateIngredienteRequest,
+    idIngredienteRequest,
   }: updateIngredientecommand): Promise<updateIngredientelDto> {
     const collection: ingrediente =
       await this._ingredienteService.updateingrediente(
-        this._mapper.updateDtotoDomain(idIngredienteRequest,updateIngredienteRequest),
+        this._mapper.updateDtotoDomain(
+          idIngredienteRequest,
+          updateIngredienteRequest,
+        ),
       );
     return this._mapper.toDto(collection);
   }
