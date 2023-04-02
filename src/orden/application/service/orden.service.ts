@@ -24,7 +24,6 @@ export class ordenService {
   async getOrderId(orderId: createOrdenIdDto): Promise<any[]> {
     const orden = await this.iOrden.getOrderId(orderId);
     return orden;
-    
   }
 
   async deleteOrderId(orderId: createOrdenIdDto): Promise<any[]> {
@@ -49,6 +48,16 @@ export class ordenService {
 
   async createOrdenEstado(estadoOrden): Promise<any> {
     const ordenEstado = await this.iOrden.createOrdenEstado(estadoOrden);
+    return ordenEstado;
+  }
+
+  async createOrdenPago(idOrden, ordenPago): Promise<any> {
+    const ordenEstado = await this.iOrden.createOrdenPago(idOrden, ordenPago);
+    return ordenEstado;
+  }
+
+    async getAllPagos(orderId): Promise<any> {
+    const ordenEstado = await this.iOrden.getAllPagos(orderId);
     return ordenEstado;
   }
 }

@@ -12,6 +12,11 @@ import { orden_lugarEntity } from '../entities/orden_lugar.orm';
 import { estadoEntity } from '../entities/estado.orm';
 import { estado_ordenEntity } from '../entities/estado_orden.orm';
 import { ordenEstadoDto } from 'src/orden/application/dto/ordenEstado.dto';
+import { pagoElectronicoEntity } from '../entities/pagoElectronico.orm';
+import { pagoEfectivoEntity } from '../entities/pagoEfectivo.orm';
+import { zelleEntity } from '../entities/zelle.orm';
+import { pagoDto } from 'src/orden/application/dto/pago.dto';
+import { ordenPagoEntity } from '../entities/orden_pago.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -27,7 +32,15 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(estadoEntity)
     private readonly estadoRepository: Repository<estadoEntity>,
     @InjectRepository(estado_ordenEntity)
-    private readonly estadoOrdenRepository: Repository<estadoEntity>
+    private readonly estadoOrdenRepository: Repository<estadoEntity>,
+    @InjectRepository(pagoElectronicoEntity)
+    private readonly pagoElectronicoERepository: Repository<pagoElectronicoEntity>,
+    @InjectRepository(pagoEfectivoEntity)
+    private readonly pagoEfectivoRepository: Repository<pagoEfectivoEntity>,
+    @InjectRepository(zelleEntity)
+    private readonly zelleRepository: Repository<zelleEntity>,
+    @InjectRepository(ordenPagoEntity)
+    private readonly ordenPagoRepository: Repository<ordenPagoEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -255,5 +268,141 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     return {};
   }
 
+
+    async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
+    console.log(orderId.id, pago.tipo_pago )
+
+    if (pago.tipo_pago === "electronico"){
+    console.log('Pago electronico')
+    const pagoElectronico = new pagoElectronicoEntity()
+    pagoElectronico.pago_id = new UniqueId().getId();
+    pagoElectronico.tipo_pago = pago.pagoElectronico.tipo_pago;
+    pagoElectronico.numero_referencia = pago.pagoElectronico.numero_referencia;
+    await this.pagoElectronicoERepository.save(pagoElectronico);
+    
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.pago_id = pagoElectronico.pago_id;
+    ordenPago.fecha_historial =formattedDate;
+
+    await this.ordenPagoRepository.save(ordenPago)
+    
+
+    } else if(pago.tipo_pago === "efectivo"){
+    console.log('Entro en efectivo')
+    const pagoEfectivo = new pagoEfectivoEntity()
+    pagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
+    pagoEfectivo.tipo_pago = pago.pagoEfectivo.tipo_pago;
+    pagoEfectivo.denominacion = pago.pagoEfectivo.denominacion;
+    pagoEfectivo.numero_serie = pago.pagoEfectivo.numero_serie;
+    pagoEfectivo.cantidad_billetes = pago.pagoEfectivo.cantidad_billetes;
+
+    await this.pagoEfectivoRepository.save(pagoEfectivo);
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.dolares_efectivo_id = pagoEfectivo.dolares_efectivo_id;
+    ordenPago.fecha_historial =formattedDate;
+
+    await this.ordenPagoRepository.save(ordenPago)
+
+    }else{
+    console.log('Entro en zelle')
+    const zelle = new zelleEntity()
+    zelle.zelle_id = new UniqueId().getId();
+    zelle.correo_electronico = pago.zelle.correo_electronico;
+
+    await this.zelleRepository.save(zelle);
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.zelle_id = zelle.zelle_id;
+    ordenPago.fecha_historial =formattedDate;
+    await this.ordenPagoRepository.save(ordenPago)
+    
+    }
+
+    return {};
+  }
+
+async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
+  const orden = await ordenPagoEntity.find({
+    where: { orden_id: orderId.id },
+    relations: ['pagoElectronico', 'pagoEfectivo', 'zelle'],
+  });
+
+  if (orden.length === 0) {
+    throw new Error(`No se encontró una orden con ID ${orderId.id}`);
+  }
+
+  const pagos = orden.flatMap((ordenPago) => {
+    const pagosOrden = [];
+
+    if (ordenPago.pagoElectronico) {
+      pagosOrden.push({
+        tipo_pago: 'electrónico',
+        numero_referencia: ordenPago.pagoElectronico.numero_referencia,
+        tipo_electronico: ordenPago.pagoElectronico.tipo_pago,
+        fecha_historial: ordenPago.fecha_historial
+      });
+    }
+
+    if (ordenPago.pagoEfectivo) {
+      pagosOrden.push({
+        tipo_pago: 'efectivo',
+        numero_serie: ordenPago.pagoEfectivo.numero_serie,
+        denominacion: ordenPago.pagoEfectivo.denominacion,
+        cantidad_billetes: ordenPago.pagoEfectivo.cantidad_billetes,
+        tipo_efectivo: ordenPago.pagoEfectivo.tipo_pago,
+        fecha_historial: ordenPago.fecha_historial
+      });
+    }
+
+    if (ordenPago.zelle) {
+      pagosOrden.push({
+        tipo_pago: 'Zelle',
+        correo_electronico: ordenPago.zelle.correo_electronico,
+        fecha_historial: ordenPago.fecha_historial
+      });
+    }
+
+    return pagosOrden;
+  });
+
+  return pagos;
+}
 
 }
