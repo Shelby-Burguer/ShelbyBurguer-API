@@ -41,5 +41,14 @@ export class ordenService {
     const resOrden = await this.iOrden.obtenerTodasLasOrdenesConDetalle();
     return resOrden;
   }
-  
+
+  async getEstados(): Promise<any[]>{
+    const orden = await this.iOrden.getEstados();
+    return orden;
+  }
+
+  async createOrdenEstado(estadoOrden): Promise<any> {
+    const ordenEstado = await this.iOrden.createOrdenEstado(estadoOrden);
+    return ordenEstado;
+  }
 }
