@@ -65,7 +65,6 @@ export class ordenController {
     return await this._ordenService.createOrdenPago(orderId, pago);
   }
 
-  
   @Get('/pagos/All/:id')
   async getAllPagos (@Param() orderId: createOrdenIdDto): Promise<any> {
     return await this._ordenService.getAllPagos(orderId);

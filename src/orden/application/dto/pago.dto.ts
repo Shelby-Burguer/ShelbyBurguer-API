@@ -11,6 +11,10 @@ export class pagoDto {
   tipo_pago: string;
 
   @Expose()
+  @IsString()
+  monto: string;
+  
+  @Expose()
   pagoElectronico: pagoElectronicoDto;
 
   @Expose()

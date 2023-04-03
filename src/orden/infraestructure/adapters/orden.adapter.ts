@@ -99,15 +99,14 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
   async procesarOrdenId(orderId: createOrdenIdDto, orden: OrdenDto): Promise<any> {
     const horaActual = new Date();
     const horaOrden = horaActual.toLocaleTimeString();
-
     if(orden.numero_mesa){
-     const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, numero_mesa: orden.numero_mesa});
+     const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, numero_mesa: orden.numero_mesa, total_orden: orden.total_orden});
     
       if (result.affected === 0) {
         throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
       }
     } else if (orden.tipo_orden === "delivery"){
-        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id});
+        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, total_orden: orden.total_orden});
 
       const lugar = await this.lugarRepository.findOne({
       where: { id_lugar: orden.lugar_id },
@@ -137,7 +136,7 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
             throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
         }
     }else{
-        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id});
+        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, total_orden: orden.total_orden});
 
         if (result.affected === 0) {
             throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
@@ -194,6 +193,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     descuento: orden.descuento,
     tipo_orden: orden.tipo_orden,
     numero_orden: orden.numero_orden,
+    total_orden: orden.total_orden,
     cliente: {
       id_cliente: orden.cliente.id_cliente,
       cedula_cliente: orden.cliente.cedula_cliente,
@@ -233,7 +233,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       },
     })),
   }));
-
+ 
   return resultado;
 }
 
@@ -270,8 +270,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
 
 
     async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
-    console.log(orderId.id, pago.tipo_pago )
-
     if (pago.tipo_pago === "electronico"){
     console.log('Pago electronico')
     const pagoElectronico = new pagoElectronicoEntity()
@@ -295,6 +293,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.orden_id = orderId.id;
     ordenPago.pago_id = pagoElectronico.pago_id;
     ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
 
     await this.ordenPagoRepository.save(ordenPago)
     
@@ -325,6 +324,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.orden_id = orderId.id;
     ordenPago.dolares_efectivo_id = pagoEfectivo.dolares_efectivo_id;
     ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
 
     await this.ordenPagoRepository.save(ordenPago)
 
@@ -351,58 +351,67 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.orden_id = orderId.id;
     ordenPago.zelle_id = zelle.zelle_id;
     ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
     await this.ordenPagoRepository.save(ordenPago)
     
     }
-
     return {};
   }
 
 async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
-  const orden = await ordenPagoEntity.find({
-    where: { orden_id: orderId.id },
-    relations: ['pagoElectronico', 'pagoEfectivo', 'zelle'],
-  });
+  try {
+    const ordenes = await ordenPagoEntity.find({
+      where: { orden_id: orderId.id },
+      relations: ['pagoElectronico', 'pagoEfectivo', 'zelle'],
+    });
 
-  if (orden.length === 0) {
-    throw new Error(`No se encontró una orden con ID ${orderId.id}`);
+    if (ordenes.length === 0) {
+      console.log(`No se encontró una orden con ID ${orderId.id}`);
+      return null;
+    }
+
+    const pagos = ordenes.flatMap((orden) => [
+      ...(orden.pagoElectronico
+        ? [
+            {
+              tipo_pago: 'electrónico',
+              numero_referencia: orden.pagoElectronico.numero_referencia,
+              tipo_electronico: orden.pagoElectronico.tipo_pago,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto
+            },
+          ]
+        : []),
+      ...(orden.pagoEfectivo
+        ? [
+            {
+              tipo_pago: 'efectivo',
+              numero_serie: orden.pagoEfectivo.numero_serie,
+              denominacion: orden.pagoEfectivo.denominacion,
+              cantidad_billetes: orden.pagoEfectivo.cantidad_billetes,
+              tipo_efectivo: orden.pagoEfectivo.tipo_pago,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto
+            },
+          ]
+        : []),
+      ...(orden.zelle
+        ? [
+            {
+              tipo_pago: 'Zelle',
+              correo_electronico: orden.zelle.correo_electronico,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto
+            },
+          ]
+        : []),
+    ]);
+
+    return pagos;
+  } catch (error) {
+    console.log(`Error al obtener los pagos para la orden con ID ${orderId.id}`);
+    console.error(error);
+    return null;
   }
-
-  const pagos = orden.flatMap((ordenPago) => {
-    const pagosOrden = [];
-
-    if (ordenPago.pagoElectronico) {
-      pagosOrden.push({
-        tipo_pago: 'electrónico',
-        numero_referencia: ordenPago.pagoElectronico.numero_referencia,
-        tipo_electronico: ordenPago.pagoElectronico.tipo_pago,
-        fecha_historial: ordenPago.fecha_historial
-      });
-    }
-
-    if (ordenPago.pagoEfectivo) {
-      pagosOrden.push({
-        tipo_pago: 'efectivo',
-        numero_serie: ordenPago.pagoEfectivo.numero_serie,
-        denominacion: ordenPago.pagoEfectivo.denominacion,
-        cantidad_billetes: ordenPago.pagoEfectivo.cantidad_billetes,
-        tipo_efectivo: ordenPago.pagoEfectivo.tipo_pago,
-        fecha_historial: ordenPago.fecha_historial
-      });
-    }
-
-    if (ordenPago.zelle) {
-      pagosOrden.push({
-        tipo_pago: 'Zelle',
-        correo_electronico: ordenPago.zelle.correo_electronico,
-        fecha_historial: ordenPago.fecha_historial
-      });
-    }
-
-    return pagosOrden;
-  });
-
-  return pagos;
 }
-
 }

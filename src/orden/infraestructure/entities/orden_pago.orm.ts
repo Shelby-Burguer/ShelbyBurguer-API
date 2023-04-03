@@ -33,6 +33,9 @@ export class ordenPagoEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
   fecha_historial: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: false })
+  monto: string;
+
 @ManyToOne(() => pagoEfectivoEntity, (pagoEfectivo) => pagoEfectivo.estado_orden, {
     eager: true,
     nullable: true,
