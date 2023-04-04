@@ -12,6 +12,7 @@ import { LugarEntity } from 'src/ordenar_pedidos/infrastructure/entities/lugar.e
 import { pagoEfectivoEntity } from './pagoEfectivo.orm';
 import { pagoElectronicoEntity } from './pagoElectronico.orm';
 import { zelleEntity } from './zelle.orm';
+import { montoBs_DolaresEntity } from './montoBS_Dolares.orm';
 
 @Entity('orden_pago')
 export class ordenPagoEntity extends BaseEntity {
@@ -56,5 +57,12 @@ export class ordenPagoEntity extends BaseEntity {
   })
   @JoinColumn({ name: 'zelle_id' })
   zelle: zelleEntity;
+
+  @ManyToOne(() => montoBs_DolaresEntity, (montoBs_Dolares) => montoBs_Dolares.estado_orden, {
+    eager: true,
+    nullable: true,
+  })
+  @JoinColumn({ name: 'montobs_dolares_id' })
+  montoBs_Dolares: montoBs_DolaresEntity;
 
 }

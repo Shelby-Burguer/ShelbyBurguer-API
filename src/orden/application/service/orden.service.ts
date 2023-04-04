@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { createOrdenIdDto } from '../dto/createOrdenId.dto';
 import { iOrdenRepository } from '../../infraestructure/repositories/orden.repository';
 import { OrdenDto } from '../dto/orden.dto';
+import { montoBsDto } from '../dto/montoBs.dto';
 
 @Injectable()
 export class ordenService {
@@ -56,9 +57,21 @@ export class ordenService {
     return ordenEstado;
   }
 
-    async getAllPagos(orderId): Promise<any> {
+  async getAllPagos(orderId): Promise<any> {
     const ordenEstado = await this.iOrden.getAllPagos(orderId);
     console.log("Que devuelve?",  ordenEstado);
     return ordenEstado;
+  }
+
+  async createMontoBS(montoBs): Promise<any>{
+    const montoBsDolares = await this.iOrden.createMontoBS(montoBs);
+
+    return montoBsDolares;
+  }
+
+  async getAllMontoBS(): Promise<montoBsDto[]>{
+    const montoBsDolares = await this.iOrden.getAllMontoBS();
+
+    return montoBsDolares;
   }
 }

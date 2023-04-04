@@ -13,9 +13,10 @@ import { pagoEfectivoEntity } from './entities/pagoEfectivo.orm';
 import { pagoElectronicoEntity } from './entities/pagoElectronico.orm';
 import { pdtcb_odEntity } from './entities/pdtcb_od.orm';
 import { zelleEntity } from './entities/zelle.orm';
+import { montoBs_DolaresEntity } from './entities/montoBS_Dolares.orm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity])],
+  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity])],
   controllers: [ordenController],
   providers: [
     ordenService,

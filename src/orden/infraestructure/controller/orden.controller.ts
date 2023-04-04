@@ -14,6 +14,7 @@ import { createOrdenIdDto } from '../../application/dto/createOrdenId.dto';
 import { OrdenDto } from 'src/orden/application/dto/orden.dto';
 import { ordenEstadoDto } from 'src/orden/application/dto/ordenEstado.dto';
 import { pagoDto } from 'src/orden/application/dto/pago.dto';
+import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
 
 @Controller('orden')
 export class ordenController {
@@ -70,6 +71,15 @@ export class ordenController {
     return await this._ordenService.getAllPagos(orderId);
   }
 
+  @Post('/montoBsDolares/create')
+  async createMontoBsDolares(@Body() montoBs: montoBsDto): Promise<any> {
+    return await this._ordenService.createMontoBS(montoBs);
+  }
+  
+  @Get('/montoBsDolares/All')
+  async getMontoBsDolares(): Promise<any> {
+    return await this._ordenService.getAllMontoBS();
+  }
   /*
   @Delete('/delete/:id')
   async delete(

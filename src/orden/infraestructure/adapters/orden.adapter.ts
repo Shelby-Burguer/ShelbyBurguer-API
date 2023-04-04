@@ -17,6 +17,8 @@ import { pagoEfectivoEntity } from '../entities/pagoEfectivo.orm';
 import { zelleEntity } from '../entities/zelle.orm';
 import { pagoDto } from 'src/orden/application/dto/pago.dto';
 import { ordenPagoEntity } from '../entities/orden_pago.orm';
+import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
+import { montoBs_DolaresEntity } from '../entities/montoBS_Dolares.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -40,7 +42,10 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(zelleEntity)
     private readonly zelleRepository: Repository<zelleEntity>,
     @InjectRepository(ordenPagoEntity)
-    private readonly ordenPagoRepository: Repository<ordenPagoEntity>
+    private readonly ordenPagoRepository: Repository<ordenPagoEntity>,
+    @InjectRepository(montoBs_DolaresEntity)
+    private readonly montoBsRepository: Repository<montoBs_DolaresEntity>
+    
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -413,5 +418,40 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
     console.error(error);
     return null;
   }
+}
+
+  async createMontoBS(montoBs: montoBsDto): Promise<any> {
+    const montoBs_Dolares = new montoBs_DolaresEntity();
+    montoBs_Dolares.montobs_dolares_id = new UniqueId().getId();
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    montoBs_Dolares.fecha_historial = formattedDate
+    montoBs_Dolares.monto = montoBs.monto
+
+    await this.montoBsRepository.save(montoBs_Dolares);
+
+
+    return {};
+  }
+
+
+  async getAllMontoBS(): Promise<montoBsDto[]> {
+  const montos = await this.montoBsRepository.find();
+  const lastDate = montos.reduce((prev, current) => {
+    const prevDate = new Date(prev.fecha_historial);
+    const currentDate = new Date(current.fecha_historial);
+    return prevDate > currentDate ? prev : current;
+  }).fecha_historial;
+  const lastMontos = montos.filter(monto => monto.fecha_historial === lastDate);
+  return lastMontos.map(monto => ({ monto: monto.monto, fecha_historial: monto.fecha_historial }));
 }
 }
