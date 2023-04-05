@@ -24,6 +24,9 @@ export class OrdenEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
   tipo_orden: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: false })
+  total_orden: string;
+
   @Column({ type: 'int', nullable: false })
   numero_orden: number;
 
