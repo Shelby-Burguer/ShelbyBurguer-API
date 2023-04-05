@@ -59,7 +59,6 @@ export class ordenService {
 
   async getAllPagos(orderId): Promise<any> {
     const ordenEstado = await this.iOrden.getAllPagos(orderId);
-    console.log("Que devuelve?",  ordenEstado);
     return ordenEstado;
   }
 

@@ -45,7 +45,6 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     private readonly ordenPagoRepository: Repository<ordenPagoEntity>,
     @InjectRepository(montoBs_DolaresEntity)
     private readonly montoBsRepository: Repository<montoBs_DolaresEntity>
-    
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -276,7 +275,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
 
     async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
     if (pago.tipo_pago === "electronico"){
-    console.log('Pago electronico')
     const pagoElectronico = new pagoElectronicoEntity()
     pagoElectronico.pago_id = new UniqueId().getId();
     pagoElectronico.tipo_pago = pago.pagoElectronico.tipo_pago;
@@ -300,11 +298,23 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.fecha_historial =formattedDate;
     ordenPago.monto = pago.monto;
 
+    
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
+    await this.ordenPagoRepository.save(ordenPago)
+
     await this.ordenPagoRepository.save(ordenPago)
     
 
     } else if(pago.tipo_pago === "efectivo"){
-    console.log('Entro en efectivo')
+
     const pagoEfectivo = new pagoEfectivoEntity()
     pagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
     pagoEfectivo.tipo_pago = pago.pagoEfectivo.tipo_pago;
@@ -331,10 +341,19 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.fecha_historial =formattedDate;
     ordenPago.monto = pago.monto;
 
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
     await this.ordenPagoRepository.save(ordenPago)
 
     }else{
-    console.log('Entro en zelle')
+
     const zelle = new zelleEntity()
     zelle.zelle_id = new UniqueId().getId();
     zelle.correo_electronico = pago.zelle.correo_electronico;
@@ -357,6 +376,15 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     ordenPago.zelle_id = zelle.zelle_id;
     ordenPago.fecha_historial =formattedDate;
     ordenPago.monto = pago.monto;
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
     await this.ordenPagoRepository.save(ordenPago)
     
     }
@@ -367,7 +395,7 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
   try {
     const ordenes = await ordenPagoEntity.find({
       where: { orden_id: orderId.id },
-      relations: ['pagoElectronico', 'pagoEfectivo', 'zelle'],
+      relations: ['pagoElectronico', 'pagoEfectivo', 'zelle', 'montoBs_Dolares'], // Agregamos la relación a la tabla montobs_dolares
     });
 
     if (ordenes.length === 0) {
@@ -383,7 +411,9 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
               numero_referencia: orden.pagoElectronico.numero_referencia,
               tipo_electronico: orden.pagoElectronico.tipo_pago,
               fecha_historial: orden.fecha_historial,
-              monto: orden.monto
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
             },
           ]
         : []),
@@ -396,7 +426,9 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
               cantidad_billetes: orden.pagoEfectivo.cantidad_billetes,
               tipo_efectivo: orden.pagoEfectivo.tipo_pago,
               fecha_historial: orden.fecha_historial,
-              monto: orden.monto
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
             },
           ]
         : []),
@@ -406,7 +438,9 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
               tipo_pago: 'Zelle',
               correo_electronico: orden.zelle.correo_electronico,
               fecha_historial: orden.fecha_historial,
-              monto: orden.monto
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
             },
           ]
         : []),

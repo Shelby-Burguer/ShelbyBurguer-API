@@ -30,6 +30,9 @@ export class ordenPagoEntity extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   zelle_id: string;
+  
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  montobs_dolares_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: false })
   fecha_historial: string;
