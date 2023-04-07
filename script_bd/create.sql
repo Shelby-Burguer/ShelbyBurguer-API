@@ -164,6 +164,7 @@ CREATE TABLE "cliente" (
      "id_lugar_cliente" character varying,
      CONSTRAINT "PK_dbf4725e2849f4036253ee7dbd0" PRIMARY KEY ("id_cliente")
 );
+
 CREATE TABLE "lugar" (
      "id_lugar" character varying NOT NULL,
      "nombre_lugar" character varying(100) NOT NULL,
@@ -202,7 +203,6 @@ alter table orden_lugar
     add constraint fk_id_orden_lugar_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade,
     add constraint fk_id_lugar_orden_lugar foreign key (lugar_id) references lugar(id_lugar) ON DELETE CASCADE
 ;
-
 
 alter table estado_orden
     add constraint fk_id_orden_estado_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade,
