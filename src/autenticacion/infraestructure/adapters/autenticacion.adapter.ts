@@ -9,6 +9,7 @@ import { userRoleEntity } from '../entities/userRole.orm';
 import { userDto } from 'src/autenticacion/application/dto/user.dto';
 import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
+import { credencialesDto } from 'src/autenticacion/application/dto/credenciales.dto';
 
 @Injectable()
 export class autenticacionPersisteceAdapter implements iAutenticacionRepository {
@@ -38,23 +39,24 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
     };
   }
 
-  async authenticateUser(credenciales: { email: string, password: string }): Promise<any> {
-    const user = await this.userRepository.findOne({ where: { email_users: credenciales.email } });
-
+  async authenticateUser(credenciales: credencialesDto): Promise<any> {
+    const user = await this.userRepository.findOne({ where: { email_users: credenciales.email_user } });
+    
+   
     const roles = await this.userRoleRepository.findOne({
       where: { users_id: user.users_id },
-      relations: ['roles'],
+      relations: ['role'],
   });
 
-    console.log('Nombre rol', roles.role.nombre_roles);
-    
+
+
     
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
 
-    const isPasswordValid = await compare(credenciales.password, user.password_users);
-    if (!isPasswordValid) {
+    //const isPasswordValid = await compare(credenciales.password_user, user.password_users);
+    if (credenciales.password_user !== user.password_users) {
       throw new UnauthorizedException('Contraseña incorrecta');
     }
 

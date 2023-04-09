@@ -25,13 +25,13 @@ export class userRoleEntity extends BaseEntity {
     eager: true,
     nullable: false,
   })
-  @JoinColumn({ name: 'user_id' })
+  @JoinColumn({ name: 'users_id' })
   user: userEntity;
 
   @ManyToOne(() => roleEntity, (role) => role.user_role, {
     eager: true,
     nullable: false,
   })
-  @JoinColumn({ name: 'role_id' })
+  @JoinColumn({ name: 'roles_id' })
   role: roleEntity;
 }

@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { iAutenticacionRepository } from 'src/autenticacion/infraestructure/repositories/autenticacion.repository';
 import { userDto } from '../dto/user.dto';
+import { credencialesDto } from '../dto/credenciales.dto';
 
 
 
@@ -15,11 +16,13 @@ export class autenticacionService {
     const users = await this.iAutenticacion.createUser(user)
   }
 
-  async authenticateUser(credenciales: { email: string, password: string }): Promise<string> {
+  async authenticateUser(credenciales: credencialesDto): Promise<string> {
     const user = await this.iAutenticacion.authenticateUser(credenciales);
 
-    return ;
+    return user ;
+
   }
+
 }
 
 

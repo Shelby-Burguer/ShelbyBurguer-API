@@ -7,6 +7,7 @@ import {
   Put,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
@@ -22,6 +23,8 @@ import { updateIngredientelDto } from '../../application/dto/updateIngrediente.d
 import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+
 
 @Controller('ingrediente')
 export class ingredienteController {
@@ -39,6 +42,7 @@ export class ingredienteController {
   }
 
   @Get('/all/:id')
+@UseGuards(JwtAuthGuard)
   async getOneIngrediente(
     @Param() ingredienteId: idIngredienteDto,
   ): Promise<readIngredienteDto[]> {
