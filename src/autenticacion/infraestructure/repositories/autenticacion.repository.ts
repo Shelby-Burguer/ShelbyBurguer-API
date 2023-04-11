@@ -5,5 +5,6 @@ import { credencialesDto } from 'src/autenticacion/application/dto/credenciales.
 export interface iAutenticacionRepository {
   createUser(user: userDto): Promise<any[]>;
   authenticateUser(credenciales:credencialesDto): Promise<any>;
+  validateUser(credenciales: string): Promise<any>;
 
 }

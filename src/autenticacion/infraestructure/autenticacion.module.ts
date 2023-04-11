@@ -6,6 +6,8 @@ import { userRoleEntity } from './entities/userRole.orm';
 import { autenticacionService } from '../application/service/autenticacion.service';
 import { autenticacionPersisteceAdapter } from './adapters/autenticacion.adapter';
 import { autenticacionController } from './controller/autenticacion.controller';
+import { JwtStrategy } from '../application/service/jwtauth.service';
+import { RolesGuard } from '../application/service/auth/rolesGuard.guard';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { autenticacionController } from './controller/autenticacion.controller';
   controllers: [autenticacionController],
   providers: [
   autenticacionService,
+  JwtStrategy, 
+  RolesGuard,
     {
       provide: 'iAutenticacionRepository',
       useClass: autenticacionPersisteceAdapter,

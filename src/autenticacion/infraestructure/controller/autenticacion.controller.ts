@@ -29,7 +29,6 @@ export class autenticacionController {
      return await this._autenticacionService.createUser(user);
   }
   
-  @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Body() credenciales: credencialesDto): Promise<{ token: string }> {
     const token = await this._autenticacionService.authenticateUser(credenciales);

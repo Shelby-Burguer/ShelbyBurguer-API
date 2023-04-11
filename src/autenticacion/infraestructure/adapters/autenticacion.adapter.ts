@@ -41,15 +41,11 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
 
   async authenticateUser(credenciales: credencialesDto): Promise<any> {
     const user = await this.userRepository.findOne({ where: { email_users: credenciales.email_user } });
-    
    
     const roles = await this.userRoleRepository.findOne({
       where: { users_id: user.users_id },
       relations: ['role'],
   });
-
-
-
     
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
@@ -62,6 +58,22 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
 
     const token = sign({ userId: user.users_id, role: roles.role.nombre_roles }, 'secretKey', { expiresIn: '1h' });
     return token;
+  }
+
+    async validateUser(credenciales: string): Promise<any> {
+    const user = await this.userRepository.findOne({ where: { users_id: credenciales } });
+    
+   
+    const roles = await this.userRoleRepository.findOne({
+      where: { users_id: user.users_id },
+      relations: ['role'],
+    });
+    
+    if (!user) {
+      throw new NotFoundException('Usuario no encontrado');
+    }
+
+    return { user, roles };
   }
 
 }

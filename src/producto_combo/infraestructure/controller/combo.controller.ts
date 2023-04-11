@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Delete,
+  UseGuards
 } from '@nestjs/common';
 import { readIngredienteDto } from '../../application/dto/readingrediente.dto';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
@@ -32,6 +33,7 @@ import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { updateIgdtPdtDto } from '../../application/dto/updateIgftPdt.dto';
 import { comboService } from '../../application/service/combo.service';
 import { createComboDto } from '../../application/dto/createCombo.dto';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
 
 @Controller('combo')
 export class comboController {
@@ -39,8 +41,9 @@ export class comboController {
     private readonly _igdtPdtService: comboService,
     private readonly commandBus: CommandBus,
   ) {}
-
+  
   @Get('/all')
+  @UseGuards(JwtAuthGuard)
   async getAllIgdtPdt(): Promise<any> {
     return await this._igdtPdtService.getAllCombo()
   }

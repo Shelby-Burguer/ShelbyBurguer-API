@@ -3,8 +3,6 @@ import { iAutenticacionRepository } from 'src/autenticacion/infraestructure/repo
 import { userDto } from '../dto/user.dto';
 import { credencialesDto } from '../dto/credenciales.dto';
 
-
-
 @Injectable()
 export class autenticacionService {
   constructor(
@@ -21,6 +19,11 @@ export class autenticacionService {
 
     return user ;
 
+  }
+
+  async validateUser(credenciales: string): Promise<any> {
+    const validate = await this.iAutenticacion.validateUser(credenciales);
+    return validate ;
   }
 
 }

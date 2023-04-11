@@ -34,6 +34,7 @@ export class ingredienteController {
   ) {}
 
   @Get('/all')
+  @UseGuards(JwtAuthGuard)
   async getAllIngrediente(): Promise<readIngredienteDto[]> {
     return this._ingredienteService.execute<
       allIngredienteQuery,
@@ -53,6 +54,7 @@ export class ingredienteController {
   }
 
   @Post('/create')
+  //@UseGuards(JwtAuthGuard) 
   async create(
     @Body() _createIngredientenDto: createIngredienteDto,
   ): Promise<any> {
@@ -63,6 +65,7 @@ export class ingredienteController {
   }
 
   @Patch('/update/:id')
+  //@UseGuards(JwtAuthGuard)
   async update(
     @Param() ingredienteId: idIngredienteDto,
     @Body() ingrediente: updateIngredientelDto,
@@ -74,6 +77,7 @@ export class ingredienteController {
   }
 
   @Delete('/delete/:id')
+  //@UseGuards(JwtAuthGuard)
   async delete(@Param() ingredienteId: idIngredienteDto): Promise<any> {
     return await this.commandBus.execute<
       deleteingredientecommand,
@@ -82,6 +86,7 @@ export class ingredienteController {
   }
 
   @Put('/create/upload/:id')
+  //@UseGuards(JwtAuthGuard)
   @UseInterceptors(FileInterceptor('file'))
   async upload(
     @Param() ingredienteId: idIngredienteDto,
