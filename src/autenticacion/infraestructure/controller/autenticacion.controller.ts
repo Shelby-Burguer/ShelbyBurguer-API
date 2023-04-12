@@ -19,19 +19,21 @@ import { autenticacionService } from 'src/autenticacion/application/service/aute
 import { userDto } from 'src/autenticacion/application/dto/user.dto';
 import { credencialesDto } from 'src/autenticacion/application/dto/credenciales.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { createUserDto } from 'src/autenticacion/application/dto/createUser.dto';
 
 @Controller('autenticacion')
 export class autenticacionController {
   constructor(private readonly _autenticacionService: autenticacionService) {}
-
-  @Post('/create')
-  async createId(@Body() user: userDto): Promise<any> {
-     return await this._autenticacionService.createUser(user);
-  }
   
   @Post('/login')
   async login(@Body() credenciales: credencialesDto): Promise<{ token: string }> {
     const token = await this._autenticacionService.authenticateUser(credenciales);
     return { token };
+  }
+
+  @Post('/registro')
+  async registroUser(@Body() createUser: createUserDto): Promise<any> {
+    const resUser = await this._autenticacionService.createNewUser(createUser);
+    return resUser ;
   }
 }

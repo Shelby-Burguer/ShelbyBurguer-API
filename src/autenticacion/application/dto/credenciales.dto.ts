@@ -10,4 +10,4 @@ export class credencialesDto {
   @IsString()
   readonly password_user: string;
 
-}
+} 
