@@ -14,12 +14,16 @@ import { pagoElectronicoEntity } from './entities/pagoElectronico.orm';
 import { pdtcb_odEntity } from './entities/pdtcb_od.orm';
 import { zelleEntity } from './entities/zelle.orm';
 import { montoBs_DolaresEntity } from './entities/montoBS_Dolares.orm';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity])],
   controllers: [ordenController],
   providers: [
     ordenService,
+    JwtAuthGuard,
+    RolesGuard,
     {
       provide: 'iOrdenRepository',
       useClass: ordenPersisteceAdapter,

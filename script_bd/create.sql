@@ -155,6 +155,36 @@ CREATE TABLE montobs_dolares (
   constraint pk_montoBs_Dolares_id primary key (montobs_dolares_id)
 );
 
+CREATE TABLE users (
+  users_id varchar(70) not null,
+  nombre_users varchar(70) null,
+  apellido_users varchar(70) null,
+  cedula_users varchar(70) null,
+  telefono_users varchar(70) null,
+  direccion_users varchar(70) null,
+  fecha_inicio_users varchar(70) null,
+  fecha_final_users varchar(70),
+  email_users varchar(70) null,
+  password_users varchar(70) null,
+  preguntaSecreta_users varchar(70) null,
+  respuestaPregunta_users varchar(70) null,
+  constraint pk_users_id primary key (users_id)
+);
+
+CREATE TABLE roles (
+  roles_id varchar(70) not null,
+  nombre_roles varchar(70) null,
+  descripcion_roles varchar(70) null,
+  constraint pk_roles_id primary key (roles_id)
+);
+
+CREATE TABLE user_role (
+  user_role_id varchar(70) not null,
+  roles_id varchar(70) null,
+  users_id varchar(70) null,
+  constraint pk_user_role_id primary key (user_role_id)
+);
+
 CREATE TABLE "cliente" (
      "id_cliente" character varying NOT NULL,
      "cedula_cliente" character varying(10) NOT NULL,
@@ -164,6 +194,7 @@ CREATE TABLE "cliente" (
      "id_lugar_cliente" character varying,
      CONSTRAINT "PK_dbf4725e2849f4036253ee7dbd0" PRIMARY KEY ("id_cliente")
 );
+
 CREATE TABLE "lugar" (
      "id_lugar" character varying NOT NULL,
      "nombre_lugar" character varying(100) NOT NULL,
@@ -202,7 +233,6 @@ alter table orden_lugar
     add constraint fk_id_orden_lugar_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade,
     add constraint fk_id_lugar_orden_lugar foreign key (lugar_id) references lugar(id_lugar) ON DELETE CASCADE
 ;
-
 
 alter table estado_orden
     add constraint fk_id_orden_estado_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade,

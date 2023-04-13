@@ -310,7 +310,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
 
     await this.ordenPagoRepository.save(ordenPago)
 
-    await this.ordenPagoRepository.save(ordenPago)
     
 
     } else if(pago.tipo_pago === "efectivo"){

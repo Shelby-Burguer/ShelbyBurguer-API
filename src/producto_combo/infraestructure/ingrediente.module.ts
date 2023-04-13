@@ -34,6 +34,8 @@ import { updateIgdtPdtHandler } from '../application/handler/updateIgdtPd.handle
 import { comboController } from './controller/combo.controller';
 import { comboService } from '../application/service/combo.service';
 import { comboPersisteceAdapter } from './adapter/combo.adapter';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 
 @Module({
   imports: [
@@ -43,7 +45,7 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
       productoEntity,
       comboEntity,
       igdt_pdtEntity,
-      pdt_cbEntity,
+      pdt_cbEntity, 
     ]),
   ],
   controllers: [
@@ -89,6 +91,8 @@ import { comboPersisteceAdapter } from './adapter/combo.adapter';
     allIgdtPdtHandler,
     IgdtPdtIdHandler,
     updateIgdtPdtHandler,
+    JwtAuthGuard,
+    RolesGuard
   ],
 })
 export class ingredienteModule {}

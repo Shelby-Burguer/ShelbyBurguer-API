@@ -8,6 +8,7 @@ import { ingredienteModule } from './producto_combo/infraestructure/ingrediente.
 import { LugarModule } from './ordenar_pedidos/infrastructure/lugar.module';
 import { ordenModule } from './orden/infraestructure/orden.module';
 import { carritoModule } from './carrito/infraestructure/carrito.module';
+import { autenticacionModule } from './autenticacion/infraestructure/autenticacion.module';
 
 @Module({
   imports: [
@@ -42,10 +43,7 @@ import { carritoModule } from './carrito/infraestructure/carrito.module';
     LugarModule,
     ordenModule,
     carritoModule,
-    // collectionModule,
-    // styleModule,
-    // modelModule,
-    // orderModule
+    autenticacionModule,  
   ],
   controllers: [AppController],
   providers: [AppService],

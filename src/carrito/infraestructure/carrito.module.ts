@@ -10,6 +10,8 @@ import { ordenController } from '../../orden/infraestructure/controller/orden.co
 import { carritoEntity } from './entities/carrito.orm';
 import { OrdenEntity } from '../../orden/infraestructure/entities/orden.orm';
 import { pdtcb_odEntity } from '../../orden/infraestructure/entities/pdtcb_od.orm';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 
 @Module({
   imports: [
@@ -18,6 +20,8 @@ import { pdtcb_odEntity } from '../../orden/infraestructure/entities/pdtcb_od.or
   controllers: [carritoController],
   providers: [
     carritoService,
+    JwtAuthGuard,
+    RolesGuard,
     {
       provide: 'iCarritoRepository',
       useClass: carritoPersisteceAdapter,
