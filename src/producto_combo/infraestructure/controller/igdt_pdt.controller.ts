@@ -8,6 +8,7 @@ import {
   Delete,
   UseInterceptors,
   UploadedFile,
+  UseGuards,
 } from '@nestjs/common';
 import { QueryBus, CommandBus } from '@nestjs/cqrs';
 import { createImagenIngredienteDto } from '../../application/dto/createImagenIngrediente.dto';
@@ -22,6 +23,9 @@ import { AllIgdtPdtIdQuery } from '../queryBus/AllIgdtPdtId.Query';
 import { updateIgdtPdtcommand } from '../command/updateIgdtpdt.command';
 import { createProductoDto } from '../../application/dto/createProducto.dto';
 import { updateIgdtPdtDto } from 'src/producto_combo/application/dto/updateIgftPdt.dto';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
+import { Roles } from 'src/autenticacion/application/service/auth/roles';
 
 @Controller('ingredienteProducto')
 export class igdtPdtController {
@@ -31,6 +35,8 @@ export class igdtPdtController {
   ) {}
 
   @Get('/all')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async getAllIgdtPdt(): Promise<createIgdtPdtDto[]> {
     return this._igdtPdtService.execute<allIgdtPdtQuery, createIgdtPdtDto[]>(
       new allIgdtPdtQuery(),
@@ -38,6 +44,8 @@ export class igdtPdtController {
   }
 
   @Get('/all/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async getAllIgdtPdtId(
     @Param() ingredienteId: createIgdtPdtDto,
   ): Promise<createIgdtPdtDto[]> {
@@ -47,6 +55,8 @@ export class igdtPdtController {
   }
 
   @Post('/create')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async create(@Body() _createIgdtPdtDto: createIgdtPdtDto[]): Promise<any> {
     return await this.commandBus.execute<
       createIgdtPdtcommand,
@@ -55,6 +65,8 @@ export class igdtPdtController {
   }
 
   @Put('/update/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async update(
     @Param() productoId: createProductoDto,
     @Body() _createIgdtPdtDto: updateIgdtPdtDto,
@@ -66,6 +78,8 @@ export class igdtPdtController {
   }
 
   @Delete('/delete/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async delete(@Param() ingredienteId: idIngredienteDto): Promise<any> {
     return await this.commandBus.execute<
       deleteingredientecommand,
@@ -74,6 +88,8 @@ export class igdtPdtController {
   }
 
   @Put('/create/upload/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   @UseInterceptors(FileInterceptor('file'))
   async upload(
     @Param() ingredienteId: idIngredienteDto,

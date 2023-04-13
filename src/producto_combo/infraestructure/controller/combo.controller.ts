@@ -34,6 +34,8 @@ import { updateIgdtPdtDto } from '../../application/dto/updateIgftPdt.dto';
 import { comboService } from '../../application/service/combo.service';
 import { createComboDto } from '../../application/dto/createCombo.dto';
 import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
+import { Roles } from 'src/autenticacion/application/service/auth/roles';
 
 @Controller('combo')
 export class comboController {
@@ -43,12 +45,15 @@ export class comboController {
   ) {}
   
   @Get('/all')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async getAllIgdtPdt(): Promise<any> {
     return await this._igdtPdtService.getAllCombo()
   }
 
   @Post('/create')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async create(
     @Body() _createIgdtPdtDto: createComboDto,
   ): Promise<any>{
@@ -56,41 +61,22 @@ export class comboController {
   }
 
   @Delete('/delete/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async delete(
     @Param() _createIgdtPdtDto: createComboDto,
   ): Promise<any>{
     return await this._igdtPdtService.deleteCombo(_createIgdtPdtDto)
   }
-
-/*
- @Put('/update/:id')
-  async update(
-    @Param() productoId: createProductoDto,
-    @Body() _createIgdtPdtDto: updateIgdtPdtDto,
-  ) {
-   return await  this.commandBus.execute<updateIgdtPdtcommand,createIgdtPdtDto>(
-      new updateIgdtPdtcommand(productoId, _createIgdtPdtDto),
-    );
-  } 
-
-  @Delete('/delete/:id')
-  async delete(
-  @Param() ingredienteId: idIngredienteDto,
-  ): Promise<any> {
-   return await  this.commandBus.execute<deleteingredientecommand,idIngredienteDto>(
-      new deleteingredientecommand(ingredienteId),
-    );
-  }
-
-
  
   @Put('/create/upload/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   @UseInterceptors( FileInterceptor('file'))
   async upload(
     @Param() ingredienteId: idIngredienteDto,
     @UploadedFile() file: Express.Multer.File
   ): Promise<any>{
-
 
     const ImagenDto = new createImagenIngredienteDto();
     ImagenDto.nombreImagen = file.originalname;
@@ -101,5 +87,5 @@ export class comboController {
     createImagenIngredienteDto
     >(new createImagenIngredientecommand(ImagenDto, ingredienteId));
   }
-*/
+
 }

@@ -24,6 +24,8 @@ import { idIngredienteDto } from '../../application/dto/idIngrediente.dto';
 import { UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
+import { Roles } from 'src/autenticacion/application/service/auth/roles';
 
 
 @Controller('ingrediente')
@@ -34,7 +36,8 @@ export class ingredienteController {
   ) {}
 
   @Get('/all')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async getAllIngrediente(): Promise<readIngredienteDto[]> {
     return this._ingredienteService.execute<
       allIngredienteQuery,
@@ -43,7 +46,8 @@ export class ingredienteController {
   }
 
   @Get('/all/:id')
-@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
   async getOneIngrediente(
     @Param() ingredienteId: idIngredienteDto,
   ): Promise<readIngredienteDto[]> {
@@ -54,7 +58,8 @@ export class ingredienteController {
   }
 
   @Post('/create')
-  //@UseGuards(JwtAuthGuard) 
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin'])
   async create(
     @Body() _createIngredientenDto: createIngredienteDto,
   ): Promise<any> {
@@ -65,7 +70,8 @@ export class ingredienteController {
   }
 
   @Patch('/update/:id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin'])
   async update(
     @Param() ingredienteId: idIngredienteDto,
     @Body() ingrediente: updateIngredientelDto,
@@ -77,7 +83,8 @@ export class ingredienteController {
   }
 
   @Delete('/delete/:id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin'])
   async delete(@Param() ingredienteId: idIngredienteDto): Promise<any> {
     return await this.commandBus.execute<
       deleteingredientecommand,
@@ -86,7 +93,8 @@ export class ingredienteController {
   }
 
   @Put('/create/upload/:id')
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin'])
   @UseInterceptors(FileInterceptor('file'))
   async upload(
     @Param() ingredienteId: idIngredienteDto,

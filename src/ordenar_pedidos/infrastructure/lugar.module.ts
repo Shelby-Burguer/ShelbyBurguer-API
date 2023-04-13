@@ -14,6 +14,8 @@ import { ClienteEntity } from './entities/cliente.entity';
 import { LugarEntity } from './entities/lugar.entity';
 import { ClienteRepositoryImpl } from './repositories/cliente.repository';
 import { LugarRepositoryImpl } from './repositories/lugar.repository';
+import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
+import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([LugarEntity, ClienteEntity])],
@@ -23,6 +25,8 @@ import { LugarRepositoryImpl } from './repositories/lugar.repository';
     LugarMapper,
     LugarAdapter,
     LugarDto,
+    JwtAuthGuard,
+    RolesGuard,
     {
       provide: 'ILugarRepository',
       useClass: LugarRepositoryImpl,

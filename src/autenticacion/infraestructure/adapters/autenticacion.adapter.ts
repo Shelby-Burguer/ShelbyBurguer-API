@@ -11,6 +11,8 @@ import { compare } from 'bcrypt';
 import { sign } from 'jsonwebtoken';
 import { credencialesDto } from 'src/autenticacion/application/dto/credenciales.dto';
 import { createUserDto } from 'src/autenticacion/application/dto/createUser.dto';
+import { recoveryKeyQDto } from 'src/autenticacion/application/dto/recoveryKey.dto';
+import { recoveryKeyEDto } from 'src/autenticacion/application/dto/recoveryKeyE.dto';
 
 @Injectable()
 export class autenticacionPersisteceAdapter implements iAutenticacionRepository {
@@ -68,7 +70,7 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
       throw new UnauthorizedException('Contraseña incorrecta');
     }
 
-    const token = sign({ userId: user.users_id, role: roles.role.nombre_roles }, 'secretKey', { expiresIn: '1h' });
+    const token = sign({ userId: user.users_id, role: roles.role.nombre_roles }, 'secretKey', { expiresIn: '16h' });
     return {token: token, nombre_user: user.nombre_users, nombre_role: roles.role.nombre_roles};
   }
 
@@ -86,5 +88,30 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
 
     return { user, roles };
   }
+
+  async recoveryKeyEUser(recoveryKeyUser: recoveryKeyEDto): Promise<any> {
+
+    const userResponse = await this.userRepository.findOne({ where: { email_users:recoveryKeyUser.correo_user } });
+  
+  if (!userResponse) {
+    throw new NotFoundException(`No se encontro el correo solicitado`);
+  }
+
+    return {preguntasecreta_users: userResponse.preguntasecreta_users};
+  }
+
+ async recoveryKeyQUser(recoveryKeyUser: recoveryKeyQDto): Promise<any> {
+
+    const userResponse = await this.userRepository.findOne({ where: { email_users:recoveryKeyUser.correo_user, respuestapregunta_users: recoveryKeyUser.respuestaPregunta_users } });
+    
+    if (!userResponse) {
+    throw new NotFoundException(`La respuesta a la pregunta es incorrecta`);
+  }
+    
+    return {respuestapregunta_users: userResponse.respuestapregunta_users};
+
+  }
+
+  
 
 }

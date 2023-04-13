@@ -3,6 +3,8 @@ import { iAutenticacionRepository } from 'src/autenticacion/infraestructure/repo
 import { userDto } from '../dto/user.dto';
 import { credencialesDto } from '../dto/credenciales.dto';
 import { createUserDto } from '../dto/createUser.dto';
+import { recoveryKeyQDto } from '../dto/recoveryKey.dto';
+import { recoveryKeyEDto } from '../dto/recoveryKeyE.dto';
 
 @Injectable()
 export class autenticacionService {
@@ -27,9 +29,18 @@ export class autenticacionService {
 
   async createNewUser(credenciales: createUserDto): Promise<any> {
     const user = await this.iAutenticacion.createUser(credenciales);
+    return user;
 
-    return user ;
+  }
 
+  async recoveryKeyEUser(credenciales: recoveryKeyEDto): Promise<any> {
+      const user = await this.iAutenticacion.recoveryKeyEUser(credenciales);
+      return user;
+  }
+
+  async recoveryKeyQUser(credenciales: recoveryKeyQDto): Promise<any> {
+      const user = await this.iAutenticacion.recoveryKeyQUser(credenciales);
+      return user;
   }
 
 }

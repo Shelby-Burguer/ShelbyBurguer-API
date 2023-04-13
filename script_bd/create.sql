@@ -155,6 +155,36 @@ CREATE TABLE montobs_dolares (
   constraint pk_montoBs_Dolares_id primary key (montobs_dolares_id)
 );
 
+CREATE TABLE users (
+  users_id varchar(70) not null,
+  nombre_users varchar(70) null,
+  apellido_users varchar(70) null,
+  cedula_users varchar(70) null,
+  telefono_users varchar(70) null,
+  direccion_users varchar(70) null,
+  fecha_inicio_users varchar(70) null,
+  fecha_final_users varchar(70),
+  email_users varchar(70) null,
+  password_users varchar(70) null,
+  preguntaSecreta_users varchar(70) null,
+  respuestaPregunta_users varchar(70) null,
+  constraint pk_users_id primary key (users_id)
+);
+
+CREATE TABLE roles (
+  roles_id varchar(70) not null,
+  nombre_roles varchar(70) null,
+  descripcion_roles varchar(70) null,
+  constraint pk_roles_id primary key (roles_id)
+);
+
+CREATE TABLE user_role (
+  user_role_id varchar(70) not null,
+  roles_id varchar(70) null,
+  users_id varchar(70) null,
+  constraint pk_user_role_id primary key (user_role_id)
+);
+
 CREATE TABLE "cliente" (
      "id_cliente" character varying NOT NULL,
      "cedula_cliente" character varying(10) NOT NULL,

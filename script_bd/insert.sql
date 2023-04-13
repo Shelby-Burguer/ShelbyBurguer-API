@@ -60,3 +60,23 @@ VALUES
   ('3430003e-0634-431f-aaf5-75d435581f18',1,'34512c69-846c-452c-a614-4a188b2f4655','1bcce481-f205-45de-873d-3302b4267dd7'),
   ('6300bce6-1290-4d80-bd62-de60bb73da59',1,'34512c69-846c-452c-a614-4a188b2f4655','57c9cd06-a7f1-4912-a1ae-fe2f4cf00996'),
   ('ddaa2038-78b5-4c4f-b3e2-ead0bac75571',2,'028fe195-d3b5-478f-8b23-7b2c41be3f3f','f0cca324-deac-4cfa-a033-cc4fa191f5da');
+
+INSERT INTO users
+  (users_id,nombre_users, apellido_users, cedula_users, telefono_users, direccion_users, fecha_inicio_users, fecha_final_users,email_users,password_users,preguntaSecreta_users, respuestaPregunta_users)
+VALUES
+  ('5c50768e-4524-4e37-9e33-926809f0b4j1','Diego','Rojas','26111750', '04129642599', 'Artigas', '15/2/2023', null , 'diego.ard@gmail.com', '1803998', 'Que dia naci?','18031998'),
+  ('5c50768e-4524-4e37-9e33-926809f0bi81','DiegoAdmin', 'Rojas','26111750', '04129642599', 'Artigas', '15/2/2023', null,'diegoAdmin.ard@gmail.com', '1803998', 'Que dia naci?','18031998');
+ 
+INSERT INTO roles
+  (roles_id,nombre_roles,descripcion_roles)
+VALUES
+  ('5c50768e-4524-4e37-9e33-926809f0dr41','Cajero', 'Hace toda las funciones de un cajero'),
+  ('5c50768e-4524-4e37-9e33-926809f0e941','Admin', 'Hace toda las funciones de un admin');
+
+INSERT INTO user_role
+  (user_role_id,roles_id,users_id)
+VALUES
+  ('5c50768e-4524-4e37-9e33-926809f15g41','5c50768e-4524-4e37-9e33-926809f0dr41', '5c50768e-4524-4e37-9e33-926809f0b4j1'),
+  ('5c50768e-4524-4e37-9e33-926809f152v1','5c50768e-4524-4e37-9e33-926809f0e941', '5c50768e-4524-4e37-9e33-926809f0bi81');
+
+ 

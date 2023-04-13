@@ -20,6 +20,8 @@ import { userDto } from 'src/autenticacion/application/dto/user.dto';
 import { credencialesDto } from 'src/autenticacion/application/dto/credenciales.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { createUserDto } from 'src/autenticacion/application/dto/createUser.dto';
+import { recoveryKeyQDto } from 'src/autenticacion/application/dto/recoveryKey.dto';
+import { recoveryKeyEDto } from 'src/autenticacion/application/dto/recoveryKeyE.dto';
 
 @Controller('autenticacion')
 export class autenticacionController {
@@ -35,5 +37,17 @@ export class autenticacionController {
   async registroUser(@Body() createUser: createUserDto): Promise<any> {
     const resUser = await this._autenticacionService.createNewUser(createUser);
     return resUser ;
+  }
+
+  @Post('/recuperarPasswordE')
+  async passwordUserE(@Body() recoveryKeyUser: recoveryKeyEDto): Promise<any> {
+    const resUser = await this._autenticacionService.recoveryKeyEUser(recoveryKeyUser);
+    return resUser ;
+  }
+
+  @Post('/recuperarPasswordQ')
+  async passwordUserQ(@Body() recoveryKeyUser: recoveryKeyQDto): Promise<any> {
+    const resUser = await this._autenticacionService.recoveryKeyQUser(recoveryKeyUser);
+    return resUser;
   }
 }
