@@ -3,7 +3,7 @@ import { IsNumber, IsString } from 'class-validator';
 import { IngredienteCarritoDto } from './ingredientesCarrito.dto';
 
 @Exclude()
-export class createCarritoDto {
+export class createNewCarritoDto {
 
   @Expose()
   @IsString()
@@ -16,9 +16,4 @@ export class createCarritoDto {
   @Expose()
   @IsString()
   idOrden: string;
-
-  @Expose()
-  @IsString()
-  ingrediente_id: IngredienteCarritoDto[];
-  
 }

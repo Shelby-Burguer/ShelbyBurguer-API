@@ -16,9 +16,10 @@ import { zelleEntity } from './entities/zelle.orm';
 import { montoBs_DolaresEntity } from './entities/montoBS_Dolares.orm';
 import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
+import { registro_productoEntity } from './entities/registroProducto.orm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity])],
+  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity, registro_productoEntity, registro_productoEntity])],
   controllers: [ordenController],
   providers: [
     ordenService,

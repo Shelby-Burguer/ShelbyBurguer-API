@@ -5,49 +5,45 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
-  OneToMany
 } from 'typeorm';
 import { productoEntity } from '../../../producto_combo/infraestructure/orm/producto.orm';
 import { comboEntity } from '../../../producto_combo/infraestructure/orm/combo.orm';
 import { OrdenEntity } from './orden.orm';
-import { registro_productoEntity } from './registroProducto.orm';
+import { ingredienteEntity } from 'src/producto_combo/infraestructure/orm/ingrediente.orm';
+import { pdtcb_odEntity } from './pdtcb_od.orm';
 
-@Entity('pdtcb_od')
-export class pdtcb_odEntity extends BaseEntity {
+@Entity('registro_producto')
+export class registro_productoEntity extends BaseEntity {
   @PrimaryColumn()
-  pdtcb_od_id: string;
+  registro_producto_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: false })
-  orden_id: string;
+  ingrediente_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
   producto_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  combo_id: string;
+  pdtcb_od_id: string;
 
-@ManyToOne(() => productoEntity, (producto) => producto.pdtcb_od, {
+@ManyToOne(() => productoEntity, (producto) => producto.registro_producto, {
     eager: true,
   })
   @JoinColumn({ name: 'producto_id' })
   producto: productoEntity;
 
-@ManyToOne(() => comboEntity, (combo) => combo.pdtcb_od, {
+@ManyToOne(() => ingredienteEntity, (ingrediente) => ingrediente.registro_producto, {
     eager: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'combo_id' })
-  combo: comboEntity;
+  @JoinColumn({ name: 'ingrediente_id' })
+  ingrediente: ingredienteEntity;
 
-  @ManyToOne(() => OrdenEntity, (orden) => orden.pdtcb_od, {
+  @ManyToOne(() => pdtcb_odEntity, (pdtcb_od) => pdtcb_od.registro_producto, {
     eager: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'orden_id' })
-  orden: OrdenEntity;
-
-  @OneToMany(() => registro_productoEntity, (registro_producto) => registro_producto.pdtcb_od)
-  registro_producto: registro_productoEntity[];
+  @JoinColumn({ name: 'pdtcb_od_id' })
+  pdtcb_od: pdtcb_odEntity;
   
-
 }

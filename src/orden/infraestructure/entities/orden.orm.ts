@@ -3,6 +3,7 @@ import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn, ManyToOne, JoinCo
 import { estado_ordenEntity } from './estado_orden.orm';
 import { orden_lugarEntity } from './orden_lugar.orm';
 import { pdtcb_odEntity } from './pdtcb_od.orm';
+import { registro_productoEntity } from './registroProducto.orm';
 
 @Entity('orden')
 export class OrdenEntity extends BaseEntity {
