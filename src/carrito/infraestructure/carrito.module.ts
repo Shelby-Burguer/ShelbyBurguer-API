@@ -14,10 +14,11 @@ import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-aut
 import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 import { carritoIngredienteEntity } from './entities/carritoIngredientes.orm';
 import { registro_productoEntity } from 'src/orden/infraestructure/entities/registroProducto.orm';
+import { carritoIngrediente_carritoEntity } from './entities/carritoIngredienteCarritoEntity.orm';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([carritoEntity, productoEntity, pdtcb_odEntity, carritoIngredienteEntity, registro_productoEntity ]),
+    TypeOrmModule.forFeature([carritoEntity, productoEntity, pdtcb_odEntity, carritoIngredienteEntity, registro_productoEntity, carritoIngrediente_carritoEntity ]),
   ],
   controllers: [carritoController],
   providers: [

@@ -12,6 +12,7 @@ import { createCarritoIngredienteDto } from 'src/carrito/application/dto/createC
 import { registro_productoEntity } from 'src/orden/infraestructure/entities/registroProducto.orm';
 import { createNewCarritoDto } from 'src/carrito/application/dto/createCarritoNew.dto';
 import { createingredieteArrayDto } from 'src/carrito/application/dto/createIngredienteArray.dto';
+import { carritoIngrediente_carritoEntity } from '../entities/carritoIngredienteCarritoEntity.orm';
 
 @Injectable()
 export class carritoPersisteceAdapter implements iCarritoRepository {
@@ -25,13 +26,13 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
     @InjectRepository(carritoIngredienteEntity)
     private readonly carritoIngredienteRepository: Repository<carritoIngredienteEntity>,
     @InjectRepository(registro_productoEntity)
-    private readonly registro_productoRepository: Repository<registro_productoEntity>,   
-    
+    private readonly registro_productoRepository: Repository<registro_productoEntity>,
+    @InjectRepository(carritoIngrediente_carritoEntity)
+    private readonly carritoIngrediente_carritoRepository: Repository<carritoIngrediente_carritoEntity>,
   ) {}
 
   async getAllCarrito(): Promise<any[]> {
     const carrito: carritoEntity[] = await this.carritoRepository.find();
-    console.log('carrito', carrito);
 
     const productos: productoEntity[] = [];
 
@@ -45,93 +46,112 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
     return productos;
   }
 
-    async getAllCarritoIngrediente(): Promise<any[]> {
-    const carrito: carritoIngredienteEntity[] = await this.carritoIngredienteRepository.find();
-    console.log('CarritoIngrediente', carrito);
+  async getAllCarritoIngrediente(): Promise<any[]> {
+    const carrito: carritoIngredienteEntity[] =
+      await this.carritoIngredienteRepository.find();
 
     return carrito;
   }
 
-async createCarrito(carrito: createCarritoDto): Promise<any> {
-  const carritoE = new carritoEntity();
-  carritoE.carrito_id = new UniqueId().getId();
-  carritoE.orden_id = carrito.idOrden;
-  carritoE.producto_id = carrito.idProducto;
-  await this.carritoRepository.save(carritoE);
-  console.log(carritoE);
+  async createCarrito(carrito: createCarritoDto): Promise<any> {
+    console.log('id orden', carrito.idOrden)
+    const carritoE = new carritoEntity();
+    carritoE.carrito_id = new UniqueId().getId();
+    carritoE.orden_id = carrito.idOrden;
+    carritoE.producto_id = carrito.idProducto;
+    await this.carritoRepository.save(carritoE);
+    console.log(carritoE);
 
-  for (let i = 0; i < carrito.ingrediente_id.length; i++) {
-    const carritoI = new carritoIngredienteEntity();
-    carritoI.carrito_ingrediente_id = new UniqueId().getId();
-    carritoI.ingrediente_id = carrito.ingrediente_id[i].id;
-    carritoI.cantidad = carrito.ingrediente_id[i].cantidad;
-    carritoI.producto_id = carrito.idProducto;
-    await this.carritoIngredienteRepository.save(carritoI);
-    console.log(carritoI);
+    let carritoIngredienteCarritoId: string;
+    for (let i = 0; i < carrito.ingrediente_id.length; i++) {
+      const carritoI = new carritoIngredienteEntity();
+      carritoI.carrito_ingrediente_id = new UniqueId().getId();
+      carritoI.ingrediente_id = carrito.ingrediente_id[i].id;
+      carritoI.cantidad = carrito.ingrediente_id[i].cantidad;
+      carritoI.producto_id = carrito.idProducto;
+      await this.carritoIngredienteRepository.save(carritoI);
+
+      const carritoIngredienteCarrito = new carritoIngrediente_carritoEntity();
+      carritoIngredienteCarrito.carritoingrediente_carrito_id =
+        new UniqueId().getId();
+      carritoIngredienteCarrito.carrito_id = carritoE.carrito_id;
+      carritoIngredienteCarrito.carrito_ingrediente_id =
+        carritoI.carrito_ingrediente_id;
+      await this.carritoIngrediente_carritoRepository.save(
+        carritoIngredienteCarrito,
+      );
+
+      if (i === 0) {
+        carritoIngredienteCarritoId =
+          carritoIngredienteCarrito.carritoingrediente_carrito_id;
+      }
+    }
+
+    return {
+      carrito_id: carritoE.carrito_id,
+      orden_id: carrito.idOrden,
+      producto_id: carrito.idProducto,
+      carritoIngrediente_carrito_id: carritoIngredienteCarritoId,
+    };
   }
 
-  return {
-    carrito_id: carritoE.carrito_id,
-    orden_id: carrito.idOrden,
-    producto_id: carrito.idProducto,
-  };
-}
-
-
-  async createCarritoIngrediente(carritoIngrediente: createCarritoIngredienteDto): Promise<any> {
+  async createCarritoIngrediente(
+    carritoIngrediente: createCarritoIngredienteDto,
+  ): Promise<any> {
     const carritoI = new carritoIngredienteEntity();
     carritoI.carrito_ingrediente_id = new UniqueId().getId();
     carritoI.ingrediente_id = carritoIngrediente.ingrediente_id;
     carritoI.producto_id = carritoIngrediente.producto_id;
     await this.carritoIngredienteRepository.save(carritoI);
     console.log(carritoI);
-
+    
     return {
       carrito_id: carritoI.carrito_ingrediente_id,
       ingrediente_id: carritoI.ingrediente_id,
-      producto_id: carritoI.producto_id
+      producto_id: carritoI.producto_id,
     };
   }
 
-async createProductoOrdenes(registro_producto: createingredieteArrayDto): Promise<any> {
-console.log('Este es el ingrediente', registro_producto.ingrediente_id)
-  await registro_producto.productos.map(async (item) => {
-    const pdtcb_od = new pdtcb_odEntity();
-    pdtcb_od.pdtcb_od_id = new UniqueId().getId();
-    pdtcb_od.orden_id = item.idOrden;
-    pdtcb_od.producto_id = item.idProducto;
-    pdtcb_od.combo_id = null;
-    await this.pdtcb_odRepository.save(pdtcb_od);
-    
-    await registro_producto.ingrediente_id.map(async (ingrediente) => {
-    console.log('Este es el ingrediente dento del map')
+  async createProductoOrdenes(carrito: createingredieteArrayDto): Promise<any> {
+    // Obtener todos los registros de la tabla carritoIngrediente_carrito con sus relaciones correspondientes
+    const carritoIngredientesCarrito =
+      await this.carritoIngrediente_carritoRepository.find({
+        relations: [
+          'carrito',
+          'carritoIngrediente'
+        ],
+      });
+
+    // Recorrer cada registro para obtener la información necesaria
+    for (const cic of carritoIngredientesCarrito) {
+      const pdtcb_od = new pdtcb_odEntity();
+      pdtcb_od.pdtcb_od_id = new UniqueId().getId();
+      pdtcb_od.producto_id = cic.carrito.producto_id;
+      pdtcb_od.orden_id = cic.carrito.orden_id;
+      pdtcb_od.combo_id = null;
+      await this.pdtcb_odRepository.save(pdtcb_od);
+        console.log('Sale?')
       const registroProducto = new registro_productoEntity();
       registroProducto.registro_producto_id = new UniqueId().getId();
-      registroProducto.ingrediente_id = ingrediente.ingrediente_id;
+      registroProducto.ingrediente_id = cic.carritoIngrediente.ingrediente_id;
       registroProducto.pdtcb_od_id = pdtcb_od.pdtcb_od_id;
-      registroProducto.producto_id = item.idProducto;
-
-      console.log('Este es el ingrediente dento del map', registroProducto)
+      registroProducto.producto_id = cic.carrito.producto_id;
       await this.registro_productoRepository.save(registroProducto);
-    });
-
-   // const resultsRegistroProducto = await Promise.all(promisesRegistroProducto);
-
-   
-  });
- return {};
-}
+    }
+    console.log('Sale?')
+    return {};
+  }
 
   async deleteCarrito(): Promise<any> {
     await this.carritoRepository.delete({});
-    await this.registro_productoRepository.delete({});
+    await this.carritoIngredienteRepository.delete({});
     let messageDelete: string = 'Eiminación realizada';
 
     return messageDelete;
   }
 
   async deleteProductoCarrito(carrito: createNewCarritoDto): Promise<any> {
-    console.log(carrito);
+    console.log('id carrito para eliminar', carrito);
     await this.carritoRepository.delete({ producto_id: carrito.idProducto });
     let messageDelete: string = 'Eiminación realizada';
 

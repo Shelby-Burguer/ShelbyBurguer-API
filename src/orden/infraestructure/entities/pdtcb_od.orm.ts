@@ -48,6 +48,5 @@ export class pdtcb_odEntity extends BaseEntity {
 
   @OneToMany(() => registro_productoEntity, (registro_producto) => registro_producto.pdtcb_od)
   registro_producto: registro_productoEntity[];
-  
 
 }
