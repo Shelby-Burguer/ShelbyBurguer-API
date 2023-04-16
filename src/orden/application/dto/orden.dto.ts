@@ -29,6 +29,11 @@ export class OrdenDto {
 
   @Expose()
   @IsString()
+  total_orden: string;
+
+
+  @Expose()
+  @IsString()
   numero_orden: string;
 
   @Expose()

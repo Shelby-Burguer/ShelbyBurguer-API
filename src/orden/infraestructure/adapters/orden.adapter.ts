@@ -12,6 +12,13 @@ import { orden_lugarEntity } from '../entities/orden_lugar.orm';
 import { estadoEntity } from '../entities/estado.orm';
 import { estado_ordenEntity } from '../entities/estado_orden.orm';
 import { ordenEstadoDto } from 'src/orden/application/dto/ordenEstado.dto';
+import { pagoElectronicoEntity } from '../entities/pagoElectronico.orm';
+import { pagoEfectivoEntity } from '../entities/pagoEfectivo.orm';
+import { zelleEntity } from '../entities/zelle.orm';
+import { pagoDto } from 'src/orden/application/dto/pago.dto';
+import { ordenPagoEntity } from '../entities/orden_pago.orm';
+import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
+import { montoBs_DolaresEntity } from '../entities/montoBS_Dolares.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -27,7 +34,17 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(estadoEntity)
     private readonly estadoRepository: Repository<estadoEntity>,
     @InjectRepository(estado_ordenEntity)
-    private readonly estadoOrdenRepository: Repository<estadoEntity>
+    private readonly estadoOrdenRepository: Repository<estadoEntity>,
+    @InjectRepository(pagoElectronicoEntity)
+    private readonly pagoElectronicoERepository: Repository<pagoElectronicoEntity>,
+    @InjectRepository(pagoEfectivoEntity)
+    private readonly pagoEfectivoRepository: Repository<pagoEfectivoEntity>,
+    @InjectRepository(zelleEntity)
+    private readonly zelleRepository: Repository<zelleEntity>,
+    @InjectRepository(ordenPagoEntity)
+    private readonly ordenPagoRepository: Repository<ordenPagoEntity>,
+    @InjectRepository(montoBs_DolaresEntity)
+    private readonly montoBsRepository: Repository<montoBs_DolaresEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -86,15 +103,14 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
   async procesarOrdenId(orderId: createOrdenIdDto, orden: OrdenDto): Promise<any> {
     const horaActual = new Date();
     const horaOrden = horaActual.toLocaleTimeString();
-
     if(orden.numero_mesa){
-     const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, numero_mesa: orden.numero_mesa});
+     const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, numero_mesa: orden.numero_mesa, total_orden: orden.total_orden});
     
       if (result.affected === 0) {
         throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
       }
     } else if (orden.tipo_orden === "delivery"){
-        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id});
+        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, total_orden: orden.total_orden});
 
       const lugar = await this.lugarRepository.findOne({
       where: { id_lugar: orden.lugar_id },
@@ -124,7 +140,7 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
             throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
         }
     }else{
-        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id});
+        const result = await this.ordenRepository.update(orderId.id, { hora_orden: horaOrden, descuento: orden.descuento.toString(), tipo_orden: orden.tipo_orden, cliente_id: orden.cliente_id, total_orden: orden.total_orden});
 
         if (result.affected === 0) {
             throw new NotFoundException(`Orden con id ${orderId.id} no encontrada`);
@@ -181,6 +197,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     descuento: orden.descuento,
     tipo_orden: orden.tipo_orden,
     numero_orden: orden.numero_orden,
+    total_orden: orden.total_orden,
     cliente: {
       id_cliente: orden.cliente.id_cliente,
       cedula_cliente: orden.cliente.cedula_cliente,
@@ -220,7 +237,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       },
     })),
   }));
-
+ 
   return resultado;
 }
 
@@ -256,4 +273,218 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
   }
 
 
+    async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
+    if (pago.tipo_pago === "electronico"){
+    const pagoElectronico = new pagoElectronicoEntity()
+    pagoElectronico.pago_id = new UniqueId().getId();
+    pagoElectronico.tipo_pago = pago.pagoElectronico.tipo_pago;
+    pagoElectronico.numero_referencia = pago.pagoElectronico.numero_referencia;
+    await this.pagoElectronicoERepository.save(pagoElectronico);
+    
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.pago_id = pagoElectronico.pago_id;
+    ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
+
+    
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
+    await this.ordenPagoRepository.save(ordenPago)
+
+    
+
+    } else if(pago.tipo_pago === "efectivo"){
+
+    const pagoEfectivo = new pagoEfectivoEntity()
+    pagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
+    pagoEfectivo.tipo_pago = pago.pagoEfectivo.tipo_pago;
+    pagoEfectivo.denominacion = pago.pagoEfectivo.denominacion;
+    pagoEfectivo.numero_serie = pago.pagoEfectivo.numero_serie;
+    pagoEfectivo.cantidad_billetes = pago.pagoEfectivo.cantidad_billetes;
+
+    await this.pagoEfectivoRepository.save(pagoEfectivo);
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.dolares_efectivo_id = pagoEfectivo.dolares_efectivo_id;
+    ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
+
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
+    await this.ordenPagoRepository.save(ordenPago)
+
+    }else{
+
+    const zelle = new zelleEntity()
+    zelle.zelle_id = new UniqueId().getId();
+    zelle.correo_electronico = pago.zelle.correo_electronico;
+
+    await this.zelleRepository.save(zelle);
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+    
+    const ordenPago = new ordenPagoEntity();
+    ordenPago.orden_pago_id = new UniqueId().getId();
+    ordenPago.orden_id = orderId.id;
+    ordenPago.zelle_id = zelle.zelle_id;
+    ordenPago.fecha_historial =formattedDate;
+    ordenPago.monto = pago.monto;
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.montobs_dolares_id = lastMontoId
+
+    await this.ordenPagoRepository.save(ordenPago)
+    
+    }
+    return {};
+  }
+
+async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
+  try {
+    const ordenes = await ordenPagoEntity.find({
+      where: { orden_id: orderId.id },
+      relations: ['pagoElectronico', 'pagoEfectivo', 'zelle', 'montoBs_Dolares'], // Agregamos la relación a la tabla montobs_dolares
+    });
+
+    if (ordenes.length === 0) {
+      console.log(`No se encontró una orden con ID ${orderId.id}`);
+      return null;
+    }
+
+    const pagos = ordenes.flatMap((orden) => [
+      ...(orden.pagoElectronico
+        ? [
+            {
+              tipo_pago: 'electrónico',
+              numero_referencia: orden.pagoElectronico.numero_referencia,
+              tipo_electronico: orden.pagoElectronico.tipo_pago,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
+            },
+          ]
+        : []),
+      ...(orden.pagoEfectivo
+        ? [
+            {
+              tipo_pago: 'efectivo',
+              numero_serie: orden.pagoEfectivo.numero_serie,
+              denominacion: orden.pagoEfectivo.denominacion,
+              cantidad_billetes: orden.pagoEfectivo.cantidad_billetes,
+              tipo_efectivo: orden.pagoEfectivo.tipo_pago,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
+            },
+          ]
+        : []),
+      ...(orden.zelle
+        ? [
+            {
+              tipo_pago: 'Zelle',
+              correo_electronico: orden.zelle.correo_electronico,
+              fecha_historial: orden.fecha_historial,
+              monto: orden.monto,
+              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
+              monto_bs: orden.montoBs_Dolares.monto
+            },
+          ]
+        : []),
+    ]);
+
+    return pagos;
+  } catch (error) {
+    console.log(`Error al obtener los pagos para la orden con ID ${orderId.id}`);
+    console.error(error);
+    return null;
+  }
+}
+
+  async createMontoBS(montoBs: montoBsDto): Promise<any> {
+    const montoBs_Dolares = new montoBs_DolaresEntity();
+    montoBs_Dolares.montobs_dolares_id = new UniqueId().getId();
+
+    const currentDate = new Date();
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const year = currentDate.getFullYear();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+    montoBs_Dolares.fecha_historial = formattedDate
+    montoBs_Dolares.monto = montoBs.monto
+
+    await this.montoBsRepository.save(montoBs_Dolares);
+
+
+    return {};
+  }
+
+
+  async getAllMontoBS(): Promise<montoBsDto[]> {
+  const montos = await this.montoBsRepository.find();
+  const lastDate = montos.reduce((prev, current) => {
+    const prevDate = new Date(prev.fecha_historial);
+    const currentDate = new Date(current.fecha_historial);
+    return prevDate > currentDate ? prev : current;
+  }).fecha_historial;
+  const lastMontos = montos.filter(monto => monto.fecha_historial === lastDate);
+  return lastMontos.map(monto => ({ monto: monto.monto, fecha_historial: monto.fecha_historial }));
+}
 }
