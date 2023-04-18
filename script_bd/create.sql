@@ -261,7 +261,6 @@ ALTER TABLE carritoIngrediente_carrito
 ADD CONSTRAINT fk_carritoIngrediente_carrito_carritoIngrediente FOREIGN KEY (carrito_ingrediente_id) REFERENCES CARRITO_INGREDIENTE(carrito_ingrediente_id) ON DELETE CASCADE,
 ADD CONSTRAINT fk_carritoIngrediente_carrito_carrito FOREIGN KEY (carrito_id) REFERENCES carrito(carrito_id) ON DELETE CASCADE;
 
-
 alter table registro_producto
     add constraint fk_id_registro_producto_pdtcb_od foreign key (pdtcb_od_id) references PDTCB_OD(pdtcb_od_id) ON DELETE cascade,
     add constraint fk_id_registro_producto_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id) ON DELETE cascade,

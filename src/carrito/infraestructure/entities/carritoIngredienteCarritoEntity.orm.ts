@@ -35,7 +35,7 @@ export class carritoIngrediente_carritoEntity extends BaseEntity {
     eager: true,
     nullable: true,
   })
-  @JoinColumn({ name: 'carritoingrediente_carrito_id' })
+  @JoinColumn({ name: 'carrito_ingrediente_id' })
   carritoIngrediente: carritoIngredienteEntity;
 }
 

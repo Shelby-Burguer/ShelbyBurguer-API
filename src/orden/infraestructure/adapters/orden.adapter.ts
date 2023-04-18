@@ -83,7 +83,6 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
   });
 
     const products = pdtcb_odRecords.flatMap((pdtcb_od) => pdtcb_od.producto);
-
     return products;
   }
 
@@ -237,7 +236,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       const registrosProducto = productoOrden.registro_producto.filter((registroProducto) => {
         return registroProducto.producto_id === idProducto && registroProducto.pdtcb_od_id === productoOrden.pdtcb_od_id;
       });
-      console.log('Registro bonito',registrosProducto)
       // iterar sobre los registros de producto filtrados y agregar los ingredientes correspondientes
       registrosProducto.forEach((registroProducto) => {
         detallesProducto.ingredientes.push({
@@ -264,16 +262,10 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
   return resultado;
 }
 
-
-
-
-
-
   async getEstados(): Promise<any[]> {
     const estados = await this.estadoRepository.find();
     return estados;
   }
-
 
   async createOrdenEstado(estadoOrden: ordenEstadoDto): Promise<any> {
     const orden = new OrdenEntity();

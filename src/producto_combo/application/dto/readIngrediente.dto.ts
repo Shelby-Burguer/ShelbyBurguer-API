@@ -30,4 +30,8 @@ export class readIngredienteDto {
   @Expose()
   @IsString()
   proteina: string;
+
+  @Expose()
+  @IsString()
+  extra: string;
 }

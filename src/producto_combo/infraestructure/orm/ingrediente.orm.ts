@@ -19,6 +19,9 @@ export class ingredienteEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   nombre_imagen: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  extra: string;
+
   @Column({
     type: 'bytea',
     nullable: true,

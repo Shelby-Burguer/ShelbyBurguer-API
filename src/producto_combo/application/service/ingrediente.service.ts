@@ -38,7 +38,7 @@ export class ingredienteService {
       );
     return this._mapper.toDomain(createdIngredienteEntity);
   }
-
+  
   async createImagenIngrediente(
     imagenIngrediente: createImagenIngredienteDto,
     idIngrediente: idIngredienteDto,
