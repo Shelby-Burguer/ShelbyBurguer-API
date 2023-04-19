@@ -21,9 +21,11 @@ create table INGREDIENTE
      nombre_imagen varchar(70) null,
      datos_imagen bytea null,
      proteina_ingrediente varchar(70) null,
+     extra varchar(70) null,
      constraint pk_ingrediente_id primary key (ingrediente_id)	
 
 );
+
 
 create table IGDT_PDT
 (
@@ -190,6 +192,8 @@ CREATE TABLE registro_producto (
   ingrediente_id varchar(70) null,
   producto_id varchar(70) null,
   pdtcb_od_id varchar(70) null,
+  cantodad varchar(70) null,
+  precio varchar(70) null,
   constraint pk_registro_producto_id primary key (registro_producto_id)
 );
 
@@ -199,6 +203,7 @@ create table carrito_ingrediente
      ingrediente_id varchar(70) null,
      producto_id varchar(70) null,
      cantidad varchar(70) null,
+     precio varchar(70) null,
      constraint pk_carrito_ingrediente_id primary key (carrito_ingrediente_id)
 );
 
