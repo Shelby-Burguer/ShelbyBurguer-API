@@ -21,9 +21,11 @@ create table INGREDIENTE
      nombre_imagen varchar(70) null,
      datos_imagen bytea null,
      proteina_ingrediente varchar(70) null,
+     extra varchar(70) null,
      constraint pk_ingrediente_id primary key (ingrediente_id)	
 
 );
+
 
 create table IGDT_PDT
 (
@@ -185,23 +187,32 @@ CREATE TABLE user_role (
   constraint pk_user_role_id primary key (user_role_id)
 );
 
-CREATE TABLE "cliente" (
-     "id_cliente" character varying NOT NULL,
-     "cedula_cliente" character varying(10) NOT NULL,
-     "nombre_cliente" character varying(20) NOT NULL,
-     "apellido_cliente" character varying(20),
-     "telefono_cliente" character varying(11),
-     "id_lugar_cliente" character varying,
-     CONSTRAINT "PK_dbf4725e2849f4036253ee7dbd0" PRIMARY KEY ("id_cliente")
+CREATE TABLE registro_producto (
+  registro_producto_id varchar(70) not null,
+  ingrediente_id varchar(70) null,
+  producto_id varchar(70) null,
+  pdtcb_od_id varchar(70) null,
+  cantodad varchar(70) null,
+  precio varchar(70) null,
+  constraint pk_registro_producto_id primary key (registro_producto_id)
 );
 
-CREATE TABLE "lugar" (
-     "id_lugar" character varying NOT NULL,
-     "nombre_lugar" character varying(100) NOT NULL,
-     "tipo_lugar" "public"."lugar_tipo_lugar_enum" NOT NULL,
-     "precio_lugar" real,
-     "id_padre_lugar" character varying,
-     CONSTRAINT "PK_a058a781463d243964c637c3ce9" PRIMARY KEY ("id_lugar")
+create table carrito_ingrediente
+(	 
+     carrito_ingrediente_id varchar(70) not null,
+     ingrediente_id varchar(70) null,
+     producto_id varchar(70) null,
+     cantidad varchar(70) null,
+     precio varchar(70) null,
+     constraint pk_carrito_ingrediente_id primary key (carrito_ingrediente_id)
+);
+
+create table carritoIngrediente_carrito
+(	 
+  carritoingrediente_carrito_id varchar(70) not null,
+  carrito_ingrediente_id varchar(70) not null,
+  carrito_id varchar(70) not null,
+  constraint pk_carritoIngrediente_carrito primary key (carritoingrediente_carrito_id)
 );
 
 ALTER TABLE "cliente" ADD CONSTRAINT "FK_d9cf8c718ba2133c20c14db42c3" FOREIGN KEY ("id_lugar_cliente") REFERENCES "lugar"("id_lugar") ON DELETE NO ACTION ON UPDATE NO action;
@@ -228,7 +239,6 @@ alter table ORDEN
     add constraint fk_id_cliente_orden foreign key (cliente_id) references cliente(id_cliente) ON DELETE CASCADE
 ;
 
-
 alter table orden_lugar
     add constraint fk_id_orden_lugar_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade,
     add constraint fk_id_lugar_orden_lugar foreign key (lugar_id) references lugar(id_lugar) ON DELETE CASCADE
@@ -245,6 +255,21 @@ alter table orden_pago
     add constraint fk_id_orden_pago_pago_efectivo foreign key (dolares_efectivo_id) references pago_efectivo(dolares_efectivo_id) ON DELETE cascade,
     add constraint fk_id_orden_pago_zelle foreign key (zelle_id) references zelle(zelle_id) ON DELETE cascade,
     add constraint fk_id_orden_montobs_dolares foreign key (montobs_dolares_id) references montobs_dolares(montobs_dolares_id) ON DELETE cascade
+;
+
+alter table user_role
+    add constraint fk_id_user_role_users foreign key (users_id) references users(users_id) ON DELETE cascade,
+    add constraint fk_id_user_role_roles foreign key (roles_id) references roles(roles_id) ON DELETE CASCADE
+;
+
+ALTER TABLE carritoIngrediente_carrito
+ADD CONSTRAINT fk_carritoIngrediente_carrito_carritoIngrediente FOREIGN KEY (carrito_ingrediente_id) REFERENCES CARRITO_INGREDIENTE(carrito_ingrediente_id) ON DELETE CASCADE,
+ADD CONSTRAINT fk_carritoIngrediente_carrito_carrito FOREIGN KEY (carrito_id) REFERENCES carrito(carrito_id) ON DELETE CASCADE;
+
+alter table registro_producto
+    add constraint fk_id_registro_producto_pdtcb_od foreign key (pdtcb_od_id) references PDTCB_OD(pdtcb_od_id) ON DELETE cascade,
+    add constraint fk_id_registro_producto_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id) ON DELETE cascade,
+    add constraint fk_id_registro_producto_producto foreign key (producto_id) references PRODUCTO(producto_id) ON DELETE CASCADE
 ;
 
 -- DROP TYPE IF EXISTS "public"."lugar_tipo_lugar_enum";

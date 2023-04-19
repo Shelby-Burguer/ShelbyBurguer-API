@@ -83,7 +83,6 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
   });
 
     const products = pdtcb_odRecords.flatMap((pdtcb_od) => pdtcb_od.producto);
-
     return products;
   }
 
@@ -186,9 +185,11 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       'pdtcb_od.combo',
       'estado_orden',
       'estado_orden.estado',
+      'pdtcb_od.registro_producto',
+      'pdtcb_od.registro_producto.ingrediente',
     ],
   });
-  
+
   const resultado = ordenes.map((orden) => ({
     orden_id: orden.orden_id,
     fecha_orden: orden.fecha_orden,
@@ -219,13 +220,35 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       },
       precio_historico: ordenLugar.precio_historico,
     })),
-    productos: orden.pdtcb_od.map((productoOrden) => ({
-      pdtcb_od_id: productoOrden.pdtcb_od_id,
-      producto_id: productoOrden.producto?.producto_id,
-      producto_nombre: productoOrden.producto?.nombre_producto,
-      combo_id: productoOrden.combo?.combo_id,
-      combo_nombre: productoOrden.combo?.nombre_combo,
-    })),
+    // iterar sobre los productos de la orden
+    productos: orden.pdtcb_od.map((productoOrden) => {
+      const idProducto = productoOrden.producto?.producto_id
+      const detallesProducto = {
+        pdtcb_od_id: productoOrden.pdtcb_od_id,
+        producto_id: idProducto,
+        producto_nombre: productoOrden.producto?.nombre_producto,
+        combo_id: productoOrden.combo?.combo_id,
+        combo_nombre: productoOrden.combo?.nombre_combo,
+        ingredientes: [],
+      };
+      
+      // filtrar los registros de producto correspondientes a este producto de la orden
+      const registrosProducto = productoOrden.registro_producto.filter((registroProducto) => {
+        return registroProducto.producto_id === idProducto && registroProducto.pdtcb_od_id === productoOrden.pdtcb_od_id;
+      });
+      // iterar sobre los registros de producto filtrados y agregar los ingredientes correspondientes
+      registrosProducto.forEach((registroProducto) => {
+        detallesProducto.ingredientes.push({
+          registro_producto_id: registroProducto.registro_producto_id,
+          ingrediente_id: registroProducto.ingrediente?.ingrediente_id,
+          ingrediente_nombre: registroProducto.ingrediente?.nombre_ingrediente,
+          cantidad: registroProducto.cantidad,
+          precio: registroProducto.precio
+        });
+      });
+      
+      return detallesProducto;
+    }),
     estado: orden.estado_orden.map((estadoOrden) => ({
       estado_orden_id: estadoOrden.estado_orden_id,
       fecha_historial: estadoOrden.fecha_historial,
@@ -237,7 +260,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       },
     })),
   }));
- 
+
   return resultado;
 }
 
@@ -245,7 +268,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     const estados = await this.estadoRepository.find();
     return estados;
   }
-
 
   async createOrdenEstado(estadoOrden: ordenEstadoDto): Promise<any> {
     const orden = new OrdenEntity();

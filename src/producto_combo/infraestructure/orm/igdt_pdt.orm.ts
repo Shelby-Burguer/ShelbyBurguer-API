@@ -18,6 +18,9 @@ export class igdt_pdtEntity extends BaseEntity {
   cantidad_igdt_pdt: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
+  precio_igdt_pdt: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
   ingrediente_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })

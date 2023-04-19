@@ -34,9 +34,10 @@ export class ingredientePersisteceAdapter implements iIngredienteRepository {
         nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
         unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
         proteina_ingrediente: _ingredienteEntity.proteina_ingrediente,
+        extra: _ingredienteEntity.extra,
         objecturl_ingrediente: _ingredienteEntity.objecturl_ingrediente,
       });
-
+    console.log("salida ingrediente",ingrediente);
     return ingrediente;
   }
 
@@ -63,6 +64,7 @@ export class ingredientePersisteceAdapter implements iIngredienteRepository {
       nombre_ingrediente: _ingredienteEntity.nombre_ingrediente,
       unidad_ingrediente: _ingredienteEntity.unidad_ingrediente,
       proteina_ingrediente: _ingredienteEntity.proteina_ingrediente,
+      extra: _ingredienteEntity.extra,
     });
 
     const ingrediente: ingredienteEntity =

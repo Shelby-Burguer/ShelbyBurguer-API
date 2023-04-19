@@ -5,10 +5,12 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
+  OneToMany
 } from 'typeorm';
 import { productoEntity } from '../../../producto_combo/infraestructure/orm/producto.orm';
 import { comboEntity } from '../../../producto_combo/infraestructure/orm/combo.orm';
 import { OrdenEntity } from './orden.orm';
+import { registro_productoEntity } from './registroProducto.orm';
 
 @Entity('pdtcb_od')
 export class pdtcb_odEntity extends BaseEntity {
@@ -43,5 +45,8 @@ export class pdtcb_odEntity extends BaseEntity {
   })
   @JoinColumn({ name: 'orden_id' })
   orden: OrdenEntity;
+
+  @OneToMany(() => registro_productoEntity, (registro_producto) => registro_producto.pdtcb_od)
+  registro_producto: registro_productoEntity[];
 
 }

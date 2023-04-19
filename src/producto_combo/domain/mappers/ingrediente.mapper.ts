@@ -27,6 +27,7 @@ export class ingredienteDataMapper
     ingre.objectURL = entity.objecturl_ingrediente;
     ingre.nombreImagen = entity.nombre_imagen;
     ingre.datosImagen = entity.datos_imagen;
+    ingre.extra = stringVo.create(entity.extra);
     ingre.proteina = stringVo.create(entity.proteina_ingrediente);
     return ingre;
   }
@@ -38,6 +39,7 @@ export class ingredienteDataMapper
     ingreEntity.unidad_ingrediente = ingrediente.unidad.getString();
     ingreEntity.objecturl_ingrediente = ingrediente.objectURL;
     ingreEntity.proteina_ingrediente = ingrediente.proteina.getString();
+    ingreEntity.extra = ingrediente.extra.getString();
 
     return ingreEntity;
   }
@@ -62,7 +64,8 @@ export class ingredienteDataMapper
     ingredienteDto.nombreImagen = dto.nombreImagen;
     ingredienteDto.datosImagen = dto.datosImagen;
     ingredienteDto.proteina = dto.proteina.getString();
-
+    ingredienteDto.extra = dto.extra.getString();
+    
     return ingredienteDto;
   }
 
@@ -82,8 +85,8 @@ export class ingredienteDataMapper
     _ingrediente.nombre = stringVo.create(dto.nombre);
     _ingrediente.unidad = stringVo.create(dto.unidad);
     _ingrediente.proteina = stringVo.create(dto.proteina);
+    _ingrediente.extra = stringVo.create(dto.extra);
     _ingrediente.objectURL = dto.objectURL;
-
     return _ingrediente;
   }
 
@@ -106,6 +109,7 @@ export class ingredienteDataMapper
     _ingrediente.nombre = stringVo.create(updateIngrediente.nombre);
     _ingrediente.unidad = stringVo.create(updateIngrediente.unidad);
     _ingrediente.proteina = stringVo.create(updateIngrediente.proteina);
+    _ingrediente.extra = stringVo.create(updateIngrediente.extra);
     return _ingrediente;
   }
 

@@ -17,5 +17,9 @@ export class createIngredienteDto {
 
   @Expose()
   @IsString()
+  extra: string;
+
+  @Expose()
+  @IsString()
   objectURL: string;
 }

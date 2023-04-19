@@ -14,4 +14,9 @@ export class updateIngredientelDto {
   @Expose()
   @IsString()
   proteina: string;
+
+  @Expose()
+  @IsString()
+  extra: string;
+
 }
