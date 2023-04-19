@@ -9,5 +9,6 @@ export class ingrediente {
   public nombreImagen: string;
   public datosImagen: Uint8Array;
   public proteina: stringVo;
+  public precio: stringVo;
   public extra: stringVo;
 }

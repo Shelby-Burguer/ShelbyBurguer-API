@@ -33,5 +33,9 @@ export class readIngredienteDto {
 
   @Expose()
   @IsString()
+  precio: string;
+
+  @Expose()
+  @IsString()
   extra: string;
 }

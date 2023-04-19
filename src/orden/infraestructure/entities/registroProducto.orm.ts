@@ -26,6 +26,12 @@ export class registro_productoEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: true })
   pdtcb_od_id: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  cantidad: string;
+
+  @Column({ type: 'varchar', length: 300, nullable: true })
+  precio: string;
+
 @ManyToOne(() => productoEntity, (producto) => producto.registro_producto, {
     eager: true,
   })

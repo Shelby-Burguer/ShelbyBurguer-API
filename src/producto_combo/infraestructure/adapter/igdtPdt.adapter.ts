@@ -38,6 +38,7 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
     await this.igdtPdtRepository.save({
       igdt_pdt_id: _igdtPdtEntity.igdt_pdt_id,
       cantidad_igdt_pdt: _igdtPdtEntity.cantidad_igdt_pdt,
+      precio_igdt_pdt: _igdtPdtEntity.precio_igdt_pdt,
       ingrediente_id: _igdtPdtEntity.ingrediente_id,
       producto_id: _igdtPdtEntity.producto_id,
     });
@@ -124,6 +125,7 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
           // create new record
           const igdtPdt = this.igdtPdtRepository.create({
             cantidad_igdt_pdt: igdtPdtTest.cantidad,
+            precio_igdt_pdt: igdtPdtTest.precio,
             ingrediente_id: igdtPdtTest.id,
             producto_id: productId.producto_id,
             igdt_pdt_id: new UniqueId().getId(),

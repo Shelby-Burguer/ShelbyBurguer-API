@@ -242,6 +242,8 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
           registro_producto_id: registroProducto.registro_producto_id,
           ingrediente_id: registroProducto.ingrediente?.ingrediente_id,
           ingrediente_nombre: registroProducto.ingrediente?.nombre_ingrediente,
+          cantidad: registroProducto.cantidad,
+          precio: registroProducto.precio
         });
       });
       

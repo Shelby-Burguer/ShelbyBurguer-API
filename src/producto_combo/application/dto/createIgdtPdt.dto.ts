@@ -15,6 +15,10 @@ export class createIgdtPdtDto {
 
   @Expose()
   @IsString()
+  precio: string;
+
+  @Expose()
+  @IsString()
   ingrediente_id: string;
 
   @Expose()

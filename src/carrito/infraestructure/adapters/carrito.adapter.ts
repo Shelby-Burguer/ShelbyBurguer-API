@@ -68,6 +68,7 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
       carritoI.carrito_ingrediente_id = new UniqueId().getId();
       carritoI.ingrediente_id = carrito.ingrediente_id[i].id;
       carritoI.cantidad = carrito.ingrediente_id[i].cantidad;
+      carritoI.precio = carrito.ingrediente_id[i].precio;
       carritoI.producto_id = carrito.idProducto;
       await this.carritoIngredienteRepository.save(carritoI);
 
@@ -148,6 +149,8 @@ async createProductoOrdenes(carrito: createingredieteArrayDto): Promise<any> {
         registroProducto.ingrediente_id = cic.carritoIngrediente.ingrediente_id;
         registroProducto.pdtcb_od_id = pdtcb_od.pdtcb_od_id;
         registroProducto.producto_id = cic.carrito.producto_id;
+        registroProducto.cantidad = cic.carritoIngrediente.cantidad;
+        registroProducto.precio = cic.carritoIngrediente.precio;
         await this.registro_productoRepository.save(registroProducto);
       }
     }

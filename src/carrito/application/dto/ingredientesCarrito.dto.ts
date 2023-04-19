@@ -11,5 +11,9 @@ export class IngredienteCarritoDto {
   @Expose()
   @IsString()
   cantidad: string;
+
+  @Expose()
+  @IsString()
+  precio: string;
  
 }

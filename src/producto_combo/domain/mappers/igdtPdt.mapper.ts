@@ -40,14 +40,17 @@ export class igdtPdtDataMapper
 
   public toDalEntity(igdtPdt: createIgdtPdtDto): igdt_pdtEntity {
     const _igdtPdtEntity = new igdt_pdtEntity();
-    console.log('Llegue aqui en mapper', igdtPdt);
+
     if (igdtPdt.id == null){
       _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
     }
     
-    
     if (igdtPdt.cantidad){
       _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    }
+
+    if (igdtPdt.precio){
+      _igdtPdtEntity.precio_igdt_pdt = igdtPdt.precio
     }
 
     if (igdtPdt.ingrediente_id){
@@ -69,7 +72,6 @@ export class igdtPdtDataMapper
       _igdtPdtEntity.producto = pruebaProducto.toDalEntity(igdtPdt.producto);
     }
 
-    console.log('Llegue aqui en Final mapper', _igdtPdtEntity);
     return _igdtPdtEntity;
   }
 
@@ -80,9 +82,12 @@ export class igdtPdtDataMapper
       _igdtPdtEntity.igdt_pdt_id =  idVo.create(new UniqueId().getId()).getId();
     }
     
-    
     if (igdtPdt.cantidad){
       _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
+    }
+
+    if (igdtPdt.precio){
+      _igdtPdtEntity.precio_igdt_pdt = igdtPdt.precio
     }
 
     if (igdtPdt.ingrediente_id){
@@ -119,6 +124,10 @@ export class igdtPdtDataMapper
       _igdtPdtEntity.cantidad_igdt_pdt = igdtPdt.cantidad
     }
 
+    if (igdtPdt.precio){
+      _igdtPdtEntity.precio_igdt_pdt = igdtPdt.precio
+    }
+
     if (igdtPdt.ingrediente_id){
       _igdtPdtEntity.ingrediente_id = igdtPdt.ingrediente_id
     }
@@ -151,7 +160,7 @@ export class igdtPdtDataMapper
     return _productoEntity;
   }*/
 
-    public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
+  public toDalEntityImagen(imagenIngrediente: createImagenIngredienteDto, idIngrediente: idIngredienteDto,): ingredienteEntity {
     const ingreEntity = new ingredienteEntity();
     ingreEntity.ingrediente_id = idIngrediente.id;
     ingreEntity.nombre_imagen = imagenIngrediente.nombreImagen;
@@ -168,6 +177,10 @@ export class igdtPdtDataMapper
 
     if (_igdtPdt.cantidad_igdt_pdt){
       igdtPdtDto.cantidad = _igdtPdt.cantidad_igdt_pdt
+    }
+
+    if (_igdtPdt.precio_igdt_pdt){
+      igdtPdtDto.precio = _igdtPdt.precio_igdt_pdt
     }
     
     if (_igdtPdt.ingrediente_id){
@@ -230,7 +243,5 @@ export class igdtPdtDataMapper
     _productoEntity.producto_id = producto.id;
     return _productoEntity;
   }
-
-
 
 }
