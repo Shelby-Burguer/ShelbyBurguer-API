@@ -70,7 +70,6 @@ export class ordenService {
 
   async getAllMontoBS(): Promise<montoBsDto[]>{
     const montoBsDolares = await this.iOrden.getAllMontoBS();
-
     return montoBsDolares;
   }
 }

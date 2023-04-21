@@ -19,6 +19,7 @@ import { pagoDto } from 'src/orden/application/dto/pago.dto';
 import { ordenPagoEntity } from '../entities/orden_pago.orm';
 import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
 import { montoBs_DolaresEntity } from '../entities/montoBS_Dolares.orm';
+import { registro_productoEntity } from '../entities/registroProducto.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -44,7 +45,9 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(ordenPagoEntity)
     private readonly ordenPagoRepository: Repository<ordenPagoEntity>,
     @InjectRepository(montoBs_DolaresEntity)
-    private readonly montoBsRepository: Repository<montoBs_DolaresEntity>
+    private readonly montoBsRepository: Repository<montoBs_DolaresEntity>,
+    @InjectRepository(registro_productoEntity)
+    private readonly registro_productoRepository: Repository<registro_productoEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -76,15 +79,48 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     return { orden_id: orden.orden_id, numero_orden: orden.numero_orden };
   }
 
-  async getProductsByOrderId(orderId: createOrdenIdDto): Promise<any[]> {
-    const pdtcb_odRecords = await this.pdtcb_odRepository.find({
-      where: { orden_id: orderId.id },
-      relations: ['producto'],
+
+async getProductsByOrderId(orderId: createOrdenIdDto): Promise<any[]> {
+  const pdtcb_odRecords = await this.pdtcb_odRepository.find({
+    where: { orden_id: orderId.id },
+    relations: ['producto', 'registro_producto', 'registro_producto.ingrediente'],
   });
 
-    const products = pdtcb_odRecords.flatMap((pdtcb_od) => pdtcb_od.producto);
-    return products;
-  }
+  const productos = pdtcb_odRecords.flatMap((pdtcb_od) => pdtcb_od.producto);
+  const registrosProducto = pdtcb_odRecords.flatMap((pdtcb_od) => pdtcb_od.registro_producto);
+
+  const costoProductos = productos.reduce((total, producto) => {
+    return total + parseFloat(producto.costo_producto);
+  }, 0);
+
+  const costoIngredientes = registrosProducto.reduce((total, registroProducto) => {
+    const precio = registroProducto.precio ? parseFloat(registroProducto.precio) : 0;
+    return total + precio;
+  }, 0);
+
+  const costoTotal = costoProductos + costoIngredientes;
+
+  const result = productos.map((producto, index) => {
+    const registrosProductoProducto = registrosProducto.filter(
+      (registroProducto) =>
+        registroProducto.producto_id === producto.producto_id && registroProducto.pdtcb_od_id === pdtcb_odRecords[index].pdtcb_od_id,
+    );
+    const ingredientes = registrosProductoProducto.map((registroProducto) => registroProducto.ingrediente.nombre_ingrediente);
+    const precioIngredientes = registrosProductoProducto.reduce((total, registroProducto) => {
+      const precio = registroProducto.precio ? parseFloat(registroProducto.precio) : 0;
+      return total + precio;
+    }, 0);
+    return {
+      ...producto,
+      ingredientes,
+      costoTotal: costoTotal.toFixed(2),
+      costoProducto: parseFloat(producto.costo_producto).toFixed(2),
+      costoIngredientes: precioIngredientes.toFixed(2),
+    };
+  });
+
+  return result;
+}
 
   async getOrderId(orderId: createOrdenIdDto): Promise<any> {
     const order = await this.ordenRepository.findOne({
