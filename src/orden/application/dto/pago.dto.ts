@@ -18,7 +18,7 @@ export class pagoDto {
   pagoElectronico: pagoElectronicoDto;
 
   @Expose()
-  pagoEfectivo: pagoEfectivoDto;
+  pagoEfectivo: pagoEfectivoDto[];
 
   @Expose()
   zelle: zelleDto;

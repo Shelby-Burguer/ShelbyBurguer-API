@@ -9,15 +9,15 @@ export class pagoEfectivoDto{
 
   @Expose()
   @IsString()
-  numero_serie: string;
+  serialNumber: string;
 
   @Expose()
   @IsString()
-  denominacion: string;
+  denomination: string;
 
   @Expose()
   @IsString()
-  cantidad_billetes: string;
+  cantidadBilletes: string;
 
   @Expose()
   @IsString()
@@ -25,6 +25,10 @@ export class pagoEfectivoDto{
   
   @Expose()
   @IsString()
-  tipo_pago: string;
+  currency: string;
+
+  @Expose()
+  @IsString()
+  monto: string;
 
 }

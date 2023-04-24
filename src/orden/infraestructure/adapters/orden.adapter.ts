@@ -20,6 +20,7 @@ import { ordenPagoEntity } from '../entities/orden_pago.orm';
 import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
 import { montoBs_DolaresEntity } from '../entities/montoBS_Dolares.orm';
 import { registro_productoEntity } from '../entities/registroProducto.orm';
+import { ordenPago_pagoEfectivoEntity } from '../entities/ordenPago_PagoEfectivo.orm';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -47,7 +48,9 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(montoBs_DolaresEntity)
     private readonly montoBsRepository: Repository<montoBs_DolaresEntity>,
     @InjectRepository(registro_productoEntity)
-    private readonly registro_productoRepository: Repository<registro_productoEntity>
+    private readonly registro_productoRepository: Repository<registro_productoEntity>,
+    @InjectRepository(ordenPago_pagoEfectivoEntity)
+    private readonly ordenPago_pagoEfectivoRepository: Repository<ordenPago_pagoEfectivoEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -330,7 +333,6 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     return {};
   }
 
-
     async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
     if (pago.tipo_pago === "electronico"){
     const pagoElectronico = new pagoElectronicoEntity()
@@ -368,35 +370,17 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
 
     await this.ordenPagoRepository.save(ordenPago)
 
-    
-
-    } else if(pago.tipo_pago === "efectivo"){
-
-    const pagoEfectivo = new pagoEfectivoEntity()
-    pagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
-    pagoEfectivo.tipo_pago = pago.pagoEfectivo.tipo_pago;
-    pagoEfectivo.denominacion = pago.pagoEfectivo.denominacion;
-    pagoEfectivo.numero_serie = pago.pagoEfectivo.numero_serie;
-    pagoEfectivo.cantidad_billetes = pago.pagoEfectivo.cantidad_billetes;
-
-    await this.pagoEfectivoRepository.save(pagoEfectivo);
-
+  } else if (pago.tipo_pago === "efectivo") {
+    console.log('Prueba 1')
     const currentDate = new Date();
     const day = currentDate.getDate();
-    const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+    const month = currentDate.getMonth() + 1;
     const year = currentDate.getFullYear();
     const hours = currentDate.getHours();
     const minutes = currentDate.getMinutes();
     const seconds = currentDate.getSeconds();
 
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
-    
-    const ordenPago = new ordenPagoEntity();
-    ordenPago.orden_pago_id = new UniqueId().getId();
-    ordenPago.orden_id = orderId.id;
-    ordenPago.dolares_efectivo_id = pagoEfectivo.dolares_efectivo_id;
-    ordenPago.fecha_historial =formattedDate;
-    ordenPago.monto = pago.monto;
 
     const montos = await this.montoBsRepository.find();
     const lastMonto = montos.reduce((prev, current) => {
@@ -405,10 +389,42 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       return prevDate > currentDate ? prev : current;
     });
     const lastMontoId = lastMonto.montobs_dolares_id;
-    ordenPago.montobs_dolares_id = lastMontoId
 
-    await this.ordenPagoRepository.save(ordenPago)
+    const promises = [];
 
+      console.log('Prueba 2')
+      const newOrdenPago = new ordenPagoEntity();
+      newOrdenPago.orden_pago_id = new UniqueId().getId();
+      newOrdenPago.orden_id = orderId.id;
+      newOrdenPago.fecha_historial = formattedDate;
+      newOrdenPago.monto = pago.monto;
+      newOrdenPago.montobs_dolares_id = lastMontoId;
+      promises.push(this.ordenPagoRepository.save(newOrdenPago));
+
+    for (const pagoEfectivo of pago.pagoEfectivo) {
+      console.log('Prueba 3')
+      const newPagoEfectivo = new pagoEfectivoEntity();
+      newPagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
+      newPagoEfectivo.tipo_pago = pagoEfectivo.currency;
+      newPagoEfectivo.denominacion = pagoEfectivo.denomination;
+      newPagoEfectivo.numero_serie = pagoEfectivo.serialNumber;
+      newPagoEfectivo.cantidad_billetes = pagoEfectivo.cantidadBilletes;
+
+      promises.push(this.pagoEfectivoRepository.save(newPagoEfectivo));
+
+      console.log('Prueba 4')
+      const newOrdenPagoPagoEfectivo = new ordenPago_pagoEfectivoEntity();
+      newOrdenPagoPagoEfectivo.pagoefectivo_ordenpago_id = new UniqueId().getId();
+      newOrdenPagoPagoEfectivo.orden_pago_id = newOrdenPago.orden_pago_id ;
+      newOrdenPagoPagoEfectivo.dolares_efectivo_id = newPagoEfectivo.dolares_efectivo_id;
+
+      promises.push(this.ordenPago_pagoEfectivoRepository.save(newOrdenPagoPagoEfectivo));
+      console.log('Prueba 5')
+    }
+
+    
+    console.log('Prueba 6')
+    await Promise.all(promises);
     }else{
 
     const zelle = new zelleEntity()
@@ -452,7 +468,7 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
   try {
     const ordenes = await ordenPagoEntity.find({
       where: { orden_id: orderId.id },
-      relations: ['pagoElectronico', 'pagoEfectivo', 'zelle', 'montoBs_Dolares'], // Agregamos la relación a la tabla montobs_dolares
+      relations: ['pagoElectronico', 'zelle', 'montoBs_Dolares', 'ordenPago_pagoEfectivo', 'ordenPago_pagoEfectivo.pagoEfectivo'],
     });
 
     if (ordenes.length === 0) {
@@ -460,56 +476,76 @@ async getAllPagos(orderId: createOrdenIdDto): Promise<any[]> {
       return null;
     }
 
-    const pagos = ordenes.flatMap((orden) => [
-      ...(orden.pagoElectronico
-        ? [
-            {
-              tipo_pago: 'electrónico',
-              numero_referencia: orden.pagoElectronico.numero_referencia,
-              tipo_electronico: orden.pagoElectronico.tipo_pago,
-              fecha_historial: orden.fecha_historial,
-              monto: orden.monto,
-              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
-              monto_bs: orden.montoBs_Dolares.monto
-            },
-          ]
-        : []),
-      ...(orden.pagoEfectivo
-        ? [
-            {
-              tipo_pago: 'efectivo',
-              numero_serie: orden.pagoEfectivo.numero_serie,
-              denominacion: orden.pagoEfectivo.denominacion,
-              cantidad_billetes: orden.pagoEfectivo.cantidad_billetes,
-              tipo_efectivo: orden.pagoEfectivo.tipo_pago,
-              fecha_historial: orden.fecha_historial,
-              monto: orden.monto,
-              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
-              monto_bs: orden.montoBs_Dolares.monto
-            },
-          ]
-        : []),
-      ...(orden.zelle
-        ? [
-            {
-              tipo_pago: 'Zelle',
-              correo_electronico: orden.zelle.correo_electronico,
-              fecha_historial: orden.fecha_historial,
-              monto: orden.monto,
-              fecha_historial_monto_bs: orden.montoBs_Dolares.fecha_historial, // Agregamos la fecha_historial de la tabla montobs_dolares
-              monto_bs: orden.montoBs_Dolares.monto
-            },
-          ]
-        : []),
-    ]);
+const pagos = ordenes.flatMap((orden) => {
+  const tipoPago = orden.ordenPago_pagoEfectivo.length > 0 ? 'efectivo' :
+                   orden.pagoElectronico ? 'electrónico' :
+                   orden.zelle ? 'zelle' :
+                   orden.montoBs_Dolares ? 'bsf' : null;
 
+  const pagoEfectivoArray = orden.ordenPago_pagoEfectivo.reduce((acc, ordenPago_pagoEfectivo) => {
+    const pagoEfectivo = ordenPago_pagoEfectivo.pagoEfectivo;
+    if (pagoEfectivo && orden.fecha_historial === orden.fecha_historial) {
+      acc.push({
+        pagoEfectivo,
+        fecha_historial: orden.fecha_historial,
+        monto: orden.monto,
+        fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
+        monto_bsf: orden.montoBs_Dolares.monto,
+      });
+    }
+    return acc;
+  }, []);
+
+  const pagoElectronico = orden.pagoElectronico
+    ? {
+        numero_referencia: orden.pagoElectronico.numero_referencia,
+        tipo_electronico: orden.pagoElectronico.tipo_pago,
+        fecha_historial: orden.fecha_historial,
+        monto: orden.monto,
+        fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
+        monto_bsf: orden.montoBs_Dolares.monto,
+      }
+    : null;
+
+  const zelle = orden.zelle
+    ? {
+        correo: orden.zelle.correo_electronico,
+        fecha_historial: orden.fecha_historial,
+        monto: orden.monto,
+        fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
+        monto_bsf: orden.montoBs_Dolares.monto,
+     
+      }
+    : null;
+
+  const montoBsDolares = orden.montoBs_Dolares
+    ? {
+        fecha_historial: orden.montoBs_Dolares.fecha_historial,
+        monto: orden.monto,
+      }
+    : null;
+
+  return {
+    tipo_pago: tipoPago,
+    fecha_historial: orden.fecha_historial,
+    fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
+    monto_bsf: orden.montoBs_Dolares.monto,
+    pagoElectronico: pagoElectronico,
+    pagoEfectivo: tipoPago === 'efectivo' ? pagoEfectivoArray : null,
+    zelle: tipoPago === 'zelle' ? zelle : null,
+    montoBsDolares: tipoPago === 'bsf' ? montoBsDolares : null,
+  };
+});
     return pagos;
   } catch (error) {
-    console.log(`Error al obtener los pagos para la orden con ID ${orderId.id}`);
-    console.error(error);
-    return null;
+    console.log(`Error al obtener los pagos de la orden ${orderId.id}`, error);
+    throw error;
   }
 }
+
+
+
+
 
   async createMontoBS(montoBs: montoBsDto): Promise<any> {
     const montoBs_Dolares = new montoBs_DolaresEntity();

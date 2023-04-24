@@ -5,6 +5,7 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryColumn,
+  OneToMany,
 } from 'typeorm';
 
 import { OrdenEntity } from './orden.orm';
@@ -13,6 +14,7 @@ import { pagoEfectivoEntity } from './pagoEfectivo.orm';
 import { pagoElectronicoEntity } from './pagoElectronico.orm';
 import { zelleEntity } from './zelle.orm';
 import { montoBs_DolaresEntity } from './montoBS_Dolares.orm';
+import { ordenPago_pagoEfectivoEntity } from './ordenPago_PagoEfectivo.orm';
 
 @Entity('orden_pago')
 export class ordenPagoEntity extends BaseEntity {
@@ -26,9 +28,6 @@ export class ordenPagoEntity extends BaseEntity {
   pago_id: string;
 
   @Column({ type: 'varchar', length: 300, nullable: true })
-  dolares_efectivo_id: string;
-
-  @Column({ type: 'varchar', length: 300, nullable: true })
   zelle_id: string;
   
   @Column({ type: 'varchar', length: 300, nullable: true })
@@ -39,13 +38,6 @@ export class ordenPagoEntity extends BaseEntity {
 
   @Column({ type: 'varchar', length: 300, nullable: false })
   monto: string;
-
-@ManyToOne(() => pagoEfectivoEntity, (pagoEfectivo) => pagoEfectivo.estado_orden, {
-    eager: true,
-    nullable: true,
-  })
-  @JoinColumn({ name: 'dolares_efectivo_id' })
-  pagoEfectivo: pagoEfectivoEntity;
 
 @ManyToOne(() => pagoElectronicoEntity, (pagoElectronico) => pagoElectronico.estado_orden, {
     eager: true,
@@ -68,4 +60,7 @@ export class ordenPagoEntity extends BaseEntity {
   @JoinColumn({ name: 'montobs_dolares_id' })
   montoBs_Dolares: montoBs_DolaresEntity;
 
+  @OneToMany(() => ordenPago_pagoEfectivoEntity, (ordenPago_pagoEfectivo) => ordenPago_pagoEfectivo.ordenPago)
+  ordenPago_pagoEfectivo: ordenPago_pagoEfectivoEntity[];
+  
 }
