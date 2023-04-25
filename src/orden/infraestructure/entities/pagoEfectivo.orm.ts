@@ -15,16 +15,16 @@ export class pagoEfectivoEntity extends BaseEntity {
   @PrimaryColumn()
   dolares_efectivo_id: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   numero_serie: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   denominacion: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+ @Column({ type: 'varchar', length: 300, nullable: true })
   cantidad_billetes: string;
 
-  @Column({ type: 'varchar', length: 300, nullable: false })
+  @Column({ type: 'varchar', length: 300, nullable: true })
   tipo_pago: string;
 
   @OneToMany(() => ordenPago_pagoEfectivoEntity, (ordenPago_pagoEfectivo) => ordenPago_pagoEfectivo.pagoEfectivo)

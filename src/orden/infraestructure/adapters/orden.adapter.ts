@@ -333,8 +333,18 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
     return {};
   }
 
-    async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {;
+    async createOrdenPago(orderId: createOrdenIdDto, pago: pagoDto): Promise<any> {
+    
     if (pago.tipo_pago === "electronico"){
+    const montos = await this.montoBsRepository.find();
+    const lastMonto = montos.reduce((prev, current) => {
+      const prevDate = new Date(prev.fecha_historial);
+      const currentDate = new Date(current.fecha_historial);
+      return prevDate > currentDate ? prev : current;
+    });
+    const lastMontoId = lastMonto.montobs_dolares_id;
+    const lastMontoBs = lastMonto.monto;
+
     const pagoElectronico = new pagoElectronicoEntity()
     pagoElectronico.pago_id = new UniqueId().getId();
     pagoElectronico.tipo_pago = pago.pagoElectronico.tipo_pago;
@@ -351,24 +361,18 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
 
     const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
     
+    const montoDolares = parseFloat(pago.monto) / parseFloat(lastMontoBs);
+
     const ordenPago = new ordenPagoEntity();
     ordenPago.orden_pago_id = new UniqueId().getId();
     ordenPago.orden_id = orderId.id;
     ordenPago.pago_id = pagoElectronico.pago_id;
     ordenPago.fecha_historial =formattedDate;
     ordenPago.monto = pago.monto;
-
-    
-    const montos = await this.montoBsRepository.find();
-    const lastMonto = montos.reduce((prev, current) => {
-      const prevDate = new Date(prev.fecha_historial);
-      const currentDate = new Date(current.fecha_historial);
-      return prevDate > currentDate ? prev : current;
-    });
-    const lastMontoId = lastMonto.montobs_dolares_id;
+    ordenPago.monto_dolares = montoDolares.toFixed(2).toString()
     ordenPago.montobs_dolares_id = lastMontoId
-
     await this.ordenPagoRepository.save(ordenPago)
+
 
   } else if (pago.tipo_pago === "efectivo") {
     console.log('Prueba 1')
@@ -389,6 +393,7 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       return prevDate > currentDate ? prev : current;
     });
     const lastMontoId = lastMonto.montobs_dolares_id;
+    const lastMontoBs = lastMonto.monto;
 
     const promises = [];
 
@@ -398,9 +403,12 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       newOrdenPago.orden_id = orderId.id;
       newOrdenPago.fecha_historial = formattedDate;
       newOrdenPago.monto = pago.monto;
+      newOrdenPago.monto_dolares = pago.monto;
       newOrdenPago.montobs_dolares_id = lastMontoId;
       promises.push(this.ordenPagoRepository.save(newOrdenPago));
 
+    if(pago.pagoEfectivo.length !== 0){
+    let totalPagoEfectivo = 0; // variable para seguir el total de los pagos en efectivo
     for (const pagoEfectivo of pago.pagoEfectivo) {
       console.log('Prueba 3')
       const newPagoEfectivo = new pagoEfectivoEntity();
@@ -410,8 +418,10 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       newPagoEfectivo.numero_serie = pagoEfectivo.serialNumber;
       newPagoEfectivo.cantidad_billetes = pagoEfectivo.cantidadBilletes;
 
+      const montoPagoEfectivo = parseFloat(pagoEfectivo.denomination) * parseFloat(pagoEfectivo.cantidadBilletes); // monto a agregar a la suma total
+      totalPagoEfectivo += montoPagoEfectivo; // se agrega el monto a la suma total
       promises.push(this.pagoEfectivoRepository.save(newPagoEfectivo));
-
+    
       console.log('Prueba 4')
       const newOrdenPagoPagoEfectivo = new ordenPago_pagoEfectivoEntity();
       newOrdenPagoPagoEfectivo.pagoefectivo_ordenpago_id = new UniqueId().getId();
@@ -422,6 +432,34 @@ async obtenerTodasLasOrdenesConDetalle(): Promise<any[]> {
       console.log('Prueba 5')
     }
 
+    if(pago.tipo_pago_efectivo === "Bs."){
+      const montoDolares = totalPagoEfectivo / parseFloat(lastMontoBs);
+      this.ordenPagoRepository.update(newOrdenPago.orden_pago_id, {monto: totalPagoEfectivo.toFixed(2).toString(), monto_dolares: totalPagoEfectivo.toFixed(2).toString()});
+    } 
+    this.ordenPagoRepository.update(newOrdenPago.orden_pago_id, {monto: totalPagoEfectivo.toFixed(2).toString(), monto_dolares: totalPagoEfectivo.toFixed(2).toString()});
+    } else {
+      console.log('Prueba 3')
+      const newPagoEfectivo = new pagoEfectivoEntity();
+      newPagoEfectivo.dolares_efectivo_id = new UniqueId().getId();
+      newPagoEfectivo.tipo_pago = pago.tipo_pago_efectivo;
+      promises.push(this.pagoEfectivoRepository.save(newPagoEfectivo));
+      if(pago.tipo_pago_efectivo === "Bs."){
+      console.log('Res monto',pago.monto)
+      console.log('Res lastMontoBs',lastMontoBs)
+      const montoDolares = parseFloat(pago.monto) / parseFloat(lastMontoBs);
+      console.log('Res monto',montoDolares)
+      this.ordenPagoRepository.update(newOrdenPago.orden_pago_id, {monto_dolares:montoDolares.toFixed(2).toString()});
+      } 
+      
+      console.log('Prueba 4')
+      const newOrdenPagoPagoEfectivo = new ordenPago_pagoEfectivoEntity();
+      newOrdenPagoPagoEfectivo.pagoefectivo_ordenpago_id = new UniqueId().getId();
+      newOrdenPagoPagoEfectivo.orden_pago_id = newOrdenPago.orden_pago_id ;
+      newOrdenPagoPagoEfectivo.dolares_efectivo_id = newPagoEfectivo.dolares_efectivo_id;
+
+      promises.push(this.ordenPago_pagoEfectivoRepository.save(newOrdenPagoPagoEfectivo));
+      console.log('Prueba 5')
+    }
     
     console.log('Prueba 6')
     await Promise.all(promises);
@@ -484,11 +522,21 @@ const pagos = ordenes.flatMap((orden) => {
 
   const pagoEfectivoArray = orden.ordenPago_pagoEfectivo.reduce((acc, ordenPago_pagoEfectivo) => {
     const pagoEfectivo = ordenPago_pagoEfectivo.pagoEfectivo;
+
+     let monto_total = "";
+
+    if(pagoEfectivo.tipo_pago === "USD"){
+       monto_total = orden.monto
+    } else {
+
+       monto_total = orden.monto
+    }
+ 
     if (pagoEfectivo && orden.fecha_historial === orden.fecha_historial) {
       acc.push({
         pagoEfectivo,
         fecha_historial: orden.fecha_historial,
-        monto: orden.monto,
+        monto: monto_total,
         fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
         monto_bsf: orden.montoBs_Dolares.monto,
       });
@@ -530,6 +578,8 @@ const pagos = ordenes.flatMap((orden) => {
     fecha_historial: orden.fecha_historial,
     fecha_historial_bsf: orden.montoBs_Dolares.fecha_historial,
     monto_bsf: orden.montoBs_Dolares.monto,
+    monto_total: orden.monto,
+    monto_total_dolares: orden.monto_dolares,
     pagoElectronico: pagoElectronico,
     pagoEfectivo: tipoPago === 'efectivo' ? pagoEfectivoArray : null,
     zelle: tipoPago === 'zelle' ? zelle : null,

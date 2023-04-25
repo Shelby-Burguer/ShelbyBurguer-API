@@ -39,6 +39,9 @@ export class ordenPagoEntity extends BaseEntity {
   @Column({ type: 'varchar', length: 300, nullable: false })
   monto: string;
 
+  @Column({ type: 'varchar', length: 300, nullable: false })
+  monto_dolares: string;
+
 @ManyToOne(() => pagoElectronicoEntity, (pagoElectronico) => pagoElectronico.estado_orden, {
     eager: true,
     nullable: true,
