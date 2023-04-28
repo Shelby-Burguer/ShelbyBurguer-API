@@ -27,7 +27,6 @@ create table INGREDIENTE
 
 );
 
-
 create table IGDT_PDT
 (
      igdt_pdt_id varchar(100) not null,
@@ -45,6 +44,7 @@ create table PRODUCTO
      tipo_producto varchar(70) not null,
      costo_producto varchar(70) not null,
      nombre_imagen varchar(70) null,
+     tamaño_producto varchar(70) null,
      constraint pk_producto_id primary key (producto_id) 	
 );
 
