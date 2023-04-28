@@ -4,6 +4,8 @@ import { createOrdenIdDto } from '../dto/createOrdenId.dto';
 import { iOrdenRepository } from '../../infraestructure/repositories/orden.repository';
 import { OrdenDto } from '../dto/orden.dto';
 import { montoBsDto } from '../dto/montoBs.dto';
+import { accionUserDto } from '../dto/accionUser.dto';
+import { ordenIdDto } from '../dto/ordenId.dto';
 
 @Injectable()
 export class ordenService {
@@ -72,4 +74,16 @@ export class ordenService {
     const montoBsDolares = await this.iOrden.getAllMontoBS();
     return montoBsDolares;
   }
+
+  async createAccionUser(accionUser: accionUserDto): Promise<any>{
+    const AccionUser = await this.iOrden.createAccionUser(accionUser);
+    return AccionUser;
+  }
+
+  async getAccionUserByOrder(orderId: ordenIdDto): Promise<any>{
+    const AccionUser = await this.iOrden.getAccionUserByOrder(orderId);
+    console.log('Test reslt Accion', AccionUser)
+    return AccionUser;
+  }
+
 }

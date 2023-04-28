@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository, EntityRepository, getRepository } from 'typeorm';
+import { Repository} from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { iOrdenRepository } from '../repositories/orden.repository';
 import { createOrdenIdDto } from '../../application/dto/createOrdenId.dto';
@@ -21,6 +21,10 @@ import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
 import { montoBs_DolaresEntity } from '../entities/montoBS_Dolares.orm';
 import { registro_productoEntity } from '../entities/registroProducto.orm';
 import { ordenPago_pagoEfectivoEntity } from '../entities/ordenPago_PagoEfectivo.orm';
+import { accionUserDto } from 'src/orden/application/dto/accionUser.dto';
+import { accion_userEntity } from '../entities/accion_user.orm';
+import { orden_accionuserEntity } from '../entities/orden_accionuser.orm';
+import { ordenIdDto } from 'src/orden/application/dto/ordenId.dto';
 
 @Injectable()
 export class ordenPersisteceAdapter implements iOrdenRepository {
@@ -50,7 +54,11 @@ export class ordenPersisteceAdapter implements iOrdenRepository {
     @InjectRepository(registro_productoEntity)
     private readonly registro_productoRepository: Repository<registro_productoEntity>,
     @InjectRepository(ordenPago_pagoEfectivoEntity)
-    private readonly ordenPago_pagoEfectivoRepository: Repository<ordenPago_pagoEfectivoEntity>
+    private readonly ordenPago_pagoEfectivoRepository: Repository<ordenPago_pagoEfectivoEntity>,
+    @InjectRepository(accion_userEntity)
+    private readonly accion_userRepository: Repository<accion_userEntity>,
+    @InjectRepository(orden_accionuserEntity)
+    private readonly orden_accionuserRepository: Repository<orden_accionuserEntity>
   ) {}
 
   async createOrdenId(): Promise<any> {
@@ -631,4 +639,46 @@ const pagos = ordenes.flatMap((orden) => {
   const lastMontos = montos.filter(monto => monto.fecha_historial === lastDate);
   return lastMontos.map(monto => ({ monto: monto.monto, fecha_historial: monto.fecha_historial }));
 }
+
+
+async getAccionUserByOrder(orderId: ordenIdDto): Promise<any> {
+  const accionUsers = await this.accion_userRepository.find({
+    where: { orden_accionuser: { orden_id: orderId.id } },
+    relations: ['orden_accionuser']
+  });
+  console.log('Test getAccionUser', accionUsers)
+  return accionUsers;
+}
+
+async createAccionUser(accionUser: accionUserDto): Promise<any> {
+  console.log('Test createAccionUser', accionUser)
+  const currentDate = new Date();
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1; // Añadimos 1 porque los meses empiezan desde 0
+  const year = currentDate.getFullYear();
+  const hours = currentDate.getHours();
+  const minutes = currentDate.getMinutes();
+  const seconds = currentDate.getSeconds();
+
+  const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+
+  const accionUserEntity = new accion_userEntity();
+  accionUserEntity.accion_user_id =  new UniqueId().getId();
+  accionUserEntity.nombre_accion = accionUser.nombre_accion;
+  accionUserEntity.nombre_user = accionUser.nombre_user;
+  accionUserEntity.role_user = accionUser.role_user;
+  accionUserEntity.fecha_accion_user_orden = formattedDate;
+  await this.accion_userRepository.save(accionUserEntity);
+
+  const ordenAccionUser = new orden_accionuserEntity();
+  ordenAccionUser.orden_accionuser_id = new UniqueId().getId();
+  ordenAccionUser.orden_id =  accionUser.orden_id
+  ordenAccionUser.accion_user_id = accionUserEntity.accion_user_id;
+  await this.orden_accionuserRepository.save(ordenAccionUser);
+
+  return {};
+}
+
+
+
 }

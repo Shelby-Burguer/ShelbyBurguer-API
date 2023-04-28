@@ -12,6 +12,7 @@
 --**************************************************
 -- CORRER SOLO LA PRIMERA VEZ
 -- CREATE TYPE "public"."lugar_tipo_lugar_enum" AS ENUM('Zona', 'Dirección', 'Referencia');
+
 create table INGREDIENTE
 (
      ingrediente_id varchar(100) not null,
@@ -223,6 +224,23 @@ CREATE TABLE pagoEfectivo_ordenPago(
   constraint pk_pagoefectivo_ordenpago_id primary key (pagoEfectivo_ordenpago_id)
 );
 
+CREATE TABLE accion_user (
+  accion_user_id varchar(70) not null,
+  nombre_accion varchar(70) null,
+  nombre_user varchar(70) null,
+  role_user varchar(70) null,
+  fecha_accion_user_orden varchar(20) null,
+  constraint pk_accion_user_id primary key (accion_user_id)
+);
+
+CREATE TABLE orden_accionuser (
+  orden_accionuser_id varchar(70) not null,
+  accion_user_id varchar(70) null,
+  orden_id varchar(70) null,
+  constraint pk_orden_accionuser_id primary key (orden_accionuser_id)
+);
+
+
 CREATE TABLE "cliente" ("id_cliente" character varying NOT NULL, "cedula_cliente" character varying(10) NOT NULL, "nombre_cliente" character varying(20) NOT NULL, "apellido_cliente" character varying(20), "telefono_cliente" character varying(11), "id_lugar_cliente" character varying, CONSTRAINT "PK_dbf4725e2849f4036253ee7dbd0" PRIMARY KEY ("id_cliente"));
 
 CREATE TABLE "lugar" ("id_lugar" character varying NOT NULL, "nombre_lugar" character varying(100) NOT NULL, "tipo_lugar" "public"."lugar_tipo_lugar_enum" NOT NULL, "precio_lugar" real, "id_padre_lugar" character varying, CONSTRAINT "PK_a058a781463d243964c637c3ce9" PRIMARY KEY ("id_lugar"));
@@ -283,5 +301,10 @@ alter table registro_producto
     add constraint fk_id_registro_producto_pdtcb_od foreign key (pdtcb_od_id) references PDTCB_OD(pdtcb_od_id) ON DELETE cascade,
     add constraint fk_id_registro_producto_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id) ON DELETE cascade,
     add constraint fk_id_registro_producto_producto foreign key (producto_id) references PRODUCTO(producto_id) ON DELETE CASCADE
+;
+
+alter table orden_accionuser
+    add constraint fk_id_accion_user foreign key (accion_user_id) references accion_user(accion_user_id) ON DELETE cascade,
+    add constraint fk_id_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade
 ;
 -- DROP TYPE IF EXISTS "public"."lugar_tipo_lugar_enum";

@@ -18,9 +18,11 @@ import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-aut
 import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 import { registro_productoEntity } from './entities/registroProducto.orm';
 import { ordenPago_pagoEfectivoEntity } from './entities/ordenPago_PagoEfectivo.orm';
+import { accion_userEntity } from './entities/accion_user.orm';
+import { orden_accionuserEntity } from './entities/orden_accionuser.orm';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity, registro_productoEntity, registro_productoEntity, ordenPago_pagoEfectivoEntity])],
+  imports: [TypeOrmModule.forFeature([OrdenEntity, pdtcb_odEntity, orden_lugarEntity, LugarEntity, estadoEntity, estado_ordenEntity, zelleEntity, pagoElectronicoEntity, pagoEfectivoEntity, ordenPagoEntity, montoBs_DolaresEntity, registro_productoEntity, registro_productoEntity, ordenPago_pagoEfectivoEntity, accion_userEntity, orden_accionuserEntity])],
   controllers: [ordenController],
   providers: [
     ordenService,
