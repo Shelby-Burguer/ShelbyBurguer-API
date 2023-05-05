@@ -29,7 +29,7 @@ export class productoDataMapper {
 
   public toDalEntityp(producto: createProductoDto): productoEntity {
     const _productoEntity = new productoEntity();
-
+    console.log('producto.tamano_producto', producto.tamano_producto);
     if (producto.id) {
       _productoEntity.producto_id = producto.id;
     } else {
@@ -44,12 +44,16 @@ export class productoDataMapper {
       _productoEntity.tipo_producto = producto.tipo;
     }
 
-    if (producto.tipo) {
+    if (producto.costo) {
       _productoEntity.costo_producto = producto.costo;
     }
 
     if (producto.tipo) {
       _productoEntity.nombre_imagen = producto.imagen;
+    }
+
+    if (producto.tamano_producto) {
+      _productoEntity.tamano_producto = producto.tamano_producto;
     }
 
     console.log('Llegue a producto', _productoEntity);
@@ -84,8 +88,10 @@ export class productoDataMapper {
     productoDto.nombre = _producto.nombre_producto;
     productoDto.tipo = _producto.tipo_producto;
     productoDto.costo = _producto.costo_producto;
-    productoDto.imagen = _producto.nombre_imagen;
+    productoDto.imagen = _producto.nombre_imagen
+    productoDto.tamano_producto = _producto.tamano_producto;
 
+    console.log('TestgetAllProductonew', productoDto);
     return productoDto;
   }
 

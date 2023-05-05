@@ -36,6 +36,7 @@ export class ingredienteService {
       await this._iIngredienteRepository.createIngrediente(
         this._mapper.toDalEntity(ingrediente),
       );
+      console.log('vamo qlq esto', createdIngredienteEntity)
     return this._mapper.toDomain(createdIngredienteEntity);
   }
   

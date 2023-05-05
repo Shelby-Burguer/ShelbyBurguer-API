@@ -17,6 +17,7 @@ export class createProductoHandler
   async execute({
     createProductoRequest,
   }: createProductocommand): Promise<createProductoDto> {
+  console.log('Test createProductoRequest', createProductoRequest)
     const producto: productoEntity =
       await this._productoService.createProducto(createProductoRequest);
     
