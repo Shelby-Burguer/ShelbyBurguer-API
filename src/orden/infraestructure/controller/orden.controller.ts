@@ -19,6 +19,8 @@ import { montoBsDto } from 'src/orden/application/dto/montoBs.dto';
 import { JwtAuthGuard } from 'src/autenticacion/application/service/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/autenticacion/application/service/auth/rolesGuard.guard';
 import { Roles } from 'src/autenticacion/application/service/auth/roles';
+import { accionUserDto } from 'src/orden/application/dto/accionUser.dto';
+import { ordenIdDto } from 'src/orden/application/dto/ordenId.dto';
 
 @Controller('orden')
 export class ordenController {
@@ -73,7 +75,6 @@ export class ordenController {
     return await this._ordenService.getEstados();
   }
 
-
   @Post('/ordenEstado/create')
     @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(['Admin', 'Cajero'])
@@ -108,12 +109,19 @@ export class ordenController {
   async getMontoBsDolares(): Promise<any> {
     return await this._ordenService.getAllMontoBS();
   }
-  /*
-  @Delete('/delete/:id')
-  async delete(
-    @Param() _createIgdtPdtDto: createComboDto,
-  ): Promise<any>{
-    return await this._igdtPdtService.deleteCombo(_createIgdtPdtDto)
+
+  @Post('/accionUsuario/create')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
+  async accion_user(@Body() accionUser: accionUserDto): Promise<any> {
+    return await this._ordenService.createAccionUser(accionUser);
   }
-*/
+
+  @Get('/accionUsuario/All/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(['Admin', 'Cajero'])
+  async getAccionUserByOrder(@Param() orderId: ordenIdDto): Promise<any> {
+    return await this._ordenService.getAccionUserByOrder(orderId);
+  }
+
 }

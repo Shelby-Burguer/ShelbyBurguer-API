@@ -4,6 +4,8 @@ import { estado_ordenEntity } from './estado_orden.orm';
 import { orden_lugarEntity } from './orden_lugar.orm';
 import { pdtcb_odEntity } from './pdtcb_od.orm';
 import { registro_productoEntity } from './registroProducto.orm';
+import { ordenPago_pagoEfectivoEntity } from './ordenPago_PagoEfectivo.orm';
+import { orden_accionuserEntity } from './orden_accionuser.orm';
 
 @Entity('orden')
 export class OrdenEntity extends BaseEntity {
@@ -43,10 +45,15 @@ export class OrdenEntity extends BaseEntity {
   @OneToMany(() => estado_ordenEntity, (estado_orden) => estado_orden.orden)
   estado_orden: estado_ordenEntity[];
 
+  @OneToMany(() => orden_accionuserEntity, (orden_accionuser) => orden_accionuser.Orden)
+  orden_accionuser: orden_accionuserEntity[];
+
   @ManyToOne(() => ClienteEntity, (cliente) => cliente.orden, {
     eager: true,
     nullable: true,
   })
   @JoinColumn({ name: 'cliente_id' })
   cliente: ClienteEntity;
+
+
 }

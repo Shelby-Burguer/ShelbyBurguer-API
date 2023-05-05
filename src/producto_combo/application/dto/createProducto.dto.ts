@@ -27,4 +27,8 @@ export class createProductoDto {
   @IsString()
   cantidad: number;
 
+  @Expose()
+  @IsString()
+  tamano_producto: string;
+
 }

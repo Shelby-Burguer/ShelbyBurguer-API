@@ -6,6 +6,7 @@ import { igdt_pdtEntity } from '../orm/igdt_pdt.orm';
 import { createIgdtPdtDto } from 'src/producto_combo/application/dto/createIgdtPdt.dto';
 import UniqueId from '../../../shared/domain/UniqueUUID';
 import { InjectRepository } from '@nestjs/typeorm';
+import { HttpException, InternalServerErrorException } from '@nestjs/common';
 
 export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
   constructor(
@@ -17,23 +18,40 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
     private readonly productoRepository: Repository<productoEntity>,
   ) {}
   async getAllIgdtPdt(): Promise<igdt_pdtEntity[]> {
-    const igdtPdt: igdt_pdtEntity[] = await this.igdtPdtRepository.find({
-      relations: ['ingrediente', 'producto'],
-    });
-    return igdtPdt;
+    try {
+      const igdtPdt: igdt_pdtEntity[] = await this.igdtPdtRepository.find({
+        relations: ['ingrediente', 'producto'],
+      });
+      return igdtPdt;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async getAllIgdtPdtid(
     _igdtPdtEntity: igdt_pdtEntity,
   ): Promise<igdt_pdtEntity[]> {
-    const igdtPdt: igdt_pdtEntity[] = await this.igdtPdtRepository.find({
-      where: { producto_id: _igdtPdtEntity.igdt_pdt_id },
-      relations: ['ingrediente', 'producto'],
-    });
-    return igdtPdt;
+    try {
+      const igdtPdt: igdt_pdtEntity[] = await this.igdtPdtRepository.find({
+        where: { producto_id: _igdtPdtEntity.igdt_pdt_id },
+        relations: ['ingrediente', 'producto'],
+      });
+      return igdtPdt;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async createIgdtPdt(_igdtPdtEntity: igdt_pdtEntity): Promise<string> {
+  try {
     console.log(_igdtPdtEntity);
     await this.igdtPdtRepository.save({
       igdt_pdt_id: _igdtPdtEntity.igdt_pdt_id,
@@ -44,11 +62,19 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
     });
     const messageDelete = 'Eiminación realizada';
     return messageDelete;
+        } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async createImagenIngrediente(
     _ingredienteEntity: ingredienteEntity,
   ): Promise<any> {
+  try {
     await this.ingredienteRepository.update(_ingredienteEntity.ingrediente_id, {
       nombre_imagen: _ingredienteEntity.nombre_imagen,
       datos_imagen: _ingredienteEntity.datos_imagen,
@@ -60,6 +86,13 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
       });
 
     return ingrediente;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async updateIgdtPdt(
@@ -67,6 +100,7 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
     producto: productoEntity,
     igdtPdtArray: createIgdtPdtDto[],
   ) {
+  try {
     console.log('Producto id adapter', productId.producto_id);
     console.log('Producto id adapter', producto);
     console.log('Producto id igdtPdt', igdtPdtArray);
@@ -143,13 +177,28 @@ export class igdtPdtPersisteceAdapter implements iIgdtPdtRepository {
 
     const respuesta = 'Se ha actualizado';
     return respuesta;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async deleteProducto(_productoEntity: productoEntity): Promise<string> {
+  try {
     console.log(_productoEntity);
     await this.ingredienteRepository.delete(_productoEntity.producto_id);
     const messageDelete = 'Eiminación realizada';
 
     return messageDelete;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 }

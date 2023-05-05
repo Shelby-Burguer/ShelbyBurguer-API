@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 
 import { Repository } from 'typeorm';
 import { comboEntity } from '../orm/combo.orm';
@@ -17,6 +17,7 @@ export class comboPersisteceAdapter implements icomboRepository {
     private readonly pdt_cbRepository: Repository<pdt_cbEntity>,
   ) {}
   async getAllCombo(): Promise<any[]> {
+  try {
     const combos = await this.comboRepository.find({
       relations: ['pdt_cb', 'pdt_cb.producto'],
     });
@@ -31,9 +32,17 @@ export class comboPersisteceAdapter implements icomboRepository {
         cantidad_pdt_cb: pdt_cb.cantidad_pdt_cb,
       })),
     }));
+      } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
+  }
   }
 
   async createCombo(createComboDto: createComboDto): Promise<any> {
+  try {
     // Crear un nuevo combo y guardar la información excepto los productos
     const combo = new comboEntity();
     combo.combo_id = new UniqueId().getId();
@@ -68,11 +77,27 @@ export class comboPersisteceAdapter implements icomboRepository {
         cantidad_pdt_cb: pdt_cb.cantidad_pdt_cb,
       })),
     };
+    } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
+  }
   }
 
   async deleteCombo(deleteComboDto: createComboDto): Promise<any> {
+  try {
     await this.comboRepository.delete(deleteComboDto.id);
     const messageDelete = 'Eiminación realizada';
     return messageDelete;
+  } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
   }
+  }
+  
 }

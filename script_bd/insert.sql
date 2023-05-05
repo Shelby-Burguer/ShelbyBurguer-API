@@ -5,7 +5,8 @@ INSERT INTO INGREDIENTE (
     objectURL_ingrediente,
     nombre_imagen,
     datos_imagen,
-    proteina_ingrediente
+    proteina_ingrediente,
+    extra
   )
 VALUES (
     'fcb38c9a-be62-4ebe-b182-32704ede8bd3',
@@ -14,6 +15,7 @@ VALUES (
     null,
     'mostaza.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -23,7 +25,8 @@ VALUES (
     null,
     'pollo-hamburguesa.jpg',
     null,
-    'Si'
+    'Si',
+    'No'
   ),
   (
     '3c9c76da-9de9-435e-88f2-d2d5f19fa430',
@@ -32,6 +35,7 @@ VALUES (
     null,
     'papas al hilo.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -41,7 +45,8 @@ VALUES (
     null,
     'chistorra.jpg',
     null,
-    'Si'
+    'Si',
+    'No'
   ),
   (
     '4f0d59e6-56dc-471a-b41a-1bee63ade1f7',
@@ -50,6 +55,7 @@ VALUES (
     null,
     'tocineta.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -59,6 +65,7 @@ VALUES (
     null,
     'mayonesa.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -68,6 +75,7 @@ VALUES (
     null,
     'queso-fundido.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -77,6 +85,7 @@ VALUES (
     null,
     'cebolla.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -86,6 +95,7 @@ VALUES (
     null,
     'salsa de la casa.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -95,7 +105,8 @@ VALUES (
     null,
     'chorizo.jpg',
     null,
-    'Si'
+    'Si',
+    'No'
   ),
   (
     'c21e670e-2f59-4520-8428-216bc3601a8b',
@@ -104,7 +115,8 @@ VALUES (
     null,
     'carne-hamburguesa.jpg',
     null,
-    'Si'
+    'Si',
+    'No'
   ),
   (
     'c8c53f72-c92e-4291-8ec9-453e58a3d198',
@@ -113,6 +125,7 @@ VALUES (
     null,
     'salsa-de-tomate.jpg',
     null,
+    'No',
     'No'
   ),
   (
@@ -122,7 +135,8 @@ VALUES (
     null,
     'chuleta.jpg',
     null,
-    'Si'
+    'Si',
+    'No'
   );
 INSERT INTO estado (estado_id, nombre_estado)
 VALUES (
@@ -157,7 +171,7 @@ VALUES (
     'Two Dólar',
     'Hamburguesa',
     '2',
-    '16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'
+    'depositphotos_387255148-stock-photo-summer-bbq-food-table.jpg'
   );
 INSERT INTO COMBO (
     combo_id,
@@ -174,60 +188,70 @@ VALUES (
 INSERT INTO IGDT_PDT (
     igdt_pdt_id,
     cantidad_igdt_pdt,
+    precio_igdt_pdt, 
     ingrediente_id,
     producto_id
   )
 VALUES (
     'd55f8d5b-3a73-4f26-a40e-bb74fed5907e',
     1,
+    null,
     'c21e670e-2f59-4520-8428-216bc3601a8b',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     '5328bec0-c67e-4d82-913c-cb2042aaf961',
     1,
+    null,
     'a4ab46aa-21c1-4f1b-a3f3-650431c0f387',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     '0e95da65-e8a5-4c55-ba42-dba39c5f9f60',
     1,
+    null,
     '3c9c76da-9de9-435e-88f2-d2d5f19fa430',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     '9514512a-e50e-488d-83a5-3670c1217210',
     1,
+    null,
     'fcb38c9a-be62-4ebe-b182-32704ede8bd3',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     'bf9b5d3b-2d0b-4c16-b623-599b56022c5c',
     1,
+    null,
     '4f0d59e6-56dc-471a-b41a-1bee63ade1f7',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     '46a6f6e4-4da9-40ff-aa38-b9de1f8bd0b1',
     1,
+    null,
     '5e24a8d4-57e5-41ba-8071-1e568580208e',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     '2577c678-5722-483c-a526-a2b0efaf475e',
     1,
+    null,
     'a8633ed4-fd66-4ce5-93a6-e7c6c993c88b',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     'c6924cfc-7e5f-4479-b9e4-33b4da0a6cfe',
     1,
+    null,
     '9ff30fc9-1fe7-4d1e-923d-d501e331bb41',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   ),
   (
     'a5ee914b-6a25-411e-9b18-dff78833937c',
     1,
+    null,
     'c8c53f72-c92e-4291-8ec9-453e58a3d198',
     'd3c84506-e5be-433b-9f18-a3dd88f41b09'
   );
@@ -307,3 +331,4 @@ VALUES (
     '5c50768e-4524-4e37-9e33-926809f0e941',
     '5c50768e-4524-4e37-9e33-926809f0bi81'
   );
+ 

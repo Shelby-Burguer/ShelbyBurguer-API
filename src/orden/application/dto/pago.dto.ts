@@ -13,12 +13,16 @@ export class pagoDto {
   @Expose()
   @IsString()
   monto: string;
-  
+
+  @Expose()
+  @IsString()
+  tipo_pago_efectivo: string;
+
   @Expose()
   pagoElectronico: pagoElectronicoDto;
 
   @Expose()
-  pagoEfectivo: pagoEfectivoDto;
+  pagoEfectivo: pagoEfectivoDto[];
 
   @Expose()
   zelle: zelleDto;

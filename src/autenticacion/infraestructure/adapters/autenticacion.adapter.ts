@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import UniqueId from '../../../shared/domain/UniqueUUID';
@@ -26,6 +26,7 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
   ) {}
 
   async createUser(_user: createUserDto): Promise<any> {
+  try {
     const user = new userEntity();
     user.users_id = new UniqueId().getId();
     user.nombre_users = _user.nombre_user;
@@ -51,30 +52,45 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
     await this.userRoleRepository.save(userRole)
   
     return {};
+    } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
+  }
   }
 
-  async authenticateUser(credenciales: credencialesDto): Promise<any> {
+async authenticateUser(credenciales: credencialesDto): Promise<any> {
+  try {
     const user = await this.userRepository.findOne({ where: { email_users: credenciales.email_user } });
-   
-    const roles = await this.userRoleRepository.findOne({
-      where: { users_id: user.users_id },
-      relations: ['role'],
-  });
-    
     if (!user) {
       throw new NotFoundException('Usuario no encontrado');
     }
-
+  
+    const roles = await this.userRoleRepository.findOne({
+      where: { users_id: user.users_id },
+      relations: ['role'],
+    });
+  
     //const isPasswordValid = await compare(credenciales.password_user, user.password_users);
     if (credenciales.password_user !== user.password_users) {
       throw new UnauthorizedException('Contraseña incorrecta');
     }
-
+  
     const token = sign({ userId: user.users_id, role: roles.role.nombre_roles }, 'secretKey', { expiresIn: '16h' });
-    return {token: token, nombre_user: user.nombre_users, nombre_role: roles.role.nombre_roles};
+    return { token: token, nombre_user: user.nombre_users, nombre_role: roles.role.nombre_roles };
+  } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
   }
+}
 
     async validateUser(credenciales: string): Promise<any> {
+    try {
     const user = await this.userRepository.findOne({ where: { users_id: credenciales } });
     
     const roles = await this.userRoleRepository.findOne({
@@ -87,10 +103,17 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
     }
 
     return { user, roles };
+    } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
+  }
   }
 
   async recoveryKeyEUser(recoveryKeyUser: recoveryKeyEDto): Promise<any> {
-
+  try {
     const userResponse = await this.userRepository.findOne({ where: { email_users:recoveryKeyUser.correo_user } });
   
   if (!userResponse) {
@@ -98,10 +121,17 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
   }
 
     return {preguntasecreta_users: userResponse.preguntasecreta_users};
+  } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
+  }
   }
 
  async recoveryKeyQUser(recoveryKeyUser: recoveryKeyQDto): Promise<any> {
-
+  try {
     const userResponse = await this.userRepository.findOne({ where: { email_users:recoveryKeyUser.correo_user, respuestapregunta_users: recoveryKeyUser.respuestaPregunta_users } });
     
     if (!userResponse) {
@@ -109,8 +139,14 @@ export class autenticacionPersisteceAdapter implements iAutenticacionRepository 
   }
     
     return {respuestapregunta_users: userResponse.respuestapregunta_users};
-
+  } catch (error) {
+    if (error instanceof HttpException) {
+      throw error;
+    } else {
+      throw new InternalServerErrorException();
+    }
   }
+ }
 
   
 

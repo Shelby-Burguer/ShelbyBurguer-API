@@ -65,7 +65,6 @@ export class ingredienteDataMapper
     ingredienteDto.datosImagen = dto.datosImagen;
     ingredienteDto.proteina = dto.proteina.getString();
     ingredienteDto.extra = dto.extra.getString();
-    
     return ingredienteDto;
   }
 

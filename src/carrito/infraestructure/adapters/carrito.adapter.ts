@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Repository, In } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import UniqueId from '../../../shared/domain/UniqueUUID';
@@ -31,30 +31,61 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
     private readonly carritoIngrediente_carritoRepository: Repository<carritoIngrediente_carritoEntity>,
   ) {}
 
-  async getAllCarrito(): Promise<any[]> {
-    const carrito: carritoEntity[] = await this.carritoRepository.find();
+    async getAllCarrito(): Promise<any[]> {
+    try {
+      const carrito: carritoEntity[] = await this.carritoRepository.find();
 
-    const productos: productoEntity[] = [];
+      const productos: productoEntity[] = [];
 
-    for (const item of carrito) {
-      const producto = await this.productoRepository.findOne({
-        where: { producto_id: item.producto_id },
-      });
-      productos.push(producto);
+      for (const item of carrito) {
+        const producto = await this.productoRepository.findOne({
+          where: { producto_id: item.producto_id },
+        });
+
+        const ingredientes = await this.carritoIngrediente_carritoRepository.find({
+          where: { carrito_id: item.carrito_id },
+          relations: ['carritoIngrediente'],
+        });
+
+        let precioTotal = Number(producto.costo_producto);
+
+        for (const ingrediente of ingredientes) {
+          const precioIngrediente = Number(ingrediente.carritoIngrediente.precio);
+          precioTotal += precioIngrediente;
+        }
+
+        producto.costo_producto = precioTotal.toString();
+
+        productos.push(producto);
+      }
+
+      return productos;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
     }
 
-    return productos;
-  }
-
   async getAllCarritoIngrediente(): Promise<any[]> {
+  try {
     const carrito: carritoIngredienteEntity[] =
       await this.carritoIngredienteRepository.find();
 
     return carrito;
+  } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async createCarrito(carrito: createCarritoDto): Promise<any> {
-   
+   try {
     const carritoE = new carritoEntity();
     carritoE.carrito_id = new UniqueId().getId();
     carritoE.orden_id = carrito.idOrden;
@@ -94,11 +125,19 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
       producto_id: carrito.idProducto,
       carritoIngrediente_carrito_id: carritoIngredienteCarritoId,
     };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async createCarritoIngrediente(
     carritoIngrediente: createCarritoIngredienteDto,
   ): Promise<any> {
+  try {
     const carritoI = new carritoIngredienteEntity();
     carritoI.carrito_ingrediente_id = new UniqueId().getId();
     carritoI.ingrediente_id = carritoIngrediente.ingrediente_id;
@@ -111,9 +150,19 @@ export class carritoPersisteceAdapter implements iCarritoRepository {
       ingrediente_id: carritoI.ingrediente_id,
       producto_id: carritoI.producto_id,
     };
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
 async createProductoOrdenes(carrito: createingredieteArrayDto): Promise<any> {
+  try {
+  const todosoproductoCarrito = await this.carritoRepository.find();
+  
   // Obtener todos los registros de la tabla carritoIngrediente_carrito con sus relaciones correspondientes
   const carritoIngredientesCarrito =
     await this.carritoIngrediente_carritoRepository.find({
@@ -122,6 +171,24 @@ async createProductoOrdenes(carrito: createingredieteArrayDto): Promise<any> {
         'carritoIngrediente'
       ],
     });
+
+  const productosSinIngredientes = todosoproductoCarrito.filter(
+  (producto) =>
+    !carritoIngredientesCarrito.some(
+      (cic) => cic.carrito.producto_id === producto.producto_id
+    )
+  );
+
+  console.log('Test baby funciona', productosSinIngredientes)
+
+    for (let i = 0; i < productosSinIngredientes.length; i++) {
+      const pdtcb_od = new pdtcb_odEntity();
+      pdtcb_od.pdtcb_od_id = new UniqueId().getId();
+      pdtcb_od.producto_id = productosSinIngredientes[i].producto_id
+      pdtcb_od.orden_id = productosSinIngredientes[0].orden_id;
+      pdtcb_od.combo_id = null;
+      await this.pdtcb_odRepository.save(pdtcb_od);
+    }
 
   // Agrupar los registros por carrito_id
   const carritos = carritoIngredientesCarrito.reduce((acc, cic) => {
@@ -157,21 +224,45 @@ async createProductoOrdenes(carrito: createingredieteArrayDto): Promise<any> {
   }
   console.log('Sale?')
   return {};
+  } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
 }
 
   async deleteCarrito(): Promise<any> {
+  try {
     await this.carritoRepository.delete({});
     await this.carritoIngredienteRepository.delete({});
     let messageDelete: string = 'Eiminación realizada';
 
     return messageDelete;
+   } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async deleteProductoCarrito(carrito: createNewCarritoDto): Promise<any> {
+  try {
     console.log('id carrito para eliminar', carrito);
     await this.carritoRepository.delete({ producto_id: carrito.idProducto });
     let messageDelete: string = 'Eiminación realizada';
 
     return messageDelete;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
+  
 }
