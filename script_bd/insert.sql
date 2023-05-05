@@ -171,7 +171,7 @@ VALUES (
     'Two Dólar',
     'Hamburguesa',
     '2',
-    '16891a7a-52f8-4bc6-8176-00a5ae0b1c0a.jpg'
+    'depositphotos_387255148-stock-photo-summer-bbq-food-table.jpg'
   );
 INSERT INTO COMBO (
     combo_id,

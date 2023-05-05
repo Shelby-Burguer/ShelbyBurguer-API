@@ -27,6 +27,7 @@ create table INGREDIENTE
 
 );
 
+
 create table IGDT_PDT
 (
      igdt_pdt_id varchar(100) not null,
@@ -44,7 +45,7 @@ create table PRODUCTO
      tipo_producto varchar(70) not null,
      costo_producto varchar(70) not null,
      nombre_imagen varchar(70) null,
-     tamaño_producto varchar(70) null,
+     tamano_producto varchar(70) null,
      constraint pk_producto_id primary key (producto_id) 	
 );
 
@@ -245,9 +246,9 @@ CREATE TABLE "cliente" ("id_cliente" character varying NOT NULL, "cedula_cliente
 
 CREATE TABLE "lugar" ("id_lugar" character varying NOT NULL, "nombre_lugar" character varying(100) NOT NULL, "tipo_lugar" "public"."lugar_tipo_lugar_enum" NOT NULL, "precio_lugar" real, "id_padre_lugar" character varying, CONSTRAINT "PK_a058a781463d243964c637c3ce9" PRIMARY KEY ("id_lugar"));
 
-ALTER TABLE "cliente" ADD CONSTRAINT "FK_d9cf8c718ba2133c20c14db42c3" FOREIGN KEY ("id_lugar_cliente") REFERENCES "lugar"("id_lugar") ON DELETE NO ACTION ON UPDATE NO action;
+ALTER TABLE "cliente" ADD CONSTRAINT "FK_d9cf8c718ba2133c20c14db42c3" FOREIGN KEY ("id_lugar_cliente") REFERENCES "lugar"("id_lugar") ON DELETE CASCADE;
 
-ALTER TABLE "lugar" ADD CONSTRAINT "FK_40df63a39c51e4df499e3dfd87c" FOREIGN KEY ("id_padre_lugar") REFERENCES "lugar"("id_lugar") ON DELETE NO ACTION ON UPDATE NO action;
+ALTER TABLE "lugar" ADD CONSTRAINT "FK_40df63a39c51e4df499e3dfd87c" FOREIGN KEY ("id_padre_lugar") REFERENCES "lugar"("id_lugar") ON DELETE CASCADE;
 
 alter table IGDT_PDT
     add constraint fk_id_igdt_pdt_ingrediente foreign key (ingrediente_id) references INGREDIENTE(ingrediente_id) ON DELETE CASCADE,
@@ -307,4 +308,5 @@ alter table orden_accionuser
     add constraint fk_id_accion_user foreign key (accion_user_id) references accion_user(accion_user_id) ON DELETE cascade,
     add constraint fk_id_orden foreign key (orden_id) references ORDEN(orden_id) ON DELETE cascade
 ;
+
 -- DROP TYPE IF EXISTS "public"."lugar_tipo_lugar_enum";
